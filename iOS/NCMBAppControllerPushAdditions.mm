@@ -93,8 +93,8 @@ extern "C"
     
     void saveInstallation(NCMBInstallation * currentInstallation)
     {
-        [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if(succeeded){
+        [currentInstallation saveInBackgroundWithBlock:^(NSError *error) {
+            if(!error){
                 //端末情報の登録が成功した場合の処理
                 notifyUnity("OnRegistration", "");
                 
@@ -112,7 +112,7 @@ extern "C"
                     if (!searchErr){
                         //上書き保存する
                         currentInstallation.objectId = searchDevice.objectId;
-                        [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *updateError) {
+                        [currentInstallation saveInBackgroundWithBlock:^(NSError *updateError) {
                             if (updateError){
                                 //端末情報更新に失敗したときの処理
                                 notifyUnityError("OnRegistration", updateError);
@@ -226,7 +226,7 @@ extern "C"
     
     void sendPush(const char * json, const char * message, int delayByMilliseconds,bool dialog)
     {
-        NCMBPush *push = [[NCMBPush alloc] init];
+        NCMBPush *push = [NCMBPush push];
         
         // Json to Dictionary
         NSString *nsJson = GetStringParam(json);
@@ -243,7 +243,7 @@ extern "C"
         [push setMessage:GetStringParam(message)];
         
         // Send
-        [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [push sendPushInBackgroundWithBlock:^(NSError *error) {
             if (error)
             {
                 notifyUnityError("OnSendPush", error);
