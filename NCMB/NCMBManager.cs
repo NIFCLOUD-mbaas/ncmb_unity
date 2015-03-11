@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,10 @@ namespace NCMB
 	/// </summary>
 	public class NCMBManager : MonoBehaviour
 	{
+
+		//初回のみ実行フラグ
+		private static bool _isInitialized = false;
+
         #region Const
 		const string NS = "NCMB_SPLITTER";
         #endregion
@@ -35,9 +39,18 @@ namespace NCMB
 
         #region Delegate
 	
-
-
-
+		/// <summary>
+		///シーンを跨いでGameObjectを利用する
+		/// </summary>
+		public virtual void Awake ()
+		{
+			if (!NCMBManager._isInitialized) {
+				NCMBManager._isInitialized = true;
+				DontDestroyOnLoad (this.gameObject);
+			} else {
+				Destroy (this.gameObject);
+			}
+		}
 
 		/// <summary> 端末登録後のイベントリスナーです。</summary>
 		public delegate void OnRegistrationDelegate (string errorMessage);

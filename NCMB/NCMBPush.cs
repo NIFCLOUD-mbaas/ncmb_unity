@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,10 +30,7 @@ namespace NCMB
 		private IDictionary<string, object> pushData = new Dictionary<string, object> ();
 		#if UNITY_ANDROID
 		static AndroidJavaClass m_AJClass;
-		
-
-
-#elif UNITY_IOS
+		#elif UNITY_IOS
 		[DllImport ("__Internal")]
 		private static extern void initialize (string applicationId, string clientId);
 
@@ -87,21 +84,8 @@ namespace NCMB
 		#if UNITY_ANDROID
 		public static void Register (string senderId, bool useAnalytics)
 		{
-			if (!string.IsNullOrEmpty (senderId)) {
-				
-
-
-
-
-
-
-
-
-
-
-
-
-#if !UNITY_EDITOR
+			if (!string.IsNullOrEmpty (senderId)) {				
+				#if !UNITY_EDITOR
 				m_AJClass.CallStatic("registerNotification", senderId,useAnalytics);
 				#endif
 			}
@@ -109,39 +93,10 @@ namespace NCMB
 		
 
 
-#elif UNITY_IOS
+		#elif UNITY_IOS
 		public static void Register (bool useAnalytics)
 		{
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#if !UNITY_EDITOR
+			#if !UNITY_EDITOR
 			registerNotification(useAnalytics);
 			#endif
 		}
@@ -150,63 +105,19 @@ namespace NCMB
 		public static void RegisterWithLocation (string senderId)
 		{
 			if (!string.IsNullOrEmpty (senderId)) {
-				
-
-
-
-
-
-
-
-
-
-
-
-
-#if !UNITY_EDITOR
+				#if !UNITY_EDITOR
 				m_AJClass.CallStatic("registerNotificationWithLocation", senderId);
 				#endif
 			}
 		}
-		
-
-
-#elif UNITY_IOS
+	
+		#elif UNITY_IOS
 		/// <summary>
 		/// Register for receiving remote notifications (with current location).
 		/// </summary>
 		internal static void RegisterWithLocation ()
 		{
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#if !UNITY_EDITOR
+			#if !UNITY_EDITOR
 			registerNotificationWithLocation();
 			#endif
 		}
@@ -521,38 +432,8 @@ namespace NCMB
 		public static void ClearAll ()
 		{
 			NotificationServices.ClearRemoteNotifications ();
-			
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#if !UNITY_EDITOR
-			clearAll();
+			#if !UNITY_EDITOR
+				clearAll();
 			#endif
 		}
 		#endif

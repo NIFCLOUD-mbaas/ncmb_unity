@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,8 +52,13 @@ namespace NCMB.Internal
 		private static readonly string HEADER_TIMESTAMP_KEY = "X-NCMB-Timestamp";
 		//タイムスタンプ　キー
 		private static readonly string HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-		//Access-Control　キー
+		//Access-Control キー
 		private static readonly string HEADER_SESSION_TOKEN = "X-NCMB-Apps-Session-Token";
+		//UserAgent キー
+		private static readonly string HEADER_USER_AGENT_KEY = "X-NCMB-OS-Version";
+		//UserAgent 値
+		private static readonly string HEADER_USER_AGENT_VALUE = "unity-"+CommonConstant.SDK_VERSION;//unity-x.x.x
+
 		//セッショントークン
 		private static readonly int REQUEST_TIME_OUT = 10000;
 		private string _applicationKey = "";
@@ -125,6 +130,7 @@ namespace NCMB.Internal
 				using (WebResponse webResponse = ex.Response) {//①WebExceptionからWebResponseを取得
 					error = new NCMBException ();
 					error.ErrorMessage = ex.Message;
+					error.ErrorCode = ((int)ex.Status).ToString();
 
 					streamResponse = webResponse.GetResponseStream ();//②WebResponsからResponseデータ作成
 					streamRead = new StreamReader (streamResponse); //③Responseデータからデータ取得
@@ -256,10 +262,11 @@ namespace NCMB.Internal
 			try {
 				stream = req.GetRequestStream ();
 				stream.Write (postDataBytes, 0, postDataBytes.Length);
-			} catch (SystemException cause) {
+			} catch (WebException ex) {
 				//エラー処理
-				//throw new NCMBException (cause);
-				error = new NCMBException (cause);
+				error = new NCMBException ();
+				error.ErrorMessage = ex.Message;
+				error.ErrorCode = ((int)ex.Status).ToString();
 			} finally {
 				if (stream != null) {
 					stream.Close ();
@@ -298,6 +305,7 @@ namespace NCMB.Internal
 			req.Headers.Add (HEADER_APPLICATION_KEY, _applicationKey);
 			req.Headers.Add (HEADER_SIGNATURE, result);
 			req.Headers.Add (HEADER_TIMESTAMP_KEY, _headerTimestamp);
+			req.Headers.Add (HEADER_USER_AGENT_KEY, HEADER_USER_AGENT_VALUE);
 			if ((_sessionToken != null) && (_sessionToken != "")) {
 				req.Headers.Add (HEADER_SESSION_TOKEN, _sessionToken);
 				NCMBDebug.Log ("Session token :" + _sessionToken);
