@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -209,6 +209,8 @@ namespace NCMB
 				NCMBSettings.RegisterPush (this.usePush, this.useAnalytics, this.androidSenderId, false);
 				filePath = Application.persistentDataPath;
 				base.StartCoroutine (Platform.RunLoop ());
+			} else {
+				Destroy (base.gameObject);
 			}
 		}
 	}

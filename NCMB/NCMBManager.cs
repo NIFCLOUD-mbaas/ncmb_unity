@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,10 @@ namespace NCMB
 	/// </summary>
 	public class NCMBManager : MonoBehaviour
 	{
+
+		//初回のみ実行フラグ
+		private static bool _isInitialized = false;
+
         #region Const
 		const string NS = "NCMB_SPLITTER";
         #endregion
@@ -35,9 +39,18 @@ namespace NCMB
 
         #region Delegate
 	
-
-
-
+		/// <summary>
+		///シーンを跨いでGameObjectを利用する
+		/// </summary>
+		public virtual void Awake ()
+		{
+			if (!NCMBManager._isInitialized) {
+				NCMBManager._isInitialized = true;
+				DontDestroyOnLoad (this.gameObject);
+			} else {
+				Destroy (this.gameObject);
+			}
+		}
 
 		/// <summary> 端末登録後のイベントリスナーです。</summary>
 		public delegate void OnRegistrationDelegate (string errorMessage);
@@ -49,32 +62,6 @@ namespace NCMB
 		//public delegate void OnGetLocationSucceededDelegate(NCMBGeoPoint geo);
 		// <summary> 位置情報失敗。</summary>
 		//public delegate void OnGetLocationFailedDelegate(string errorMessage);
-
-		/*
-		/// <summary>
-		/// プッシュ送信後のイベントリスナーを登録します。
-		/// </summary>
-		static public void OnSendPush (OnSendPushDelegate callback)
-		{
-			onSendPush += callback;
-		}
-
-		/// <summary>
-		/// 端末登録後のイベントリスナーを登録します。
-		/// </summary>
-		static public void OnRegistration (OnRegistrationDelegate callback)
-		{
-			onRegistration += callback;
-		}
-
-		/// <summary>
-		/// プッシュ受信後のイベントリスナーを登録します。
-		/// </summary>
-		static public void OnNotificationReceived (OnNotificationReceivedDelegate callback)
-		{
-			onNotificationReceived += callback;
-		}
-		*/
 
 		/// <summary> 端末登録後のイベントリスナーです。</summary>
 		public static OnRegistrationDelegate onRegistration;
@@ -260,9 +247,6 @@ namespace NCMB
 			//RichUrl = richUrl;
 			//UserInfo = userInfo;
 		}
-
-		//public NCMBPushPayload()
-		//{
-		//}
+			
 	}
 }
