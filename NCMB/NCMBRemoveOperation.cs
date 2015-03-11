@@ -25,7 +25,6 @@ namespace NCMB.Internal
 	internal class NCMBRemoveOperation : INCMBFieldOperation
 	{
 	
-		//protected HashSet<object> objects = new HashSet<object> ();
 		ArrayList objects = new ArrayList ();//追加
 		public NCMBRemoveOperation (object values)
 		{
@@ -93,28 +92,17 @@ namespace NCMB.Internal
 			}
 			//配列のみリムーブ実行
 			if ((oldValue is IList)) {
-
-				//削除処理を行う
-				//ArrayList result = new ArrayList ((IList)oldValue);
-				//result = NCMBUtility._removeAllFromListMainFunction ((IList)oldValue, this.objects);
-								
-				//１．取り出したローカルデータから今回の引数で渡されたオブジェクトの削除
-				//例：estimatedData(result)＝{1,NCMBObject}　引数(values)={2,NCMBObject}の時,結果:{1}
+			
+				//取り出したローカルデータから今回の引数で渡されたオブジェクトの削除
 				ArrayList result = new ArrayList ((IList)oldValue);
 				foreach (object removeObj in this.objects) {
 					while (result.Contains(removeObj)) {//removeAllと同等
 						result.Remove (removeObj);
 					}
 				}
-				//ここから下は引数の中で「NCMBObjectが保存されているかつ、
-				//estimatedData(result)の中の一致するNCMBObjectが消せなかった」時の処理です。
-				//つまり　「上で消せなかったNCMBObject=インスタンスが違う」
-				//estimatedData(result)の中のNCMBObjectと引数のNCMBObjectがどちらもnewで作られたものなら上で消せるが、
-				//どちらかがnewでどちらかがCreateWithoutDataで作られた場合は上で消せない。
-				//そのため下の処理はobjectIdで検索をかけてobjectIdが一致するNCMBObjectの削除を行う
+				//以下「NCMBObjectが保存されているかつ、estimatedData(result)の中の一致するNCMBObjectが消せなかった」時の処理
 				
-				//２．今回引数で渡されたオブジェクトから１.のオブジェクトの削除
-				//例：引数(objectsToBeRemoved)＝{2,NCMBObject}　1の結果={1}の時,結果:{2,NCMBObject}
+				//今回引数で渡されたオブジェクトからオブジェクトの削除
 				ArrayList objectsToBeRemoved = new ArrayList ((IList)this.objects);
 
 				foreach (object removeObj2 in result) {
@@ -123,9 +111,8 @@ namespace NCMB.Internal
 					}
 				}
 								
-				//３．２の結果のリスト（引数）の中のNCMBObjectがすでに保存されている場合はobjectIdを返す
+				//結果のリスト（引数）の中のNCMBObjectがすでに保存されている場合はobjectIdを返す
 				//まだ保存されていない場合はnullを返す
-				//例：CreateWithoutDataの場合「objectIds　Value:ppmQNGZahXpO8YSV」newの場合「objectIds　Value:null」
 				HashSet<object> objectIds = new HashSet<object> ();
 				foreach (object hashSetValue in objectsToBeRemoved) {
 					if (hashSetValue is NCMBObject) {
@@ -133,10 +120,7 @@ namespace NCMB.Internal
 						objectIds.Add (valuesNCMBObject.ObjectId);
 					}
 					
-					//４．resultの中のNCMBObjectからobjectIdsの中にあるObjectIdと一致するNCMBObjectの削除
-					//ここだけfor文で対応している理由は,
-					//「foreach文により要素を列挙している最中には、そのリスト(result)から要素を削除することはできない(Exception吐く)」
-					//例：上記の例の場合の結果result = {1}				
+					//resultの中のNCMBObjectからobjectIdsの中にあるObjectIdと一致するNCMBObjectの削除
 					object resultValue;
 					for (int i = 0; i < result.Count; i++) {
 						resultValue = result [i];

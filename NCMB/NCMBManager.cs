@@ -63,32 +63,6 @@ namespace NCMB
 		// <summary> 位置情報失敗。</summary>
 		//public delegate void OnGetLocationFailedDelegate(string errorMessage);
 
-		/*
-		/// <summary>
-		/// プッシュ送信後のイベントリスナーを登録します。
-		/// </summary>
-		static public void OnSendPush (OnSendPushDelegate callback)
-		{
-			onSendPush += callback;
-		}
-
-		/// <summary>
-		/// 端末登録後のイベントリスナーを登録します。
-		/// </summary>
-		static public void OnRegistration (OnRegistrationDelegate callback)
-		{
-			onRegistration += callback;
-		}
-
-		/// <summary>
-		/// プッシュ受信後のイベントリスナーを登録します。
-		/// </summary>
-		static public void OnNotificationReceived (OnNotificationReceivedDelegate callback)
-		{
-			onNotificationReceived += callback;
-		}
-		*/
-
 		/// <summary> 端末登録後のイベントリスナーです。</summary>
 		public static OnRegistrationDelegate onRegistration;
 		/// <summary> プッシュ送信後のイベントリスナーです。</summary>
@@ -273,9 +247,6 @@ namespace NCMB
 			//RichUrl = richUrl;
 			//UserInfo = userInfo;
 		}
-
-		//public NCMBPushPayload()
-		//{
-		//}
+			
 	}
 }

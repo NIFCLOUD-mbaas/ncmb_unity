@@ -76,7 +76,7 @@ namespace NCMB
 
 					return val;
 				} finally {
-					Monitor.Exit (obj);//ロック解放。ここに書くことでtryの中でエラーが発生しても正しく解放される。
+					Monitor.Exit (obj);//ロック解放
 				}
 			}
 			set {
@@ -543,34 +543,26 @@ namespace NCMB
 					}
 					
 					
-					//１．取り出したローカルデータから今回の引数で渡されたオブジェクトの削除
-					//例：estimatedData(result)＝{1,NCMBObject}　引数(values)={2,NCMBObject}の時,結果:{1}
+					//取り出したローカルデータから今回の引数で渡されたオブジェクトの削除
 					ArrayList result = new ArrayList (value);
 					foreach (object removeObj in values) {
-						while (result.Contains (removeObj)) {//removeAllと同等
+						while (result.Contains (removeObj)) {
 							result.Remove (removeObj);
 						}
 					}
 					
-					//ここから下は引数の中で「NCMBObjectが保存されているかつ、
-					//estimatedData(result)の中の一致するNCMBObjectが消せなかった」時の処理です。
-					//つまり　「上で消せなかったNCMBObject=インスタンスが違う」
-					//estimatedData(result)の中のNCMBObjectと引数のNCMBObjectがどちらもnewで作られたものなら上で消せるが、
-					//どちらかがnewでどちらかがCreateWithoutDataで作られた場合は上で消せない。
-					//そのため下の処理はobjectIdで検索をかけてobjectIdが一致するNCMBObjectの削除を行う
+					//以下「NCMBObjectが保存されているかつ、estimatedData(result)の中の一致するNCMBObjectが消せなかった」時の処理
 					
-					//２．今回引数で渡されたオブジェクトから１.のオブジェクトの削除
-					//例：引数(objectsToBeRemoved)＝{2,NCMBObject}　1の結果={1}の時,結果:{2,NCMBObject}
+					//今回引数で渡されたオブジェクトからオブジェクトの削除
 					ArrayList objectsToBeRemoved = new ArrayList ((IList)values);
 					foreach (object removeObj2 in result) {
-						while (objectsToBeRemoved.Contains (removeObj2)) {//removeAllと同等
+						while (objectsToBeRemoved.Contains (removeObj2)) {
 							objectsToBeRemoved.Remove (removeObj2);
 						}
 					}
 					
-					//３．２の結果のリスト（引数）の中のNCMBObjectがすでに保存されている場合はobjectIdを返す
+					//結果のリスト（引数）の中のNCMBObjectがすでに保存されている場合はobjectIdを返す
 					//まだ保存されていない場合はnullを返す
-					//例：CreateWithoutDataの場合「objectIds　Value:ppmQNGZahXpO8YSV」newの場合「objectIds　Value:null」
 					HashSet<object> objectIds = new HashSet<object> ();
 					foreach (object hashSetValue in objectsToBeRemoved) {
 						if (hashSetValue is NCMBObject) {
@@ -578,10 +570,7 @@ namespace NCMB
 							objectIds.Add (valuesNCMBObject.ObjectId);
 						}
 						
-						//４．resultの中のNCMBObjectからobjectIdsの中にあるObjectIdと一致するNCMBObjectの削除
-						//ここだけfor文で対応している理由は,
-						//「foreach文により要素を列挙している最中には、そのリスト(result)から要素を削除することはできない(Exception吐く)」
-						//例：上記の例の場合の結果result = {1}				
+						//resultの中のNCMBObjectからobjectIdsの中にあるObjectIdと一致するNCMBObjectの削除
 						object resultValue;
 						for (int i = 0; i < result.Count; i++) {
 							resultValue = result [i];
@@ -724,11 +713,11 @@ namespace NCMB
 								int index = Convert.ToInt32 (existingObjectIds [objectsNCMBObject.ObjectId]);	
 								val.Insert (index, objectsValue);
 							} else {
-								//ユニークなのでadd。追加する
+								//ユニークのためadd。追加する
 								val.Add (objectsValue);
 							}
 						} else if (!val.Contains (objectsValue)) {
-							//更新時。基本的にこちら。重複していない値のみaddする
+							//更新時。重複していない値のみaddする
 							val.Add (objectsValue);
 						}
 					}
@@ -1253,7 +1242,7 @@ namespace NCMB
 					this._updateLatestEstimatedData (); //add only to update the estimate data save process
 
 				} else {
-					//通信失敗時の処理。追加した空の履歴データにデータが入っていればマージする。チケット#34927参照
+					//通信失敗時の処理。追加した空の履歴データにデータが入っていればマージする
 					LinkedListNode<IDictionary<string, INCMBFieldOperation>> linkedListNode = this.operationSetQueue.Find (operationBeforeSave);
 					IDictionary<string, INCMBFieldOperation> value = linkedListNode.Next.Value;
 					this.operationSetQueue.Remove (linkedListNode);

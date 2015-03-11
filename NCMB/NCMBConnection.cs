@@ -118,32 +118,32 @@ namespace NCMB.Internal
 
 			try {
 				//通常処理
-				httpResponse = (HttpWebResponse)req.GetResponse ();//①通信
-				streamResponse = httpResponse.GetResponseStream (); //②通信結果からResponseデータ作成
-				statusCode = (int)httpResponse.StatusCode; //③Responseデータからステータスコード取得
-				streamRead = new StreamReader (streamResponse); //④Responseデータからデータ取得
-				responseData = streamRead.ReadToEnd ();//⑤書き出したデータを全てstringに書き出し
+				httpResponse = (HttpWebResponse)req.GetResponse ();//通信
+				streamResponse = httpResponse.GetResponseStream (); //通信結果からResponseデータ作成
+				statusCode = (int)httpResponse.StatusCode; //Responseデータからステータスコード取得
+				streamRead = new StreamReader (streamResponse); //Responseデータからデータ取得
+				responseData = streamRead.ReadToEnd ();//書き出したデータを全てstringに書き出し
 
 			} catch (WebException ex) {
 
 				//API側からのエラー処理
-				using (WebResponse webResponse = ex.Response) {//①WebExceptionからWebResponseを取得
+				using (WebResponse webResponse = ex.Response) {//WebExceptionからWebResponseを取得
 					error = new NCMBException ();
 					error.ErrorMessage = ex.Message;
 					error.ErrorCode = ((int)ex.Status).ToString();
 
-					streamResponse = webResponse.GetResponseStream ();//②WebResponsからResponseデータ作成
-					streamRead = new StreamReader (streamResponse); //③Responseデータからデータ取得
-					responseData = streamRead.ReadToEnd ();//④書き出したデータを全てstringに書き出し
+					streamResponse = webResponse.GetResponseStream ();//WebResponsからResponseデータ作成
+					streamRead = new StreamReader (streamResponse); //Responseデータからデータ取得
+					responseData = streamRead.ReadToEnd ();//書き出したデータを全てstringに書き出し
 
-					var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;//⑤Dictionaryに変換
-					var hashtableData = new Hashtable (jsonData);//⑥Hashtableに変換　必要？
+					var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;//Dictionaryに変換
+					var hashtableData = new Hashtable (jsonData);//Hashtableに変換
 
-					error.ErrorCode = (hashtableData ["code"].ToString ());//⑦Hashtableから各keyのvalue取得
+					error.ErrorCode = (hashtableData ["code"].ToString ());//Hashtableから各keyのvalue取得
 					error.ErrorMessage = (hashtableData ["error"].ToString ());
 
-					httpResponse = (HttpWebResponse)webResponse;//⑧WebResponseをHttpWebResponseに変換
-					statusCode = (int)httpResponse.StatusCode;//⑨httpWebResponseからステータスコード取得
+					httpResponse = (HttpWebResponse)webResponse;//WebResponseをHttpWebResponseに変換
+					statusCode = (int)httpResponse.StatusCode;//httpWebResponseからステータスコード取得
 				}
 			} finally {
 				if (httpResponse != null) {
@@ -160,8 +160,7 @@ namespace NCMB.Internal
 					_checkInvalidSessionToken (error.ErrorCode);
 				}
 
-				//レスポンスシグネチャのチェック　Flagがtureかつエラーコードが以下の三つ以外の時はチェックを行う
-				//if (NCMBSettings._responseValidationFlag && (errorCode != "E404002" && errorCode != "E405001" && errorCode != "E415001")) {
+				//レスポンスシグネチャのチェック
 				if (NCMBSettings._responseValidationFlag && httpResponse != null) {
 
 					//レスポンスシグネチャが無い場合はE100001エラー
@@ -207,53 +206,8 @@ namespace NCMB.Internal
 			NCMBDebug.Log ("【responseMakeSignature】　" + responseMakeSignature);
 			NCMBDebug.Log ("検証実行");
 		}
-		/*
-		//通信処理(非同期通)
-		internal void ConnectAsync (HttpClientCallback callback)
-		{
-			//証明書更新　更新しないとSSLサイトにアクセス出来ない
-			ServicePointManager.ServerCertificateValidationCallback = delegate {
-				return true;
-			}; 
-			//リクエストの作成
-			HttpWebRequest req = _returnRequest ();
-			//非同期データ送信　BeginGetRequestStreamでくくらなければ同期通信
-			if (_method == ConnectType.POST || _method == ConnectType.PUT) {
-				//リクエスト非同期処理
-				IAsyncResult requestResult = req.BeginGetRequestStream (ar => {
-					Stream postStream = req.EndGetRequestStream (ar);                //非同期要求を終了
-					byte[] postDataBytes = Encoding.Default.GetBytes (_content);    //送信データ作成。バイト型配列に変換
-					postStream.Write (postDataBytes, 0, postDataBytes.Length);      //送信
-					postStream.Close ();                                           //リリース
-					IAsyncResult responsResult = req.BeginGetResponse (ar2 => {
-						HttpWebResponse response = (HttpWebResponse)req.EndGetResponse (ar2); //非同期要求を終了
-						Stream streamResponse = response.GetResponseStream (); //応答データを受信するためのStreamを取得
-						int statusCode = (int)response.StatusCode; //ステータスコード取得
-						StreamReader streamRead = new StreamReader (streamResponse); //レスポンスデータ取得
-						string responseData = streamRead.ReadToEnd ();
-						// 閉じる.リリース
-						streamResponse.Close ();
-						streamRead.Close ();
-						response.Close ();
-						callback (statusCode, responseData, null);//コールバックを返す
-					}, null);
-				}, null);
-			} else if (_method == ConnectType.GET || _method == ConnectType.DELETE) {  //コールバックをメソッドにしなくてもこう言う書き方も有りです
-				IAsyncResult responseResult = req.BeginGetResponse (ar => {
-					try {
-						HttpWebResponse res = (HttpWebResponse)req.EndGetResponse (ar);
-						int statusCode = (int)res.StatusCode;
-						Stream streamResponse = res.GetResponseStream ();
-						StreamReader streamRead = new StreamReader (streamResponse); //レスポンスデータ取得
-						string responseData = streamRead.ReadToEnd ();
-						callback (statusCode, responseData, null);
-					} catch (WebException e) {
-						NCMBDebug.LogError ("失敗error:" + e);
-					}
-				}, null);
-			}
-		}
-		*/
+
+
 		//同期データ送信
 		private HttpWebRequest _sendRequest (HttpWebRequest req, ref NCMBException error)
 		{
@@ -391,7 +345,6 @@ namespace NCMB.Internal
 		/// <summary>
 		/// セッショントークン有効稼働かの処理を行う
 		/// </summary>
-		
 		private void _checkInvalidSessionToken (string code)
 		{
 			if (NCMBException.INCORRECT_HEADER.Equals (code)) {
