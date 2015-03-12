@@ -55,7 +55,7 @@ namespace NCMB.Internal
 		//Access-Control キー
 		private static readonly string HEADER_SESSION_TOKEN = "X-NCMB-Apps-Session-Token";
 		//UserAgent キー
-		private static readonly string HEADER_USER_AGENT_KEY = "X-NCMB-OS-Version";
+		private static readonly string HEADER_USER_AGENT_KEY = "X-NCMB-SDK-Version";
 		//UserAgent 値
 		private static readonly string HEADER_USER_AGENT_VALUE = "unity-"+CommonConstant.SDK_VERSION;//unity-x.x.x
 
