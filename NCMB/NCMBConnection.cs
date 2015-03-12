@@ -132,18 +132,21 @@ namespace NCMB.Internal
 					error.ErrorMessage = ex.Message;
 					error.ErrorCode = ((int)ex.Status).ToString();
 
-					streamResponse = webResponse.GetResponseStream ();//WebResponsからResponseデータ作成
-					streamRead = new StreamReader (streamResponse); //Responseデータからデータ取得
-					responseData = streamRead.ReadToEnd ();//書き出したデータを全てstringに書き出し
+					if(webResponse != null){
+						streamResponse = webResponse.GetResponseStream ();//WebResponsからResponseデータ作成
+						streamRead = new StreamReader (streamResponse); //Responseデータからデータ取得
+						responseData = streamRead.ReadToEnd ();//書き出したデータを全てstringに書き出し
 
-					var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;//Dictionaryに変換
-					var hashtableData = new Hashtable (jsonData);//Hashtableに変換
+						var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;//Dictionaryに変換
+						var hashtableData = new Hashtable (jsonData);//Hashtableに変換
 
-					error.ErrorCode = (hashtableData ["code"].ToString ());//Hashtableから各keyのvalue取得
-					error.ErrorMessage = (hashtableData ["error"].ToString ());
+						error.ErrorCode = (hashtableData ["code"].ToString ());//Hashtableから各keyのvalue取得
+						error.ErrorMessage = (hashtableData ["error"].ToString ());
 
-					httpResponse = (HttpWebResponse)webResponse;//WebResponseをHttpWebResponseに変換
-					statusCode = (int)httpResponse.StatusCode;//httpWebResponseからステータスコード取得
+						httpResponse = (HttpWebResponse)webResponse;//WebResponseをHttpWebResponseに変換
+						statusCode = (int)httpResponse.StatusCode;//httpWebResponseからステータスコード取得
+					}
+
 				}
 			} finally {
 				if (httpResponse != null) {

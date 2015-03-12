@@ -1212,8 +1212,7 @@ namespace NCMB
 						this.serverData [pair.Key] = valueObj; 
 					}
 				}
-
-				//この処理を上の処理に持っていくと不具合が発生
+					
 				//dataAvailabilityにキー"acl"を設定前にresponseDicからRemoveされThisのGetのチェックでエラー
 				if (responseDic.TryGetValue ("acl", out value)) {//今回はなし
 					NCMBACL acl = NCMBACL._createACLFromJSONObject ((Dictionary<string,object>)value);
