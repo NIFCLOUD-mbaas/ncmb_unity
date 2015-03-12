@@ -128,15 +128,12 @@ namespace NCMB.Internal
 
 				//API側からのエラー処理
 				using (WebResponse webResponse = ex.Response) {//WebExceptionからWebResponseを取得
-					error = new NCMBException ();
-					error.ErrorMessage = ex.Message;
-					error.ErrorCode = ((int)ex.Status).ToString();
 
-					if(webResponse != null){
+					error = new NCMBException ();
+					if (webResponse != null) {
 						streamResponse = webResponse.GetResponseStream ();//WebResponsからResponseデータ作成
 						streamRead = new StreamReader (streamResponse); //Responseデータからデータ取得
 						responseData = streamRead.ReadToEnd ();//書き出したデータを全てstringに書き出し
-
 						var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;//Dictionaryに変換
 						var hashtableData = new Hashtable (jsonData);//Hashtableに変換
 
@@ -145,6 +142,9 @@ namespace NCMB.Internal
 
 						httpResponse = (HttpWebResponse)webResponse;//WebResponseをHttpWebResponseに変換
 						statusCode = (int)httpResponse.StatusCode;//httpWebResponseからステータスコード取得
+					} else {
+						error.ErrorMessage = ex.Message;
+						error.ErrorCode = ((int)ex.Status).ToString();
 					}
 
 				}
@@ -207,7 +207,6 @@ namespace NCMB.Internal
 			}
 			NCMBDebug.Log ("【responseSignature】　" + responseSignature);
 			NCMBDebug.Log ("【responseMakeSignature】　" + responseMakeSignature);
-			NCMBDebug.Log ("検証実行");
 		}
 
 
@@ -220,10 +219,9 @@ namespace NCMB.Internal
 				stream = req.GetRequestStream ();
 				stream.Write (postDataBytes, 0, postDataBytes.Length);
 			} catch (WebException ex) {
-				//エラー処理
 				error = new NCMBException ();
 				error.ErrorMessage = ex.Message;
-				error.ErrorCode = ((int)ex.Status).ToString();
+				error.ErrorCode = ((int)ex.Status).ToString ();
 			} finally {
 				if (stream != null) {
 					stream.Close ();
