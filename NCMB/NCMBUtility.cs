@@ -189,13 +189,7 @@ namespace NCMB.Internal
 			}
 			object typeString;
 			jsonDic.TryGetValue ("__type", out typeString);     
-						
-			/*
-						if (typeString == null) {
-								return jsonDic;
-						}
-						*/
-						
+												
 			if (typeString == null) { //Dictionary
 				Dictionary<string, object> tmpDic = new Dictionary<string, object> ();
 				object decodeObj;

@@ -14,7 +14,7 @@
  limitations under the License.
  **********/
 
-#define DEBUG
+//#define DEBUG
 using System.Diagnostics;
 using System;
 
@@ -23,8 +23,6 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 
-//自作したDebugクラス
-//DebugでラッピングするとすべてのDebugがラッピングされるためNCMBDebugで作成
 //ログを消したい時はNCMBDebugクラスの#define DEBUGをコメントアウトしてください
 namespace NCMB.Internal
 {
