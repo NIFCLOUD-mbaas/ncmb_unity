@@ -368,7 +368,7 @@ extern "C"
 {
     UnitySendRemoteNotificationError( error );
     
-    notifyUnityError("OnRemoteRegistrationDidFail", error);
+    notifyUnityError("OnRegistration", error);
 }
 
 //contentAvailableがfalseの時に実行される
