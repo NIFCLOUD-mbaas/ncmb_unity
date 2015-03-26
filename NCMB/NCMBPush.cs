@@ -81,6 +81,7 @@ namespace NCMB
 			m_AJClass = new AndroidJavaClass("com.nifty.cloud.mb.NCMBPushProxy");
 			#endif
 		}
+
 		#if UNITY_ANDROID
 		public static void Register (string senderId, bool useAnalytics)
 		{
@@ -135,7 +136,9 @@ namespace NCMB
 		//    m_AJClass.CallStatic("subscribe", channel);
 		//    #endif
 		//}
+
 		/*** Push設定 ***/
+
 		/// <summary>
 		/// メッセージの取得、または設定を行います。
 		/// </summary>
@@ -265,6 +268,7 @@ namespace NCMB
 				}
 			}
 		}
+
 		/*	
 		/// <summary>
 		/// アクションの取得、または設定を行います(Androidのみ)。
@@ -356,7 +360,54 @@ namespace NCMB
 			}
 			set { this.pushData ["contentAvailable"] = value; }
 		}
+
+		/// <summary>
+		/// カテゴリーの取得、または設定を行います。
+		/// </summary>
+		public string Category {
+			get {
+				string category = null;
+				if (pushData.ContainsKey ("category")) {
+					category = (string)this.pushData ["category"];
+				}
+				return category;
+			}
+			set { this.pushData ["category"] = value; }
+		}
+
+
+		/// <summary>
+		/// 配信期限日の取得、または設定を行います。
+		/// </summary>
+		public DateTime? DeliveryExpirationDate {
+			get {
+				DateTime? DeliveryExpirationDate = null;
+				if (pushData.ContainsKey ("deliveryExpirationDate")) {
+					DeliveryExpirationDate = (DateTime)this.pushData ["deliveryExpirationDate"];
+				}
+				return DeliveryExpirationDate;
+			}
+				set { this.pushData ["deliveryExpirationDate"] = value; }
+		}
+
+		/// <summary>
+		/// 配信期限時間の取得、または設定を行います。<br/>
+		/// 時間単位で指定する場合は「n hour」(n=1～24）<br/>
+		/// 日単位で指定する場合は「n day」（n=1～28） を設定します。
+		/// </summary>
+		public string DeliveryExpirationTime {
+			get {
+				string category = null;
+				if (pushData.ContainsKey ("deliveryExpirationTime")) {
+					category = (string)this.pushData ["deliveryExpirationTime"];
+				}
+				return category;
+			}
+				set { this.pushData ["deliveryExpirationTime"] = value; }
+		}
+
 		/*** Push送信 ***/
+
 		/// <summary>
 		/// プッシュの送信を行います。
 		/// </summary>
@@ -368,7 +419,9 @@ namespace NCMB
 
 			//エラー判定
 			if (pushData.ContainsKey ("DeliveryDate") && pushData.ContainsKey ("delayByMilliseconds")) {
-				throw new ArgumentException ("DeliveryDate and delayByMilliseconds can not be set at the same time.Please set only one.");
+				throw new ArgumentException ("DeliveryDate and DelayByMilliseconds can not be set at the same time.Please set only one.");
+			}else if(pushData.ContainsKey ("deliveryExpirationDate") && pushData.ContainsKey ("deliveryExpirationTime")){
+				throw new ArgumentException ("DeliveryExpirationDate and DeliveryExpirationTime can not be set at the same time.Please set only one.");
 			}
 		
 			//本文設定
