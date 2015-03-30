@@ -115,7 +115,7 @@ namespace NCMB
 		/// <summary>E502003 DBエラーです。</summary>
 		public static readonly string DATABASE_ERROR = "E502003"; 
 
-		/// <summary>E502003 SDK内部エラーです。</summary>
+		/// <summary>E450001 SDK内部エラーです。</summary>
 		public static readonly string SDKSYSTEM_ERROR = "E450001"; 
 
 		/// <summary>コンストラクター。</summary>
