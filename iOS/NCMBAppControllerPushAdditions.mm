@@ -173,15 +173,23 @@ extern "C"
     void settingPush(NSMutableDictionary *data, NCMBPush *push ,int delayByMilliseconds,bool dialog)
     {
         //iOS Set Sound
-        //NSArray *target = [data objectForKey:@"target"];
-        //if([target indexOfObject:@"ios"] != NSNotFound || target.count == 2 || target == nil){
-        //    data[@"sound"] = @"default";
-        //}
+        NSArray *target = [data objectForKey:@"target"];
+        if([target indexOfObject:@"ios"] != NSNotFound || target.count == 2 || target == nil){
+            data[@"sound"] = @"default";
+        }
+        
+        // Set Dialog
         if (dialog) {
             [push setDialog:dialog];
         }
         
-        //BadgeIncrementFlag
+        // Set Category
+        if([data objectForKey:@"category"]){
+            [push setCategory:[data objectForKey:@"category"]];
+            [data removeObjectForKey:@"category"];
+        }
+        
+        // Set BadgeIncrementFlag
         if([data objectForKey:@"badgeIncrementFlag"]){
             if ([[data objectForKey:@"badgeIncrementFlag"] isEqual:@0])
             {
@@ -192,7 +200,7 @@ extern "C"
             [data removeObjectForKey:@"badgeIncrementFlag"];
         }
         
-        //contentAvailable
+        // Set contentAvailable
         if([data objectForKey:@"contentAvailable"]){
             if ([[data objectForKey:@"contentAvailable"] isEqual:@0])
             {
@@ -220,6 +228,23 @@ extern "C"
         else
         {
             [push setDeliveryTime:[NSDate dateWithTimeIntervalSinceNow:((double)delayByMilliseconds / 1000)]];
+        }
+        
+        // Set Delivery Expiration Time
+        if([data objectForKey:@"deliveryExpirationDate"]){
+            NSString *dateStr = [data objectForKey:@"deliveryExpirationDate"];
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setLocale:[NSLocale currentLocale]];
+            [formatter setDateFormat:@"MM/dd/yyyy HH:mm:ss"];
+            NSDate *date = [formatter dateFromString:dateStr];
+            [push expireAtDate:date];
+            [data removeObjectForKey:@"deliveryExpirationDate"];
+        }
+        else if ([data objectForKey:@"deliveryExpirationTime"])
+        {
+            NSString *afterTimeStr = [data objectForKey:@"deliveryExpirationTime"];
+            [push expireAfterTimeInterval:afterTimeStr];
+            [data removeObjectForKey:@"deliveryExpirationTime"];
         }
         
     }
@@ -371,7 +396,6 @@ extern "C"
     notifyUnityError("OnRegistration", error);
 }
 
-//contentAvailableがfalseの時に実行される
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
     if([userInfo objectForKey:@"aps"]){
@@ -381,36 +405,6 @@ extern "C"
             [aps removeObjectForKey:@"sound"];
             [beforeUserInfo setObject:aps forKey:@"aps"];
             userInfo = (NSMutableDictionary *)beforeUserInfo;
-        }
-    }
-    
-    AppController_SendNotificationWithArg(kUnityDidReceiveRemoteNotification, userInfo);
-    UnitySendRemoteNotification(userInfo);//userInfoの値にNullは許容しない
-    
-    // NCMB Handle Rich Push
-    if ([userInfo.allKeys containsObject:@"com.nifty.RichUrl"])
-    {
-        if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
-        {
-            [NCMBPush handleRichPush:userInfo];
-        }
-    }
-    
-    if(useAnalytics){
-        [NCMBAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
-    }
-}
-
-//contentAvailableがtrueの時に実行される
-- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
-    if([userInfo objectForKey:@"aps"]){
-        if ([[(NSDictionary *)[userInfo objectForKey:@"aps"] objectForKey:@"sound"] isEqual:[NSNull null]]) {
-            NSMutableDictionary *beforeUserInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
-            NSMutableDictionary *aps = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"aps"]];
-            [aps removeObjectForKey:@"sound"];
-            [beforeUserInfo setObject:(NSDictionary *)aps forKey:@"aps"];
-            userInfo = (NSDictionary *)beforeUserInfo;
         }
     }
     

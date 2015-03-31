@@ -179,22 +179,25 @@ public class NCMBPushProxy
 	    if (dialog) {
 	    	push.setDialog(dialog);
 	    }
-	    
-	    if(!data.isNull ("contentAvailable")){
-	    	boolean contentAvailable = data.getBoolean("contentAvailable");
-	    	boolean targetAndroidOnly = false; 
-	    	
-			if (!data.isNull ("target")) {
-				JSONArray array = data.getJSONArray("target");
-				if(array.length() == 1){
-					for(int i=0; i<1;i++){
-						if(array.getString(i).equals("android")){
-							targetAndroidOnly = true; 
-						}
+	    //Get target
+	    boolean targetAndroidOnly = false; 
+		if (!data.isNull ("target")) {
+			JSONArray array = data.getJSONArray("target");
+			if(array.length() == 1){
+				for(int i=0; i<1;i++){
+					if(array.getString(i).equals("android")){
+						targetAndroidOnly = true; 
 					}
 				}
 			}
-			
+		}
+		//Set Sound
+		if(targetAndroidOnly == false){
+			push.put("sound","default");
+		}
+	    
+	    if(!data.isNull ("contentAvailable")){
+	    	boolean contentAvailable = data.getBoolean("contentAvailable");		
 	    	if(contentAvailable == true && targetAndroidOnly == false){
 	    		//contentAvailableとincrementBadgeFlagは同時に設定出来ない
 	    		//incrementBadgeFlagのデフォルトがtrueのため、falseを指定
@@ -226,6 +229,21 @@ public class NCMBPushProxy
 			date.setTime(date.getTime() + delayByMilliseconds);
 			push.setDeliveryTime(date);
 		}
+	    
+        // Set Delivery Expiration Time
+        if(!data.isNull ("deliveryExpirationDate")){
+			String dateString = data.getString("deliveryExpirationDate");
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+			Date date = sdf.parse(dateString);
+			push.put("deliveryExpirationDate", date);
+			data.remove("deliveryExpirationDate");
+        }
+        else if (!data.isNull ("deliveryExpirationTime"))
+        {
+        	String dateTime = data.getString("deliveryExpirationTime");
+        	push.setExpirationTimeInterval(dateTime);
+        	data.remove("deliveryExpirationTime");
+        }
     }
     
 	

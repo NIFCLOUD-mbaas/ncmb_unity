@@ -170,16 +170,16 @@ namespace NCMB
 			if (usePush) {
 				if (!getLocation) {
 					#if UNITY_ANDROID
-					NCMBPush.Register (androidSenderId, useAnalytics);
+						NCMBPush.Register (androidSenderId, useAnalytics);
 					#elif UNITY_IOS
-					NCMBPush.Register (useAnalytics);
+						NCMBPush.Register (useAnalytics);
 					#endif
 				} else {
 					#if UNITY_ANDROID
-					//not Analytics
-					NCMBPush.RegisterWithLocation (androidSenderId);
+						//not Analytics
+						NCMBPush.RegisterWithLocation (androidSenderId);
 					#elif UNITY_IOS
-					NCMBPush.RegisterWithLocation ();
+						NCMBPush.RegisterWithLocation ();
 					#endif
 				}
 			}
