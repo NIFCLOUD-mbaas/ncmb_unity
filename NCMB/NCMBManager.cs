@@ -38,7 +38,7 @@ namespace NCMB
 
 		#region Delegate
 			/// <summary>
-		/// シーンを跨いでGameObjectを利用します。
+			/// シーンを跨いでGameObjectを利用します。
 			/// </summary>
 			public virtual void Awake ()
 			{
