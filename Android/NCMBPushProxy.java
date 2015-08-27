@@ -65,9 +65,7 @@ public class NCMBPushProxy
 		NCMBPush.closeRichPush();
 	}
 	
-	public static void initialize(String _applicationKey, String _clientKey) {
-		final String applicationKey = _applicationKey;
-		final String clientKey = _clientKey;
+	public static void initialize(final String applicationKey, final String clientKey) {
 		// Looper prepare
 		UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
 			public void run() {
@@ -76,10 +74,7 @@ public class NCMBPushProxy
 		});
 	}
 	
-	public static void registerNotification(String _senderId,boolean _analytics) {
-		// Sender Id
-		final String senderId = _senderId;
-		
+	public static void registerNotification(final String senderId, boolean _analytics) {
 		// analytics flag
 		analytics = _analytics;
 		
@@ -94,10 +89,7 @@ public class NCMBPushProxy
 	}
 	
 	//_analytics未対応
-	public static void registerNotificationWithLocation(String _senderId) {
-		// Sender Id
-		final String senderId = _senderId;
-		
+	public static void registerNotificationWithLocation(final String senderId) {
 		// Looper prepare
 		UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
 			  public void run() {
@@ -123,9 +115,7 @@ public class NCMBPushProxy
 			});
 	}
 	
-	public static void subscribe(String _channel) {
-		// Sender Id
-		final String channel = _channel;
+	public static void subscribe(final String channel) {
 		// Looper prepare
 		UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
 			public void run() {
@@ -134,12 +124,7 @@ public class NCMBPushProxy
 		});
 	}
 	
-	public static void sendPush(String _json, String _message, int _delayByMilliseconds, boolean _dialog) {
-		// Sender Id
-		final String json = _json;
-		final String message = _message;
-		final int delayByMilliseconds = _delayByMilliseconds;
-		final boolean dialog = _dialog;
+	public static void sendPush(final String json, final String message, final int delayByMilliseconds, final boolean dialog) {
 		// Looper prepare
 		UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
 			public void run() {
@@ -301,11 +286,8 @@ public class NCMBPushProxy
 		});
 	}
 	
-	private static void getRegistrationId(NCMBInstallation _installation, String _senderId)
+	private static void getRegistrationId(final NCMBInstallation installation, String senderId)
 	{
-		final NCMBInstallation installation = _installation;
-		final String senderId = _senderId;
-		
 		installation.getRegistrationIdInBackground(senderId, new RegistrationCallback() {
 		    @Override
 		    public void done(NCMBException e) {
