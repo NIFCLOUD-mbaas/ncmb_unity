@@ -52,7 +52,7 @@ public class NCMBPushProxy
 		    Intent intent = UnityPlayer.currentActivity.getIntent();
 		    
 		    // Set analytics
-		    if(analytics == true){
+		    if(analytics){
 		    	//開封通知がtrueかつintentにpush.IDが入っていた場合のみ開封通知実行する
 		    	NCMBAnalytics.trackAppOpened(intent);
 		    }
@@ -192,13 +192,13 @@ public class NCMBPushProxy
 			}
 		}
 		//Set Sound
-		if(targetAndroidOnly == false){
+		if(!targetAndroidOnly){
 			push.put("sound","default");
 		}
 	    
 	    if(!data.isNull ("contentAvailable")){
 	    	boolean contentAvailable = data.getBoolean("contentAvailable");		
-	    	if(contentAvailable == true && targetAndroidOnly == false){
+	    	if(contentAvailable && !targetAndroidOnly){
 	    		//contentAvailableとincrementBadgeFlagは同時に設定出来ない
 	    		//incrementBadgeFlagのデフォルトがtrueのため、falseを指定
 	    		data.put("badgeIncrementFlag", false);
