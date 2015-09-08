@@ -96,8 +96,7 @@ extern "C"
         [currentInstallation saveInBackgroundWithBlock:^(NSError *error) {
             if(!error){
                 //端末情報の登録が成功した場合の処理
-                notifyUnity("OnRegistration", "");
-                
+                notifyUnity("OnRegistration", "");                
                 afterLaunch();
             } else {
                 //端末情報の登録が失敗した場合の処理
