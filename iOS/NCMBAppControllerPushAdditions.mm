@@ -32,13 +32,8 @@
 #import <OpenGLES/ES2/glext.h>
 
 #include "CrashReporter.h"
-#if UNITY_VERSION >= 500
 #include "Classes/UI/OrientationSupport.h"
 #include "Unity/InternalProfiler.h"
-#else
-#include "iPhone_OrientationSupport.h"
-#include "iPhone_Profiler.h"
-#endif
 
 #include "UI/Keyboard.h"
 #include "UI/UnityView.h"
