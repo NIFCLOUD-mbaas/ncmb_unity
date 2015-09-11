@@ -32,8 +32,13 @@
 #import <OpenGLES/ES2/glext.h>
 
 #include "CrashReporter.h"
+#if UNITY_VERSION >= 500
 #include "Classes/UI/OrientationSupport.h"
 #include "Unity/InternalProfiler.h"
+#else
+#include "iPhone_OrientationSupport.h"
+#include "iPhone_Profiler.h"
+#endif
 
 #include "UI/Keyboard.h"
 #include "UI/UnityView.h"
@@ -96,7 +101,8 @@ extern "C"
         [currentInstallation saveInBackgroundWithBlock:^(NSError *error) {
             if(!error){
                 //端末情報の登録が成功した場合の処理
-                notifyUnity("OnRegistration", "");                
+                notifyUnity("OnRegistration", "");
+                
                 afterLaunch();
             } else {
                 //端末情報の登録が失敗した場合の処理
