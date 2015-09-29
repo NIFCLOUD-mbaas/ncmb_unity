@@ -163,6 +163,15 @@ namespace NCMB.Internal
 					_checkInvalidSessionToken (error.ErrorCode);
 				}
 
+				//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
+				if (responseData != null) {
+					if(responseData != Regex.Unescape(responseData)){
+						UnityEngine.Debug.Log ("Unescape start."+responseData);
+						responseData = Regex.Unescape (responseData);
+						UnityEngine.Debug.Log ("Unescape finish."+responseData);
+					}
+				}
+
 				//レスポンスシグネチャのチェック
 				if (NCMBSettings._responseValidationFlag && httpResponse != null) {
 
@@ -235,6 +244,10 @@ namespace NCMB.Internal
 		/// </summary>
 		private HttpWebRequest _returnRequest ()
 		{
+			//URLをエンコード
+			var uri = new Uri(_url);
+			_url = uri.AbsoluteUri;
+
 			HttpWebRequest req = (HttpWebRequest)WebRequest.Create (_url); //デフォルトの生成
 			_makeTimeStamp (); //タイムスタンプの生成
 			req.Timeout = REQUEST_TIME_OUT;
