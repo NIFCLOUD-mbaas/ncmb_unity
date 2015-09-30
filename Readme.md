@@ -24,6 +24,7 @@
 
 - ニフティクラウド mobile backend Android SDK v1.5.4
 - ニフティクラウド moible backend iOS SDK v2.1.0（framework形式）
+- Google Play Serivce SDK
 
 ## 動作環境
 
