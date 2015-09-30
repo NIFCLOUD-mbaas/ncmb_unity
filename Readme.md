@@ -18,6 +18,19 @@
 アカウント作成後のSDK導入手順については、
 [クイックスタート](http://mb.cloud.nifty.com/doc/quickstart_unity.html)をご覧ください。
 
+## 依存ライブラリ
+
+プッシュ通知機能を利用する場合は、以下のライブラリが必要です
+
+- ニフティクラウド mobile backend Android SDK v1.5.4
+- ニフティクラウド moible backend iOS SDK v2.1.0（framework形式）
+
+## 動作環境
+
+- Unity 4.6 / Unity 5.2
+- Android 4.x〜5.x
+- iOS 6.x〜9.x
+
 ## ライセンス
 
 このSDKのライセンスはApache License Version 2.0に従います。
