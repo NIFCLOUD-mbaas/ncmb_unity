@@ -166,9 +166,7 @@ namespace NCMB.Internal
 				//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
 				if (responseData != null) {
 					if(responseData != Regex.Unescape(responseData)){
-						UnityEngine.Debug.Log ("Unescape start."+responseData);
 						responseData = Regex.Unescape (responseData);
-						UnityEngine.Debug.Log ("Unescape finish."+responseData);
 					}
 				}
 
