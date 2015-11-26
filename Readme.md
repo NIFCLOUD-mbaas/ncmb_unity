@@ -16,14 +16,14 @@
 [ニフティクラウド mobile backend](http://mb.cloud.nifty.com)のサービスサイトからアカウント登録を行ってください。
 
 アカウント作成後のSDK導入手順については、
-[クイックスタート](http://mb.cloud.nifty.com/doc/quickstart_unity.html)をご覧ください。
+[クイックスタート](http://mb.cloud.nifty.com/doc/current/introduction/quickstart_unity.html)をご覧ください。
 
 ## 依存ライブラリ
 
-プッシュ通知機能を利用する場合は、以下のライブラリが必要です
+プッシュ通知機能を利用する場合は、以下のライブラリが必要です。
+(NCMB.package内部に含まれているので、別途用意する必要はありません。)
 
-- ニフティクラウド mobile backend Android SDK v1.5.4
-- ニフティクラウド moible backend iOS SDK v2.1.0（framework形式）
+- Android Support Library
 - Google Play Serivce SDK
 
 ## 動作環境
@@ -39,5 +39,5 @@
 ## 参考URL集
 
 - [ニフティクラウド mobile backend](http://mb.cloud.nifty.com)
-- [ドキュメント](http://mb.cloud.nifty.com/doc)
+- [ドキュメント](http://mb.cloud.nifty.com/doc/current)
 - [ユーザーコミュニティ](https://github.com/NIFTYCloud-mbaas/UserCommunity)
