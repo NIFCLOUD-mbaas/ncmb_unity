@@ -162,6 +162,7 @@ namespace  NCMB
 		/// <summary>
 		/// 現在の配信端末情報を取得します。
 		/// </summary>
+		/// <returns>配信端末情報 </returns>
 		public static NCMBInstallation getCurrentInstallation ()
 		{
 			NCMBInstallation currentInstallation = null;
