@@ -13,7 +13,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  **********/
-
 using System.Collections;
 using System;
 using System.Threading;
@@ -27,7 +26,7 @@ using System.Text;
 namespace NCMB
 {
 	/// <summary>
-	/// オブジェクト操作を扱います。
+	/// オブジェクトを操作するクラスです。
 	/// </summary>
 	public class NCMBObject
 	{
@@ -76,7 +75,7 @@ namespace NCMB
 
 					return val;
 				} finally {
-					Monitor.Exit (obj);//ロック解放
+					Monitor.Exit (obj);//ロック解放。ここに書くことでtryの中でエラーが発生しても正しく解放される。
 				}
 			}
 			set {
@@ -385,7 +384,7 @@ namespace NCMB
 		internal static bool _isValidType (object value)
 		{
 			return value == null || value is string || value is NCMBObject || value is NCMBGeoPoint || value is DateTime ||
-			value is IDictionary || value is IList || value is NCMBACL || value.GetType ().IsPrimitive () || value is NCMBRelation<NCMBObject>;
+				value is IDictionary || value is IList || value is NCMBACL || value.GetType ().IsPrimitive () || value is NCMBRelation<NCMBObject>;
 		}
 		//リストの型チェックを行う
 		//RemoveRangeFromList,AddRangeToList,AddRangeUniqueToListの三カ所で使用
@@ -543,26 +542,34 @@ namespace NCMB
 					}
 					
 					
-					//取り出したローカルデータから今回の引数で渡されたオブジェクトの削除
+					//１．取り出したローカルデータから今回の引数で渡されたオブジェクトの削除
+					//例：estimatedData(result)＝{1,NCMBObject}　引数(values)={2,NCMBObject}の時,結果:{1}
 					ArrayList result = new ArrayList (value);
 					foreach (object removeObj in values) {
-						while (result.Contains (removeObj)) {
+						while (result.Contains (removeObj)) {//removeAllと同等
 							result.Remove (removeObj);
 						}
 					}
 					
-					//以下「NCMBObjectが保存されているかつ、estimatedData(result)の中の一致するNCMBObjectが消せなかった」時の処理
+					//ここから下は引数の中で「NCMBObjectが保存されているかつ、
+					//estimatedData(result)の中の一致するNCMBObjectが消せなかった」時の処理です。
+					//つまり　「上で消せなかったNCMBObject=インスタンスが違う」
+					//estimatedData(result)の中のNCMBObjectと引数のNCMBObjectがどちらもnewで作られたものなら上で消せるが、
+					//どちらかがnewでどちらかがCreateWithoutDataで作られた場合は上で消せない。
+					//そのため下の処理はobjectIdで検索をかけてobjectIdが一致するNCMBObjectの削除を行う
 					
-					//今回引数で渡されたオブジェクトからオブジェクトの削除
+					//２．今回引数で渡されたオブジェクトから１.のオブジェクトの削除
+					//例：引数(objectsToBeRemoved)＝{2,NCMBObject}　1の結果={1}の時,結果:{2,NCMBObject}
 					ArrayList objectsToBeRemoved = new ArrayList ((IList)values);
 					foreach (object removeObj2 in result) {
-						while (objectsToBeRemoved.Contains (removeObj2)) {
+						while (objectsToBeRemoved.Contains (removeObj2)) {//removeAllと同等
 							objectsToBeRemoved.Remove (removeObj2);
 						}
 					}
 					
-					//結果のリスト（引数）の中のNCMBObjectがすでに保存されている場合はobjectIdを返す
+					//３．２の結果のリスト（引数）の中のNCMBObjectがすでに保存されている場合はobjectIdを返す
 					//まだ保存されていない場合はnullを返す
+					//例：CreateWithoutDataの場合「objectIds　Value:ppmQNGZahXpO8YSV」newの場合「objectIds　Value:null」
 					HashSet<object> objectIds = new HashSet<object> ();
 					foreach (object hashSetValue in objectsToBeRemoved) {
 						if (hashSetValue is NCMBObject) {
@@ -570,7 +577,10 @@ namespace NCMB
 							objectIds.Add (valuesNCMBObject.ObjectId);
 						}
 						
-						//resultの中のNCMBObjectからobjectIdsの中にあるObjectIdと一致するNCMBObjectの削除
+						//４．resultの中のNCMBObjectからobjectIdsの中にあるObjectIdと一致するNCMBObjectの削除
+						//ここだけfor文で対応している理由は,
+						//「foreach文により要素を列挙している最中には、そのリスト(result)から要素を削除することはできない(Exception吐く)」
+						//例：上記の例の場合の結果result = {1}				
 						object resultValue;
 						for (int i = 0; i < result.Count; i++) {
 							resultValue = result [i];
@@ -713,11 +723,11 @@ namespace NCMB
 								int index = Convert.ToInt32 (existingObjectIds [objectsNCMBObject.ObjectId]);	
 								val.Insert (index, objectsValue);
 							} else {
-								//ユニークのためadd。追加する
+								//ユニークなのでadd。追加する
 								val.Add (objectsValue);
 							}
 						} else if (!val.Contains (objectsValue)) {
-							//更新時。重複していない値のみaddする
+							//更新時。基本的にこちら。重複していない値のみaddする
 							val.Add (objectsValue);
 						}
 					}
@@ -1095,7 +1105,48 @@ namespace NCMB
 		{
 			this.FetchAsync (null);
 		}
+		/*
+		private static List<string> fetchAllIds (List<NCMBObject> objects)
+		{
+			List<string> ids = new List<string> ();
+			String className = ((NCMBObject)objects [0]).ClassName;
+			String id;
+			for (int i = 0; i< objects.Count(); i++) {
+				if (!((NCMBObject)objects [i]).ClassName.Equals (className)) {
+					throw new NCMBException ("All objects should have the same class!");
+				}
+				id = ((NCMBObject)objects [i]).ObjectId;
+				if (id == null) {
+					throw new NCMBException ("All objects must exist on the server!");
+				}
+				ids.Add (id);
+			}
+			return ids;
+		}
+		*/
+		/*
+		/// <summary>
+		/// 非同期処理で複数オブジェクトの取得を行います。<br/>
+		/// 通信結果を受け取るために必ずコールバックを設定を行います。
+		/// </summary>
+		/// <param name="objects">取得するオブジェクトのリスト</param>
+		/// <param name="callback">コールバック</param>
+		public static void FetchAllAsync<T> (List<NCMBObject> objects, NCMBQueryCallback<NCMBObject> callback)
+		{
 
+			if (objects.Count == 0) {
+				//return new List<NCMBObject>();
+				callback (new List<NCMBObject> (), null);
+				return;
+			}
+			List<string> ids = fetchAllIds (objects);
+			NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject> (((NCMBObject)objects [0]).ClassName);
+			query.WhereContainedIn ("objectId", ids);
+			query.FindAsync (callback);
+			return;
+		
+		}
+		*/
 		/// <summary>
 		/// オブジェクトに指定したkeyが、存在しているかの判断を行います。
 		/// </summary>
@@ -1171,7 +1222,8 @@ namespace NCMB
 						this.serverData [pair.Key] = valueObj; 
 					}
 				}
-					
+
+				//この処理を上の処理に持っていくと不具合が発生
 				//dataAvailabilityにキー"acl"を設定前にresponseDicからRemoveされThisのGetのチェックでエラー
 				if (responseDic.TryGetValue ("acl", out value)) {//今回はなし
 					NCMBACL acl = NCMBACL._createACLFromJSONObject ((Dictionary<string,object>)value);
@@ -1200,7 +1252,7 @@ namespace NCMB
 					this._updateLatestEstimatedData (); //add only to update the estimate data save process
 
 				} else {
-					//通信失敗時の処理。追加した空の履歴データにデータが入っていればマージする
+					//通信失敗時の処理。追加した空の履歴データにデータが入っていればマージする。チケット#34927参照
 					LinkedListNode<IDictionary<string, INCMBFieldOperation>> linkedListNode = this.operationSetQueue.Find (operationBeforeSave);
 					IDictionary<string, INCMBFieldOperation> value = linkedListNode.Next.Value;
 					this.operationSetQueue.Remove (linkedListNode);
@@ -1383,7 +1435,7 @@ namespace NCMB
 			
 		}
 		//create json from this object data
-		private string _toJsonDataForDataFile ()
+		internal string _toJsonDataForDataFile ()
 		{
 			string jsonString = "";
 			object obj;
@@ -1411,7 +1463,56 @@ namespace NCMB
 			return jsonString;
 		
 		}
-
+		/*
+		private void printLog (string debugString1, string debugString2, string debugString3)
+		{
+			//NCMBDebug.Log ("[" + debugString1 + "] [ClassName] :" + this.ClassName);
+			//NCMBDebug.Log ("[" + debugString1 + "] [OperationSetQueue] count ：" + operationSetQueue.Count);
+			int i = 1;
+			foreach (IDictionary<string, INCMBFieldOperation> o in operationSetQueue) {
+				foreach (KeyValuePair<string, INCMBFieldOperation> pair in o) {
+					//NCMBDebug.Log ("[" + debugString1 + "] [OperationSetQueue][" + i + "]" + "KEY:" + pair.Key + "　VALUE:" + pair.Value);
+				}
+				i++;
+			}
+			foreach (KeyValuePair<string, object> pair in estimatedData) {
+				//NCMBDebug.Log ("[" + debugString1 + "] [estimatedData]：" + "KEY:" + pair.Key + "　VALUE:" + pair.Value);
+			}
+			foreach (KeyValuePair<string, object> pair in serverData) {
+				//NCMBDebug.Log ("[" + debugString1 + "] [ServerData]：" + "KEY:" + pair.Key + "　VALUE:" + pair.Value);
+			}
+			foreach (KeyValuePair<string, INCMBFieldOperation > pair in _currentOperations) {
+				//NCMBDebug.Log ("[" + debugString1 + "] [_currentOperations]：" + "KEY:" + pair.Key + "　VALUE:" + pair.Value);
+			}
+			foreach (KeyValuePair<string, bool> pair in dataAvailability) {
+				//NCMBDebug.Log ("[" + debugString1 + "] [dataAvailability]：" + "KEY:" + pair.Key + "　VALUE:" + pair.Value);
+			}
+		}
+		
+		private void printLogObj (string printString1, string printString2)
+		{
+			//NCMBDebug.Log ("[" + printString1 + "]");
+			//NCMBDebug.Log ("[" + printString1 + "] [" + printString2 + "] _dirty : " + this._dirty);
+			//NCMBDebug.Log ("[" + printString1 + "] [" + printString2 + "] _objectId : " + this._objectId);
+			//NCMBDebug.Log ("[" + printString1 + "] [" + printString2 + "] _createDate : " + this._createDate);
+			//NCMBDebug.Log ("[" + printString1 + "] [" + printString2 + "] _updateDate : " + this._updateDate);
+			
+		}
+		
+		internal static void printLogConnectBefore (string printString, string type, string url, string content)
+		{
+			//NCMBDebug.Log ("[" + printString + "] type: " + type);
+			//NCMBDebug.Log ("[" + printString + "] url: " + url);
+			//NCMBDebug.Log ("[" + printString + "] content: " + content);
+		}
+		
+		internal static void printLogConnectAfter (string printString, string statusCode, string responseData, string error)
+		{		
+			//NCMBDebug.Log ("[" + printString + "] Status Code: " + statusCode);
+			//NCMBDebug.Log ("[" + printString + "] Response data: " + responseData);
+			//NCMBDebug.Log ("[" + printString + "] Error: " + error);
+		}
+		*/
 		void _setDefaultValues ()
 		{
 			if (NCMBACL._getDefaultACL () != null) {			

@@ -24,12 +24,17 @@ using System.Threading;
 namespace NCMB.Internal
 {
 	/// <summary>
-	/// 拡張メソッド用のクラスです
+	/// 拡張メソッド専用のクラスです
+	/// 「拡張メソッドは非ジェネリック静的クラスで定義する」が仕様なので作成
+	/// 今後追加する拡張メソッドはここに記載してください
 	/// </summary>
 	internal static class ExtensionsClass
 	{
 		/// <summary>
-		/// ライブラリ内の指定した型の情報を取得します。 
+		/// 以下の二つのメソッドは型チェックで用いる
+		/// GetTypeInfoはライブラリ内の指定した型の情報を取得します。 
+		/// 拡張メソッドの定義の仕方ですが、 以下のように、 
+		/// 静的クラス中に、 第一引数に this キーワードを修飾子として付けた static メソッドを書きます。 
 		/// </summary>
 		public static Type GetTypeInfo (this Type t)
 		{
@@ -38,7 +43,7 @@ namespace NCMB.Internal
 
 		/// <summary>
 		/// Type がプリミティブ型の 1 つである場合は true。それ以外の場合は false。
-		/// 下記の型チェック
+		/// 下記の型チェック時
 		/// Boolean、Int16、UInt16、Int32、UInt32、Int64、UInt64、IntPtr、UIntPtr、Char、Double、
 		/// </summary>
 		internal static bool IsPrimitive (this Type type)

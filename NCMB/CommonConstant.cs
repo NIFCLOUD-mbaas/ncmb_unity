@@ -1,4 +1,4 @@
-/*******
+﻿/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,9 +39,9 @@ namespace NCMB.Internal
 		//service
 		public static readonly string DOMAIN = "mb.api.cloud.nifty.com";//ドメイン
 		public static readonly string DOMAIN_URL = "https://mb.api.cloud.nifty.com";//ドメインのURL
-
+		
 		public static readonly string API_VERSION = "2013-09-01";//APIバージョン
-		public static readonly string SDK_VERSION = "1.1.4"; //SDKバージョン
+		public static readonly string SDK_VERSION = "2.0.0"; //SDKバージョン
 		//DEBUG LOG Setting: NCMBDebugにてdefine設定をしてください
 	}
 }

@@ -17,6 +17,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
 
@@ -24,11 +25,12 @@ namespace NCMB.Internal
 {
 	internal class Platform
 	{
-
+		//internal static int ApiTimeout;
 		private static readonly ReaderWriterLockSlim QueueLock;
 		private static readonly Queue<Action> Queue;
 		static Platform ()
 		{
+			//WWWRequestLooper.ApiTimeout = 30;
 			Platform.QueueLock = new ReaderWriterLockSlim ();
 			Platform.Queue = new Queue<Action> ();
 		}

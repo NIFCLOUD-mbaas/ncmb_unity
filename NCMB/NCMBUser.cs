@@ -28,7 +28,7 @@ namespace  NCMB
 {
 
 	/// <summary>
-	/// 会員管理操作を扱います。
+	/// 会員管理を操作するクラスです。
 	/// </summary>
 	[NCMBClassName("user")]
 	public class NCMBUser : NCMBObject

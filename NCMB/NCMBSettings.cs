@@ -1,4 +1,4 @@
-/*******
+﻿/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +18,12 @@ using System.Collections;
 using System;
 using UnityEngine;
 using NCMB.Internal;
+using System.Collections.Generic;
 
 namespace NCMB
 {
 	/// <summary>
-	/// 初期設定を扱います。
+	/// 初期設定を操作するクラスです。
 	/// </summary>
 	public class NCMBSettings : MonoBehaviour
 	{
@@ -64,7 +65,8 @@ namespace NCMB
 			responseValidation = false;
 		//Current user
 		private static string _currentUser = null;
-		internal static string filePath;
+		internal static string filePath = "";
+		internal static string currentInstallationPath = "";
 
 		/// <summary>
 		/// Current userの取得、または設定を行います。 
@@ -141,14 +143,12 @@ namespace NCMB
 		/// </summary>
 		/// <param name="applicationKey">アプリケーションキー</param>
 		/// <param name="clientKey">クライアントキー</param>
-		private static void Initialize (String applicationKey, String clientKey)
+		public static void Initialize (String applicationKey, String clientKey)
 		{
 			// アプリケーションキーを設定
 			_applicationKey = applicationKey;
 			// クライアントキーを設定
 			_clientKey = clientKey;
-			// Native Initialize
-			NCMBPush.Init (applicationKey, clientKey);
 		}
 
 		/// <summary>
@@ -168,18 +168,20 @@ namespace NCMB
 
 			// Register
 			if (usePush) {
+				//Installation基本情報を取得
+				NCMBManager.CreateInstallationProperty ();
 				if (!getLocation) {
 					#if UNITY_ANDROID
-						NCMBPush.Register (androidSenderId, useAnalytics);
+					NCMBPush.Register (androidSenderId);
 					#elif UNITY_IOS
-						NCMBPush.Register (useAnalytics);
+					NCMBPush.Register (useAnalytics);
 					#endif
 				} else {
 					#if UNITY_ANDROID
-						//not Analytics
-						NCMBPush.RegisterWithLocation (androidSenderId);
+					//not Analytics
+					NCMBPush.RegisterWithLocation (androidSenderId);
 					#elif UNITY_IOS
-						NCMBPush.RegisterWithLocation ();
+					NCMBPush.RegisterWithLocation ();
 					#endif
 				}
 			}
@@ -206,11 +208,10 @@ namespace NCMB
 				DontDestroyOnLoad (base.gameObject);
 				NCMBSettings.Initialize (this.applicationKey, this.clientKey);
 				//NCMBSettings.RegisterPush(this.usePush, this.androidSenderId, this.getLocation);
-				NCMBSettings.RegisterPush (this.usePush, this.useAnalytics, this.androidSenderId, false);
 				filePath = Application.persistentDataPath;
+				currentInstallationPath = filePath + "/currentInstallation";
+				NCMBSettings.RegisterPush (this.usePush, this.useAnalytics, this.androidSenderId, false);
 				base.StartCoroutine (Platform.RunLoop ());
-			} else {
-				Destroy (base.gameObject);
 			}
 		}
 	}

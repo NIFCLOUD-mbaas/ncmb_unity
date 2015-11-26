@@ -14,7 +14,7 @@
  limitations under the License.
  **********/
 
-package com.nifty.cloud.mb;
+package com.nifty.cloud.mb.ncmbgcmplugin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity 
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		NCMBAnalytics.trackAppOpened(getIntent());
+//		NCMBAnalytics.trackAppOpened(getIntent());
 		
 		try {
 			this._proxyHelper = new ActivityProxyObjectHelper(this);
