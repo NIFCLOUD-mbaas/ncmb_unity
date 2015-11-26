@@ -68,23 +68,6 @@ namespace NCMB
 		// <summary> 位置情報失敗。</summary>
 		//public delegate void OnGetLocationFailedDelegate(string errorMessage);
 
-
-		/// <summary>
-		/// 端末登録後のイベントリスナーを登録します。
-		/// </summary>
-		static public void OnRegistration (OnRegistrationDelegate callback)
-		{
-			onRegistration += callback;
-		}
-
-		/// <summary>
-		/// プッシュ受信後のイベントリスナーを登録します。
-		/// </summary>
-		static public void OnNotificationReceived (OnNotificationReceivedDelegate callback)
-		{
-			onNotificationReceived += callback;
-		}
-
 		/// <summary> 端末登録後のイベントリスナーです。</summary>
 		public static OnRegistrationDelegate onRegistration;
 		/// <summary> メッセージ受信後のイベントリスナーです。</summary>
