@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ using System.Threading;
 namespace NCMB
 {
 	/// <summary>
-	/// クエリ操作を扱います。
+	/// クエリを操作するクラスです。
 	/// </summary>
 	public class NCMBQuery<T> where T : NCMBObject
 	{
@@ -79,7 +79,7 @@ namespace NCMB
 				this._limit = value;
 			}
 		}
-	
+
 		/// <summary>
 		/// クラス名の取得を行います。
 		/// </summary>
@@ -176,7 +176,7 @@ namespace NCMB
 			this._order.Add (key);
 			return this;
 		}
-		
+
 		/// <summary>
 		/// 降順条件の追加を行います。<br/>
 		/// 複数のソート条件を使用する場合はこちらを使用します。
@@ -326,7 +326,7 @@ namespace NCMB
 
 
 		//現状WhereNotContainedInと全く同じ機能のためコメントアウトしています
-		/*
+		/*		
 		/// <summary>
 		/// いずれも含まれない。
 		/// </summary>
@@ -401,7 +401,7 @@ namespace NCMB
 		{
 			this._include.Add (key);
 		}
-	
+
 		/// <summary>
 		/// 指定位置から近い順にオブジェクト取得を行います。
 		/// </summary>
@@ -534,7 +534,7 @@ namespace NCMB
 			this._where [key] = whereValue;
 			NCMBDebug.Log ("【_addCondition】where : " + Json.Serialize (this._where));
 		}
-		
+
 		/// <summary>
 		/// クエリにマッチするオブジェクトを取得を行います。<br/>
 		/// 通信結果を受け取るために必ずコールバックを設定を行います。
@@ -621,6 +621,10 @@ namespace NCMB
 						obj = new NCMBUser ();
 					} else if (resultClassName.Equals ("role")) {
 						obj = new NCMBRole ();
+					} else if (resultClassName.Equals ("installation")) {
+						obj = new NCMBInstallation ();
+					} else if (resultClassName.Equals ("push")) {
+						obj = new NCMBPush ();
 					} else {
 						obj = new NCMBObject (resultClassName);
 					}
@@ -718,7 +722,7 @@ namespace NCMB
 				beforeJsonData ["count"] = 1;// カウント条件を追加する
 
 				url = _makeWhereUrl (url, beforeJsonData);//urlにパラメータDictionaryを変換して結合
-		
+
 				ConnectType type = ConnectType.GET;//メソッドタイプの設定
 				//通信処理
 				NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
@@ -746,7 +750,7 @@ namespace NCMB
 			}).BeginInvoke ((IAsyncResult r) => {
 			}, null);
 		}
-			
+
 		//beforejsonDataの各値をJSON化→エンコードしurlに結合する
 		private string _makeWhereUrl (string url, Dictionary<string, object> beforejsonData)
 		{
@@ -885,6 +889,16 @@ namespace NCMB
 					Dictionary<string , object> realData = query._getFindParams ();
 					realData ["where"] = realData ["where"];
 					jsonAfter [pair.Key] = realData;
+				} else if (pair.Value is NCMBQuery<NCMBInstallation>) {
+					NCMBQuery<NCMBInstallation> query = (NCMBQuery<NCMBInstallation>)pair.Value;
+					Dictionary<string , object> realData = query._getFindParams ();
+					realData ["where"] = realData ["where"];
+					jsonAfter [pair.Key] = realData;
+				} else if (pair.Value is NCMBQuery<NCMBPush>) {
+					NCMBQuery<NCMBPush> query = (NCMBQuery<NCMBPush>)pair.Value;
+					Dictionary<string , object> realData = query._getFindParams ();
+					realData ["where"] = realData ["where"];
+					jsonAfter [pair.Key] = realData;
 				} else if (pair.Value is IDictionary) {
 					jsonAfter [pair.Key] = _encodeSubQueries (pair.Value);
 				} else {
@@ -923,10 +937,10 @@ namespace NCMB
 				throw new ArgumentException ("Not class name error. Please be sure to specify the class name.");
 			} else if (className.Equals ("push")) {
 				// プッシュ検索API
-				//url = new NCMBPush().getBaseUrl();
+				url = new NCMBPush ()._getBaseUrl ();
 			} else if (className.Equals ("installation")) {
 				// 配信端末検索API
-				//url = new NCMBInstallation().getBaseUrl();
+				url = new NCMBInstallation ()._getBaseUrl ();
 			} else if (className.Equals ("file")) {
 				// ファイル検索API
 				//url = new NCMBFile().getBaseUrl();
@@ -937,7 +951,6 @@ namespace NCMB
 			} else if (className.Equals ("role")) {
 				// ロール検索API
 				url = new NCMBRole ()._getBaseUrl ();
-				//url = new NCMBRole().getBaseUrl();
 			} else {
 				// オブジェクト検索API
 				url = new NCMBObject (_className)._getBaseUrl ();

@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 namespace NCMB
 {
 	/// <summary>
-	/// ロール操作を扱います。
+	/// ロールを操作するクラスです。
 	/// </summary>
 	[NCMBClassName("role")]
 	public class NCMBRole : NCMBObject

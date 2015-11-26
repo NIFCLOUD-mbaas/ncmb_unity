@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 
+//自作したDebugクラス
+//DebugでラッピングするとすべてのDebugがラッピングされるためNCMBDebugで作成
 //ログを消したい時はNCMBDebugクラスの#define DEBUGをコメントアウトしてください
 namespace NCMB.Internal
 {

@@ -23,7 +23,7 @@ using NCMB.Internal;
 namespace NCMB
 {
 	/// <summary>
-	/// リレーション操作を扱います。
+	/// リレーションを操作するクラスです。
 	/// </summary>
 	public class NCMBRelation<T> where T : NCMBObject
 	{
