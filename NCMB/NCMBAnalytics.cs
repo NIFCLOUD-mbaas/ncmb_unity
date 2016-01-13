@@ -70,7 +70,11 @@ namespace  NCMB
 				});    
 
 				#if UNITY_IOS
-				UnityEngine.iOS.NotificationServices.ClearRemoteNotifications ();
+					#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+					NotificationServices.ClearRemoteNotifications ();
+					#else
+					UnityEngine.iOS.NotificationServices.ClearRemoteNotifications ();
+					#endif
 				#endif
 
 			}

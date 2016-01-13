@@ -19,7 +19,7 @@ package com.nifty.cloud.mb.ncmbgcmplugin;
 
 import android.os.Bundle;
 
-public class MyCustomService extends NCMBGcmListenerService {
+public class NCMBDialogListenerService extends NCMBGcmListenerService {
 
     @Override
     public void onMessageReceived(String from, Bundle bundleData) {

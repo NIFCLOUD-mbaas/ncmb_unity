@@ -69,23 +69,18 @@ public class GCMInit extends Activity {
                     UnityPlayer.currentActivity.startService(intent);
                 }
             });
+        } else {
+            UnityPlayer.UnitySendMessage("NCMBManager", "OnRegistration", "This device is not supported google-play-services-APK.");
         }
     }
 
     /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
+     * GooglePlay開発者サービスが有効か確認
      */
     private static boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(UnityPlayer.currentActivity);
         if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(UnityPlayer.currentActivity, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-            }
             return false;
         }
         return true;
