@@ -115,7 +115,11 @@ namespace NCMB
 
 		void Update ()
 		{
+			#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+			if (NotificationServices.remoteNotificationCount > 0) {
+			#else
 			if (UnityEngine.iOS.NotificationServices.remoteNotificationCount > 0) {
+			#endif
 				ProcessNotification ();
 				NCMBPush push = new NCMBPush ();
 				push.ClearAll ();
@@ -125,8 +129,12 @@ namespace NCMB
 		void ProcessNotification ()
 		{
 			// Payload data dictionary
+			#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+			IDictionary dd = NotificationServices.remoteNotifications [0].userInfo;
+			#else
 			IDictionary dd = UnityEngine.iOS.NotificationServices.remoteNotifications [0].userInfo;
-
+			#endif
+			
 			// Payload key list
 			string[] kl = new string[] { 
                 "com.nifty.PushId",
@@ -155,11 +163,19 @@ namespace NCMB
 
 			// Set message as alertBody
 			if (string.IsNullOrEmpty (vl [im])) {
+				#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+				vl [im] = NotificationServices.remoteNotifications [0].alertBody;
+				#else
 				vl [im] = UnityEngine.iOS.NotificationServices.remoteNotifications [0].alertBody;
+				#endif
 			}
 
 			// Create payload
+			#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+			NCMBPushPayload pl = new NCMBPushPayload (vl [0], vl [1], vl [2], vl [3], vl [4], vl [5], vl [6], NotificationServices.remoteNotifications [0].userInfo);
+			#else
 			NCMBPushPayload pl = new NCMBPushPayload (vl [0], vl [1], vl [2], vl [3], vl [4], vl [5], vl [6], UnityEngine.iOS.NotificationServices.remoteNotifications [0].userInfo);
+			#endif
 
 			// Notify
 			if (onNotificationReceived != null) {

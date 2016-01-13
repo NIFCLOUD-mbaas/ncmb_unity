@@ -21,6 +21,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.unity3d.player.UnityPlayer;
+
 /**
  * NCMBRichPush provide dialog for rich push notification
  */
@@ -34,7 +36,7 @@ public class NCMBRichPush extends Dialog {
     private ProgressDialog progressDialog;
 
     public NCMBRichPush(Context context, String requestUrl) {
-        super(context, android.R.style.Theme_Translucent_NoTitleBar);
+        super(context, context.getResources().getIdentifier("Theme.Translucent.NoTitleBar", "style", "android"));
         this.requestUrl = requestUrl;
     }
 
@@ -105,7 +107,8 @@ public class NCMBRichPush extends Dialog {
                 NCMBRichPush.this.cancel();
             }
         });
-        Drawable closeDrawable = getContext().getResources().getDrawable(android.R.drawable.btn_dialog);
+        int btnDialog = UnityPlayer.currentActivity.getResources().getIdentifier("btn_dialog", "drawable", "android");
+        Drawable closeDrawable = getContext().getResources().getDrawable(btnDialog);
         this.closeImage.setImageDrawable(closeDrawable);
 
         this.closeImage.setVisibility(View.INVISIBLE);
