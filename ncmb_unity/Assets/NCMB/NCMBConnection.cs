@@ -69,8 +69,16 @@ namespace NCMB.Internal
 		private string _content = "";
 		//JSON化された送信データ
 		private string _sessionToken = "";
+		//domain Uri
+		private Uri _domainUri = null;
 		//コンストラクタ
 		internal NCMBConnection (String url, ConnectType method, string content, string sessionToken)
+			: this (url, method, content, sessionToken, CommonConstant.DOMAIN_URL)
+		{
+		}
+
+		//コンストラクタ
+		internal NCMBConnection (String url, ConnectType method, string content, string sessionToken, string domain)
 		{
 			this._method = method;
 			this._content = content;
@@ -78,6 +86,7 @@ namespace NCMB.Internal
 			this._sessionToken = sessionToken;
 			this._applicationKey = NCMBSettings.ApplicationKey;
 			this._clientKey = NCMBSettings.ClientKey;
+			this._domainUri = new Uri (domain);
 		}
 		//通信処理(同期通)
 		internal void Connect (HttpClientCallback callback)
@@ -158,7 +167,7 @@ namespace NCMB.Internal
 
 				//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
 				if (responseData != null) {
-					if(responseData != Regex.Unescape(responseData)){
+					if (responseData != Regex.Unescape (responseData)) {
 						responseData = Regex.Unescape (responseData);
 					}
 				}  
@@ -279,10 +288,10 @@ namespace NCMB.Internal
 		/// <summary>
 		/// リクエストの生成を行う
 		/// </summary>
-		private HttpWebRequest _returnRequest ()
+		internal HttpWebRequest _returnRequest ()
 		{
 			//URLをエンコード
-			var uri = new Uri(_url);
+			var uri = new Uri (_url);
 			_url = uri.AbsoluteUri;
 
 			HttpWebRequest req = (HttpWebRequest)WebRequest.Create (_url); //デフォルトの生成
@@ -321,7 +330,7 @@ namespace NCMB.Internal
 		private StringBuilder _makeSignatureHashData ()
 		{
 			StringBuilder data = new StringBuilder (); //シグネチャ（ハッシュ化）するデータの生成
-			String path = _url.Substring (CommonConstant.DOMAIN_URL.Length); // パス以降の設定,取得
+			String path = _url.Substring (this._domainUri.OriginalString.Length); // パス以降の設定,取得
 			String[] temp = path.Split ('?');
 			path = temp [0];
 			String parameter = null;
@@ -347,10 +356,10 @@ namespace NCMB.Internal
 			}
 			StringComparer cmp = StringComparer.Ordinal;
 			tmpAscendingList.Sort (cmp);
-			//Crate data
+			//Create data
 			data.Append (_method); //メソッド追加
 			data.Append ("\n");
-			data.Append (CommonConstant.DOMAIN); //ドメインの追加
+			data.Append (this._domainUri.Host); //ドメインの追加
 			data.Append ("\n");
 			data.Append (path); //パスの追加
 			data.Append ("\n");
@@ -395,8 +404,7 @@ namespace NCMB.Internal
 		/// <summary>
 		/// セッショントークン有効稼働かの処理を行う
 		/// </summary>
-		
-		private void _checkInvalidSessionToken (string code)
+		internal void _checkInvalidSessionToken (string code)
 		{
 			if (NCMBException.INCORRECT_HEADER.Equals (code)) {
 				if ((this._sessionToken != null) && (this._sessionToken.Equals (NCMBUser._getCurrentSessionToken ())))
