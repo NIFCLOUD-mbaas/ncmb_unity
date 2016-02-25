@@ -56,5 +56,5 @@ namespace NCMB
 	/// </summary>
 	/// <param name="data"> 通信結果</param>
 	/// <param name="error"> 通信エラー</param>
-	public delegate void NCMBExecuteCallback (byte[] data, NCMBException error);
+	public delegate void NCMBExecuteScriptCallback (byte[] data, NCMBException error);
 }

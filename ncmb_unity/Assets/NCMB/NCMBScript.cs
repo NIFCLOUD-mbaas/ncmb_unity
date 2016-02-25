@@ -82,7 +82,7 @@ namespace NCMB
 			_baseUrl = baseUrl;
 		}
 
-		public void ExecuteAsync (IDictionary<string, object> header, IDictionary<string, object> body, IDictionary<string, object> query, NCMBExecuteCallback callback)
+		public void ExecuteAsync (IDictionary<string, object> header, IDictionary<string, object> body, IDictionary<string, object> query, NCMBExecuteScriptCallback callback)
 		{
 			new AsyncDelegate (delegate {
 				//URL作成
@@ -172,7 +172,7 @@ namespace NCMB
 		}
 
 		//通信
-		internal void Connect (NCMBConnection connection, HttpWebRequest request, NCMBExecuteCallback callback)
+		internal void Connect (NCMBConnection connection, HttpWebRequest request, NCMBExecuteScriptCallback callback)
 		{
 			string responseData = null;
 			NCMBException error = null;
