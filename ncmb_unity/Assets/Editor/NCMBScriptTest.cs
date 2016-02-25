@@ -28,9 +28,10 @@ using System.Reflection;
 
 public class NCMBScriptTest
 {
-	
+	//ドキュメント記載のサンプルキー
 	static readonly string _appKey = "6145f91061916580c742f806bab67649d10f45920246ff459404c46f00ff3e56";
 	static readonly string _clientKey = "1343d198b510a0315db1c03f3aa0e32418b7a743f8e4b47cbff670601345cf75";
+	//node.jsのエンドポイント
 	static readonly string _endPoint = "http://localhost:3000/2015-09-01/script";
 
 	bool _callbackFlag = false;
