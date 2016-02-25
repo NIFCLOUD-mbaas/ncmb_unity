@@ -124,11 +124,12 @@ namespace NCMB
 				//クエリ文字列作成
 				String queryString = "?";
 				if (query != null && query.Count > 0) {
-					int count = 0;
+					int count = query.Count;
 					foreach (KeyValuePair<string, object> pair in query) {
 						queryString += pair.Key + "=" + pair.Value.ToString ();
-						if (count != 0) {
+						if (count > 1) {
 							queryString += "&";
+							--count;
 						}
 					}
 					scriptUrl += Uri.EscapeUriString (queryString);

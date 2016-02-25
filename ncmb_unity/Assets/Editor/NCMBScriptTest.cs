@@ -115,6 +115,25 @@ public class NCMBScriptTest
 		Assert.True (_callbackFlag);
 	}
 
+	[Test]
+	public void ExecuteCallbackWhenExecuteScriptTest_GET_Count ()
+	{
+		NCMBScript script = new NCMBScript ("testScript_GET.js", NCMBScript.MethodType.GET, _endPoint);
+		Dictionary<string, object> query = new Dictionary<string, object> (){ { "name", "tarou" }, { "message","hello" } };
+		script.ExecuteAsync (null, null, query, (byte[] result, NCMBException e) => {
+			if (e == null) {
+				string cmd = System.Text.Encoding.UTF8.GetString (result);
+				cmd = cmd.TrimEnd ('\0');//終端文字の削除
+				Assert.AreEqual ("count:2", cmd);
+			} else {
+				Assert.Fail (e.ErrorMessage);
+			}
+			_callbackFlag = true;
+		}); 
+
+		AwaitAsync ();
+		Assert.True (_callbackFlag);
+	}
 
 	[Test]
 	public void ExecuteCallbackWhenExecuteScriptTest_DELETE ()
