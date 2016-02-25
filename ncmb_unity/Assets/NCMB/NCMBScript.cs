@@ -13,7 +13,7 @@ namespace NCMB
 	public class NCMBScript
 	{
 		private static readonly string SERVICE_PATH = "script";
-		private static readonly string DEFAULT_SCRIPT_DOMAIN_URL = "https://logic.mb.cloud.nifty.com";
+		private static readonly string DEFAULT_SCRIPT_ENDPOINT = "https://logic.mb.cloud.nifty.com";
 		private static readonly string DEFAULT_SCRIPT_API_VERSION = "2015-09-01";
 		private string _scriptName;
 		private MethodType _method;
@@ -65,7 +65,7 @@ namespace NCMB
 		/// <param name="scriptName">スクリプト名</param>
 		/// <param name="method">HTTPメソッド</param>
 		public NCMBScript (string scriptName, MethodType method)
-			: this (scriptName, method, null)
+			: this (scriptName, method, DEFAULT_SCRIPT_ENDPOINT)
 		{
 		}
 
@@ -86,16 +86,16 @@ namespace NCMB
 		{
 			new AsyncDelegate (delegate {
 				//URL作成
-				String scriptUrl;
-				String domain;
-				if (this._baseUrl != null && this._baseUrl.Length > 0) {
-					domain = _baseUrl;
+				String endpoint = DEFAULT_SCRIPT_ENDPOINT;
+				String scriptUrl = DEFAULT_SCRIPT_ENDPOINT + "/" + DEFAULT_SCRIPT_API_VERSION + "/" + SERVICE_PATH + "/" + this._scriptName;
+				if (this._baseUrl == null || this._baseUrl.Length == 0) {
+					throw new ArgumentException ("Invalid baseUrl.");
+				} else if (!this._baseUrl.Equals (DEFAULT_SCRIPT_ENDPOINT)) {
+					//ユーザー設定時
+					endpoint = _baseUrl;
 					scriptUrl = this._baseUrl + "/" + this._scriptName;
-				} else {
-					domain = DEFAULT_SCRIPT_DOMAIN_URL;
-					scriptUrl = DEFAULT_SCRIPT_DOMAIN_URL + "/" + DEFAULT_SCRIPT_API_VERSION + "/" + SERVICE_PATH + "/" + this._scriptName;
 				}
-
+					
 				//メソッド作成
 				ConnectType type;
 				switch (_method) {
@@ -140,7 +140,7 @@ namespace NCMB
 				}; 
 
 				//コネクション作成
-				NCMBConnection connection = new NCMBConnection (scriptUrl, type, content, NCMBUser._getCurrentSessionToken (), domain);
+				NCMBConnection connection = new NCMBConnection (scriptUrl, type, content, NCMBUser._getCurrentSessionToken (), endpoint);
 				HttpWebRequest request = connection._returnRequest ();
 
 				//コンテント設定
