@@ -10,6 +10,9 @@ using System.Security.Cryptography;
 
 namespace NCMB
 {
+	/// <summary>
+	/// スクリプトを実行するクラスです。
+	/// </summary>
 	public class NCMBScript
 	{
 		private static readonly string SERVICE_PATH = "script";
@@ -26,16 +29,28 @@ namespace NCMB
 		/// </summary>
 		public enum MethodType
 		{
+			/// <summary>
+			/// POST メソッド。
+			/// </summary>
 			POST,
+			/// <summary>
+			/// PUT メソッド。
+			/// </summary>
 			PUT,
+			/// <summary>
+			/// GET メソッド。
+			/// </summary>
 			GET,
+			/// <summary>
+			/// DELETE メソッド。
+			/// </summary>
 			DELETE
 		}
 
 		/// <summary>
 		/// スクリプト名の取得、または設定を行います。
 		/// </summary>
-		/// <value>The name of the script.</value>
+		/// <value>スクリプト名</value>
 		public string ScriptName {
 			get { return this._scriptName; }
 			set { this._scriptName = value; }
@@ -53,7 +68,7 @@ namespace NCMB
 		/// <summary>
 		/// エンドポイントの取得、または設定を行います。
 		/// </summary>
-		/// <value>.メソッドタイプ</value>
+		/// <value>.エンドポイント</value>
 		public string BaseUrl {
 			get { return this._baseUrl; }
 			set { this._baseUrl = value; }
@@ -70,7 +85,8 @@ namespace NCMB
 		}
 
 		/// <summary>
-		/// コンストラクター。
+		/// コンストラクター。<br/>
+		/// スクリプトのエンドポイントを指定する場合は、こちらのコンストラクターを使用します。
 		/// </summary>
 		/// <param name="scriptName">スクリプト名</param>
 		/// <param name="method">HTTPメソッド</param>
@@ -82,6 +98,13 @@ namespace NCMB
 			_baseUrl = baseUrl;
 		}
 
+		/// <summary>
+		/// 非同期処理でスクリプトの実行を行います。
+		/// </summary>
+		/// <param name="header">リクエストヘッダー.</param>
+		/// <param name="body">リクエストボディ</param>
+		/// <param name="query">クエリパラメーター</param>
+		/// <param name="callback">コールバック</param>
 		public void ExecuteAsync (IDictionary<string, object> header, IDictionary<string, object> body, IDictionary<string, object> query, NCMBExecuteScriptCallback callback)
 		{
 			new AsyncDelegate (delegate {
