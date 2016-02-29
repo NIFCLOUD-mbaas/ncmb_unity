@@ -15,7 +15,7 @@
  **********/
 
 using System;
-using System.Collections.Generic;//List用
+using System.Collections.Generic;
 
 namespace NCMB
 {
@@ -31,22 +31,30 @@ namespace NCMB
 	/// </summary>
 	/// <param name="objects"> 取得したオブジェクトのリスト</param>
 	/// <param name="error"> 通信エラー</param>
-	public delegate void NCMBQueryCallback<T> (List<T> objects,NCMBException error) ;//findAsync用コールバック
+	public delegate void NCMBQueryCallback<T> (List<T> objects, NCMBException error) ;
+
 
 	/// <summary>
 	/// オブジェクトと通信エラーを返すコールバックです。
 	/// </summary>
 	/// <param name="obj"> 取得したオブジェクト</param>
 	/// <param name="error"> 通信エラー</param>
-	public delegate void NCMBGetCallback<T> (T obj,NCMBException error);//GetAsync用コールバック
+	public delegate void NCMBGetCallback<T> (T obj, NCMBException error);
 
 	/// <summary>
 	/// クエリにマッチするオブジェクトの数と通信エラーを返すコールバックです。
 	/// </summary>
 	/// <param name="count"> クエリにマッチするオブジェクトの数</param>
 	/// <param name="error"> 通信エラー</param>
-	public delegate void NCMBCountCallback (int count,NCMBException error);//CountAsync用コールバック
+	public delegate void NCMBCountCallback (int count, NCMBException error);
 
 	//通信後内部の処理に返すコールバックです
-	internal delegate void HttpClientCallback (int statusCode,string responseData,NCMBException e);
+	internal delegate void HttpClientCallback (int statusCode, string responseData, NCMBException e);
+
+	/// <summary>
+	/// スクリプト実行後のデータとエラーを返すコールバックです。
+	/// </summary>
+	/// <param name="data"> 通信結果</param>
+	/// <param name="error"> 通信エラー</param>
+	public delegate void NCMBExecuteScriptCallback (byte[] data, NCMBException error);
 }
