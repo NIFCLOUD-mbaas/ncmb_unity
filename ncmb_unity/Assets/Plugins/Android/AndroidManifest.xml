@@ -21,7 +21,7 @@
         android:label="@string/app_name"
         android:debuggable="true">
         <!-- <meta-data android:name="smallIcon" android:resource="@drawable/comment_icon"/> -->
-        <!-- UNITY PLAYER ACTIVITIES ( [WARNING] if use Prime31, edit 'com.nifty.cloud.mb' to 'com.prime31' at android:name of 3 these activities) -->
+        <!-- UNITY PLAYER ACTIVITIES ( [WARNING] if use Prime31, edit 'com.nifty.cloud.mb.ncmbgcmplugin' to 'com.prime31' at android:name of 3 these activities) -->
         <activity android:name="com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerProxyActivity"
             android:label="@string/app_name"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
