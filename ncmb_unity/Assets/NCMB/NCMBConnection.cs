@@ -166,20 +166,17 @@ namespace NCMB.Internal
 				}
 
 				//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
-				if (responseData != null) {
-					if (responseData != Regex.Unescape (responseData)) {
-						responseData = Regex.Unescape (responseData);
-					}
+				var unescapeResponseData = responseData;
+				if (unescapeResponseData != null && unescapeResponseData != Regex.Unescape (unescapeResponseData)) {
+					unescapeResponseData = Regex.Unescape (unescapeResponseData);	
 				}  
 
-				//レスポンスシグネチャのチェック　Flagがtureかつエラーコードが以下の三つ以外の時はチェックを行う
-				//if (NCMBSettings._responseValidationFlag && (errorCode != "E404002" && errorCode != "E405001" && errorCode != "E415001")) {
+				//レスポンスシグネチャのチェック
 				if (NCMBSettings._responseValidationFlag && httpResponse != null) {
-
 					//レスポンスシグネチャが無い場合はE100001エラー
 					if (httpResponse.Headers.GetValues (RESPONSE_SIGNATURE) != null) {
 						string responseSignature = httpResponse.Headers.GetValues (RESPONSE_SIGNATURE) [0];
-						_signatureCheck (responseSignature, ref statusCode, ref responseData, ref error);
+						_signatureCheck (responseSignature, ref statusCode, ref unescapeResponseData, ref error);
 					} else {
 						statusCode = 100;
 						responseData = "{}";
