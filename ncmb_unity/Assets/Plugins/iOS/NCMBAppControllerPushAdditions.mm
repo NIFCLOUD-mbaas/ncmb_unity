@@ -224,6 +224,7 @@ extern "C"
     const char * deviceTokenConstChar = [tokenId UTF8String];
     //Unityへデバイストークンを送り、UnityからmBaaS backendのinstallationクラスへ保存します
     notifyUnityWithClassName("NCMBManager", "onTokenReceived", deviceTokenConstChar);
+    UnitySendDeviceToken(deviceToken);
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
