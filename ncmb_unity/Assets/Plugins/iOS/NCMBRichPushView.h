@@ -22,5 +22,6 @@
 - (void) appearWebView:(UIInterfaceOrientation)interfaceOrientation url:(NSString*)richUrl;
 - (void) sizingWebView:(UIInterfaceOrientation)interfaceOrientation;
 - (void) closeWebView:(id)sender;
++ (void) handleRichPush:(NSDictionary *)userInfo;
 
 @end
