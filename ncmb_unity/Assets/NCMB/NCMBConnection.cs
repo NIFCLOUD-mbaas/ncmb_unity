@@ -123,32 +123,33 @@ namespace NCMB.Internal
 			StreamReader streamRead = null;
 
 			try {
-				//通常処理
-				httpResponse = (HttpWebResponse)req.GetResponse ();//①通信
-				streamResponse = httpResponse.GetResponseStream (); //②通信結果からResponseデータ作成
-				statusCode = (int)httpResponse.StatusCode; //③Responseデータからステータスコード取得
-				streamRead = new StreamReader (streamResponse); //④Responseデータからデータ取得
-				responseData = streamRead.ReadToEnd ();//⑤書き出したデータを全てstringに書き出し
-
+				// 通信結果取得
+				httpResponse = (HttpWebResponse)req.GetResponse ();
+				streamResponse = httpResponse.GetResponseStream ();
+				statusCode = (int)httpResponse.StatusCode; 
+				streamRead = new StreamReader (streamResponse);
+				responseData = streamRead.ReadToEnd ();
 			} catch (WebException ex) {
-
-				//API側からのエラー処理
-				using (WebResponse webResponse = ex.Response) {//①WebExceptionからWebResponseを取得
+				// 通信失敗
+				using (WebResponse webResponse = ex.Response) {
 					error = new NCMBException ();
 					error.ErrorMessage = ex.Message;
 
-					streamResponse = webResponse.GetResponseStream ();//②WebResponsからResponseデータ作成
-					streamRead = new StreamReader (streamResponse); //③Responseデータからデータ取得
-					responseData = streamRead.ReadToEnd ();//④書き出したデータを全てstringに書き出し
-
-					var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;//⑤Dictionaryに変換
-					var hashtableData = new Hashtable (jsonData);//⑥Hashtableに変換　必要？
-
-					error.ErrorCode = (hashtableData ["code"].ToString ());//⑦Hashtableから各keyのvalue取得
-					error.ErrorMessage = (hashtableData ["error"].ToString ());
-
-					httpResponse = (HttpWebResponse)webResponse;//⑧WebResponseをHttpWebResponseに変換
-					statusCode = (int)httpResponse.StatusCode;//⑨httpWebResponseからステータスコード取得
+					// mBaaSエラー
+					if (webResponse != null) {
+						// エラーのJSON書き出し
+						streamResponse = webResponse.GetResponseStream ();
+						streamRead = new StreamReader (streamResponse);
+						responseData = streamRead.ReadToEnd ();
+						var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;
+						var hashtableData = new Hashtable (jsonData);
+					
+						// エラー内容の設定
+						error.ErrorCode = (hashtableData ["code"].ToString ());
+						error.ErrorMessage = (hashtableData ["error"].ToString ());
+						httpResponse = (HttpWebResponse)webResponse;
+						statusCode = (int)httpResponse.StatusCode;
+					}
 				}
 			} finally {
 				if (httpResponse != null) {
