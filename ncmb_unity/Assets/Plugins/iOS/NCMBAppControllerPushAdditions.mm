@@ -49,7 +49,7 @@
 #include "PluginBase/AppDelegateListener.h"
 
 // For Push
-#import "NCMBPush.h"
+#include "NCMBRichPushView.h"
 #include <stdio.h>
 
 // Converts C style string to NSString
@@ -94,15 +94,6 @@ extern "C"
     
     // Save launch options for using later (after set key)
     NSDictionary * savedLaunchOptions;
-    
-    void afterLaunch()
-    {
-        // NCMB Track
-        //        [NCMBAnalytics trackAppOpenedWithLaunchOptions:savedLaunchOptions];
-        
-        // NCMB Handle Rich Push
-        [NCMBPush handleRichPush:[savedLaunchOptions objectForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"]];
-    }
     
     void registerCommon()
     {
@@ -241,7 +232,7 @@ extern "C"
     {
         if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
         {
-            [NCMBPush handleRichPush:userInfo];
+            [NCMBRichPushView handleRichPush:userInfo];
         }
     }
     

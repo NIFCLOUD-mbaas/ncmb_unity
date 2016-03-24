@@ -26,23 +26,13 @@ public class NCMBDialogPushConfiguration {
 	private int displayType;
 
 	/**
-	 * Costructor<br>
+	 * Constructor<br>
 	 * default display formati is DIALOG_DISPLAY_NONE <br>
 	 *
 	 */
 	public NCMBDialogPushConfiguration(){
 		//デフォルト非表示
 		this.displayType = DIALOG_DISPLAY_NONE;
-	}
-
-	/**
-	 * Constructor <br>
-	 *
-	 * @param displayType display format
-	 * @param filePath path of background image
-	 */
-	public NCMBDialogPushConfiguration(int displayType, String filePath){
-		this.displayType = displayType;
 	}
 
 	/**
@@ -55,9 +45,9 @@ public class NCMBDialogPushConfiguration {
 	}
 
 	/**
-	 * get the dislay format setting
+	 * get the display format setting
 	 *
-	 * @return curernt display format
+	 * @return current display format
 	 */
 	public int getDisplayType(){
 		return this.displayType;

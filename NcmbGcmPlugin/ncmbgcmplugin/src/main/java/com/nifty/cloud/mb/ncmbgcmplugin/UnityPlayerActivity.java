@@ -25,7 +25,6 @@ public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity 
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		NCMBAnalytics.trackAppOpened(getIntent());
 		
 		try {
 			this._proxyHelper = new ActivityProxyObjectHelper(this);
