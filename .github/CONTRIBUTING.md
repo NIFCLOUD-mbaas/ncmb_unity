@@ -25,7 +25,7 @@
 ## プルリクエストを作成する
 
 - プルリクエストを作成する場合は、可能な範囲でpull request templateの内容に沿って記載してください
-- プルリクエストを作成する場合は、masterブランチをターゲットに選択してください
+- プルリクエストを作成する場合は、developブランチをターゲットに選択してください
 
 # Contribute Guideline<a name="en">
 
@@ -51,4 +51,4 @@
 ## Pull Requests
 
 - Please follow pull request template as possible
-- Please select target branch to "master" branch.
+- Please select target branch to "develop" branch.
