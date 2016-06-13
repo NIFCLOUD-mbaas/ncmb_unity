@@ -6,19 +6,10 @@ using NCMB;
 
 public class NCMBObjectTest : MonoBehaviour
 {
-
-	static readonly string _appKey = "Set the test appKey";
-	static readonly string _clientKey = "Set the test clientKey";
-	bool _callbackFlag = false;
-
 	[TestFixtureSetUp]
 	public void Init ()
 	{
-		NCMBSettings.Initialize (
-			_appKey,
-			_clientKey
-		);
-		_callbackFlag = false;
+		NCMBTestSettings.Initialize ();
 	}
 
 	/**
@@ -36,7 +27,7 @@ public class NCMBObjectTest : MonoBehaviour
 				Assert.Fail (e.ErrorMessage);
 			}
 		});
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 
 		// テストデータ検索
 		NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject> ("TestClass");
@@ -47,11 +38,11 @@ public class NCMBObjectTest : MonoBehaviour
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBScriptTest.AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 
 		// テストデータ削除
 		obj.DeleteAsync ();

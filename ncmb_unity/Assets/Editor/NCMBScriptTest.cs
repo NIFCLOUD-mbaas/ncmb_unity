@@ -28,32 +28,22 @@ using System.Reflection;
 
 public class NCMBScriptTest
 {
-	//ドキュメント記載のサンプルキー
-	static readonly string _appKey = "6145f91061916580c742f806bab67649d10f45920246ff459404c46f00ff3e56";
-	static readonly string _clientKey = "1343d198b510a0315db1c03f3aa0e32418b7a743f8e4b47cbff670601345cf75";
 	//node.jsのエンドポイント
 	static readonly string _endPoint = "http://localhost:3000/2015-09-01/script";
-
-	bool _callbackFlag = false;
 
 	delegate void AsyncDelegate ();
 
 	[TestFixtureSetUp]
 	public void Init ()
 	{
-		//set sample API Key (from document)
-		NCMBSettings.Initialize (
-			_appKey,
-			_clientKey
-		);
-		_callbackFlag = false;
+		NCMBTestSettings.Initialize ();
 	}
 
 	[Test]
 	public void ReturnAPIKeyTest ()
 	{
-		Assert.AreEqual (NCMBSettings.ApplicationKey, _appKey);
-		Assert.AreEqual (NCMBSettings.ClientKey, _clientKey);
+		Assert.AreEqual (NCMBSettings.ApplicationKey, NCMBTestSettings.APP_KEY);
+		Assert.AreEqual (NCMBSettings.ClientKey, NCMBTestSettings.CLIENT_KEY);
 	}
 
 	[Test]
@@ -69,11 +59,11 @@ public class NCMBScriptTest
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	[Test]
@@ -89,11 +79,11 @@ public class NCMBScriptTest
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		}); 
 			
-		AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	[Test]
@@ -109,11 +99,11 @@ public class NCMBScriptTest
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	[Test]
@@ -129,11 +119,11 @@ public class NCMBScriptTest
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	[Test]
@@ -148,11 +138,11 @@ public class NCMBScriptTest
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	[Test]
@@ -166,11 +156,11 @@ public class NCMBScriptTest
 				Assert.AreEqual ("name must not be null.", e.ErrorMessage);
 				Assert.AreEqual (HttpStatusCode.BadRequest.ToString (), e.ErrorCode);
 			}
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	[Test]
@@ -186,46 +176,12 @@ public class NCMBScriptTest
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
-
-	// 非同期のコールバックが実行されるまで待機
-	public static void AwaitAsync ()
-	{
-		//Platformクラスを取得
-		Type platform = null;
-		foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
-			foreach (Type type in assembly.GetTypes()) {
-				if (type.Name == "Platform") {
-					platform = type;
-				}
-			}
-		}
-
-		//コールバックが実行されるか指定時間経過するまでループ
-		if (platform != null) {
-			var field = platform.GetField ("Queue", BindingFlags.NonPublic | BindingFlags.Static); 
-			Queue<Action> queue = (Queue<Action>)field.GetValue (platform);
-			DateTime loopTime = DateTime.Now.AddSeconds (15);
-			while (true) {
-				if (queue.Count >= 1) {
-					queue.Dequeue () ();
-					if (queue.Count == 0) {
-						break;
-					}
-				}
-				if (loopTime < DateTime.Now) {
-					Assert.Fail ("Infinite loop timeout.");
-					break;
-				}
-			}
-		}
-	}
-
 }
 
 
