@@ -57,4 +57,13 @@ namespace NCMB
 	/// <param name="data"> 通信結果</param>
 	/// <param name="error"> 通信エラー</param>
 	public delegate void NCMBExecuteScriptCallback (byte[] data, NCMBException error);
+
+	/// <summary>
+	/// ファイルダウンロード後のデータとエラーを返すコールバックです。
+	/// </summary>
+	/// <param name="data"> 通信結果</param>
+	/// <param name="error"> 通信エラー</param>
+	public delegate void NCMBGetFileCallback (byte[] data, NCMBException error);
+
+
 }
