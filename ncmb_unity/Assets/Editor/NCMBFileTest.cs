@@ -13,7 +13,6 @@ public class NCMBFileTest : MonoBehaviour
 	[TestFixtureSetUp]
 	public void Init ()
 	{
-		//NCMBTestSettings.Initialize ();
 		NCMBSettings.Initialize ("applicationKey", "clientKey");
 		_callbackFlag = false;
 	}
@@ -146,7 +145,7 @@ public class NCMBFileTest : MonoBehaviour
 
 		NCMBScriptTest.AwaitAsync ();
 		Assert.NotNull (getFile.FileData);
-		Assert.AreEqual ("hello", Encoding.UTF8.GetString (file.FileData));
+		Assert.AreEqual ("hello", Encoding.UTF8.GetString (getFile.FileData));
 		Assert.True (_callbackFlag);
 	}
 
@@ -214,10 +213,9 @@ public class NCMBFileTest : MonoBehaviour
 	public void FileACLTest ()
 	{
 		byte[] data = System.Text.Encoding.UTF8.GetBytes ("acl test");
-		NCMBFile file = new NCMBFile ("ACL.txt", data);
 		NCMBACL acl = new NCMBACL ();
 		acl.PublicReadAccess = true;
-		file.ACL = acl;
+		NCMBFile file = new NCMBFile ("ACL.txt", data, acl);
 		file.SaveAsync ((NCMBException error) => {
 		});
 		NCMBScriptTest.AwaitAsync ();
@@ -234,4 +232,33 @@ public class NCMBFileTest : MonoBehaviour
 		NCMBScriptTest.AwaitAsync ();
 		Assert.True (_callbackFlag);
 	}
+
+	/**
+     * - 内容：レスポンスシグネチャの検証が成功することを確認する
+     * - 結果：エラーが発生しないこと
+     */
+	[Test]
+	public void FileResponseSignatureTest ()
+	{
+		NCMBSettings.EnableResponseValidation (true);
+
+		byte[] data = System.Text.Encoding.UTF8.GetBytes ("hello");
+		NCMBFile file = new NCMBFile ("test.txt", data);
+		file.SaveAsync ((NCMBException error) => {
+			Assert.Null (error);
+		});
+		NCMBScriptTest.AwaitAsync ();
+
+		NCMBFile getFile = new NCMBFile ("test.txt");
+		getFile.FetchAsync ((byte[] fileData, NCMBException error) => {
+			Assert.Null (error);
+			_callbackFlag = true;
+		});
+
+
+		NCMBScriptTest.AwaitAsync ();
+		Assert.NotNull (file.CreateDate);
+		Assert.True (_callbackFlag);
+	}
+
 }

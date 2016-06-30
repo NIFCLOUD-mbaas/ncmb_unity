@@ -48,8 +48,10 @@ namespace NCMB
 	/// <param name="error"> 通信エラー</param>
 	public delegate void NCMBCountCallback (int count, NCMBException error);
 
-	//通信後内部の処理に返すコールバックです
+	//通信後内部の処理に返すコールバックです(通常)
 	internal delegate void HttpClientCallback (int statusCode, string responseData, NCMBException e);
+	//通信後内部の処理に返すコールバックです(File_GET)
+	internal delegate void HttpClientFileDataCallback (int statusCode, byte[] responseData, NCMBException e);
 
 	/// <summary>
 	/// スクリプト実行後のデータとエラーを返すコールバックです。

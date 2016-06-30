@@ -163,7 +163,7 @@ namespace NCMB
 				}; 
 
 				//コネクション作成
-				NCMBConnection connection = new NCMBConnection (scriptUrl, type, content, NCMBUser._getCurrentSessionToken (), endpoint);
+				NCMBConnection connection = new NCMBConnection (scriptUrl, type, content, NCMBUser._getCurrentSessionToken (), null, endpoint);
 				HttpWebRequest request = connection._returnRequest ();
 
 				//コンテント設定

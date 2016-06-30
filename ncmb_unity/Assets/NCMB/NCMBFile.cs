@@ -16,6 +16,11 @@ namespace NCMB
 		/// </summary>
 		public string FileName {
 			get {
+				object fileName = null;
+				this.estimatedData.TryGetValue ("fileName", out fileName);
+				if (fileName == null) {
+					return null;
+				}
 				return (string)this ["fileName"];
 			}
 			set { this ["fileName"] = value; }
@@ -27,6 +32,11 @@ namespace NCMB
 		/// </summary>
 		public byte[] FileData {
 			get {
+				object fileData = null;
+				this.estimatedData.TryGetValue ("fileData", out fileData);
+				if (fileData == null) {
+					return null;
+				}
 				return (byte[])this ["fileData"];
 			}
 			set { this ["fileData"] = value; }
@@ -69,19 +79,52 @@ namespace NCMB
 
 		/// <summary>
 		/// 非同期処理でファイルの保存を行います。<br/>
-		/// オブジェクトIDが登録されていない新規ファイルなら登録を行います。<br/>
-		/// オブジェクトIDが登録されている既存ファイルなら更新を行います。<br/>
-		///通信結果が必要な場合はコールバックを指定するこちらを使用します。
+		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
 		/// </summary>
 		/// <param name="callback">コールバック</param>
 		public override void SaveAsync (NCMBCallback callback)
 		{
+			if ((this.FileName == null)) {
+				throw new NCMBException ("fileName must not be null.");
+			}
+
+			new AsyncDelegate (delegate {
+				ConnectType type;
+				if (this.CreateDate != null) {
+					type = ConnectType.PUT;
+				} else {
+					type = ConnectType.POST;
+				}
+				IDictionary<string, INCMBFieldOperation> currentOperations = null;
+				currentOperations = this.StartSave ();
+				string content = _toJSONObjectForSaving (currentOperations);
+				NCMBConnection con = new NCMBConnection (_getBaseUrl (), type, content, NCMBUser._getCurrentSessionToken (), this);
+				con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+					try {
+						NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+						if (error != null) {
+							// 失敗
+						} else {
+							Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
+							this._handleSaveResult (true, responseDic, currentOperations);
+						}
+					} catch (Exception e) {
+						error = new NCMBException (e);
+					}
+
+					if (callback != null) {
+						Platform.RunOnMainThread (delegate {
+							callback (error);
+						});
+					}
+					return;
+				});	
+			}).BeginInvoke ((IAsyncResult r) => {
+			}, null);
 		}
 
 		/// <summary>
 		/// 非同期処理でファイルの保存を行います。<br/>
-		/// オブジェクトIDが登録されていない新規ファイルなら登録を行います。<br/>
-		/// オブジェクトIDが登録されている既存ファイルなら更新を行います。<br/>
 		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
 		/// </summary>
 		public override void SaveAsync ()
@@ -96,6 +139,26 @@ namespace NCMB
 		/// <param name="callback">コールバック</param>
 		public void FetchAsync (NCMBGetFileCallback callback)
 		{
+			// fileName必須
+			if ((this.FileName == null)) {
+				throw new NCMBException ("fileName must not be null.");
+			}
+
+			new AsyncDelegate (delegate {
+				// 通信処理
+				NCMBConnection con = new NCMBConnection (_getBaseUrl (), ConnectType.GET, null, NCMBUser._getCurrentSessionToken (), this);
+				con.Connect (delegate(int statusCode, byte[] responseData, NCMBException error) {
+					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+					this.estimatedData ["fileData"] = responseData;
+					if (callback != null) {
+						Platform.RunOnMainThread (delegate {
+							callback (null, error);
+						});
+					}
+					return;
+				});	
+			}).BeginInvoke ((IAsyncResult r) => {
+			}, null);
 		}
 
 		/// <summary>
@@ -119,7 +182,7 @@ namespace NCMB
 		//通信URLの取得
 		internal override string _getBaseUrl ()
 		{
-			if (this.ContainsKey ("fileName")) {
+			if (this.FileName != null) {
 				return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/files/" + FileName;
 			}
 			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/files";
