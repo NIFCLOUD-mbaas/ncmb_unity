@@ -8,13 +8,11 @@ using System.Text;
 
 public class NCMBFileTest : MonoBehaviour
 {
-	bool _callbackFlag = false;
-
+	
 	[TestFixtureSetUp]
 	public void Init ()
 	{
-		NCMBSettings.Initialize ("applicationKey", "clientKey");
-		_callbackFlag = false;
+		NCMBTestSettings.Initialize ();
 	}
 
 	/**
@@ -74,12 +72,12 @@ public class NCMBFileTest : MonoBehaviour
 		NCMBFile file = new NCMBFile ("test.txt", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
-		Assert.True (_callbackFlag);
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	/**
@@ -96,12 +94,12 @@ public class NCMBFileTest : MonoBehaviour
 		NCMBFile file = new NCMBFile ("logo.png", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
-		Assert.True (_callbackFlag);
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	/**
@@ -115,12 +113,12 @@ public class NCMBFileTest : MonoBehaviour
 		NCMBFile file = new NCMBFile ("日本語.txt", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
-		Assert.True (_callbackFlag);
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	/**
@@ -135,18 +133,18 @@ public class NCMBFileTest : MonoBehaviour
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
 		});
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 
 		NCMBFile getFile = new NCMBFile ("test.txt");
 		getFile.FetchAsync ((byte[] fileData, NCMBException error) => {
 			Assert.Null (error);
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (getFile.FileData);
 		Assert.AreEqual ("hello", Encoding.UTF8.GetString (getFile.FileData));
-		Assert.True (_callbackFlag);
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	/**
@@ -161,17 +159,17 @@ public class NCMBFileTest : MonoBehaviour
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
 		});
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
 
 		NCMBQuery<NCMBFile> query = NCMBFile.GetQuery ();
 		query.FindAsync ((List<NCMBFile> objList, NCMBException error) => {
 			Assert.LessOrEqual (1, objList.Count);
 			Assert.Null (error);
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBScriptTest.AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	/**
@@ -186,23 +184,23 @@ public class NCMBFileTest : MonoBehaviour
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
 		});
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
 
 		file.DeleteAsync ((NCMBException error) => {
 			Assert.Null (error);
 		});
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 
 		NCMBQuery<NCMBFile> query = NCMBFile.GetQuery ();
 		query.WhereEqualTo ("fileName", "delete.txt");
 		query.FindAsync ((List<NCMBFile> objList, NCMBException error) => {
 			Assert.Null (error);
 			Assert.AreEqual (0, objList.Count);
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBScriptTest.AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	/**
@@ -218,7 +216,7 @@ public class NCMBFileTest : MonoBehaviour
 		NCMBFile file = new NCMBFile ("ACL.txt", data, acl);
 		file.SaveAsync ((NCMBException error) => {
 		});
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 
 		NCMBQuery<NCMBFile> query = NCMBFile.GetQuery ();
 		query.WhereEqualTo ("fileName", "ACL.txt");
@@ -227,10 +225,10 @@ public class NCMBFileTest : MonoBehaviour
 			NCMBFile getFile = objList [0];
 			Assert.True (getFile.ACL.PublicReadAccess);
 			Assert.False (getFile.ACL.PublicWriteAccess);
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBScriptTest.AwaitAsync ();
-		Assert.True (_callbackFlag);
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 	/**
@@ -247,18 +245,18 @@ public class NCMBFileTest : MonoBehaviour
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
 		});
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 
 		NCMBFile getFile = new NCMBFile ("test.txt");
 		getFile.FetchAsync ((byte[] fileData, NCMBException error) => {
 			Assert.Null (error);
-			_callbackFlag = true;
+			NCMBTestSettings.CallbackFlag = true;
 		});
 
 
-		NCMBScriptTest.AwaitAsync ();
+		NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
-		Assert.True (_callbackFlag);
+		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
 }
