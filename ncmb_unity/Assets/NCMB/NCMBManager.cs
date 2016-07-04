@@ -227,7 +227,7 @@ namespace NCMB
 				}
 				return path;
 			} catch (FileNotFoundException e) {
-				throw new FileNotFoundException ("File not found.", e);
+				throw e;
 			}
 		}
 
@@ -327,15 +327,13 @@ namespace NCMB
 				} catch (Exception tryReadError) {
 					if (tryReadError != null) {
 						path = NCMBSettings.currentInstallationPath;//Unityからのアクセス権があり、環境に依存しないパスを設定
-					try {
-						StreamReader sr = new StreamReader (
-							                  path, Encoding.GetEncoding ("UTF-8"));	
-						text = sr.ReadToEnd ();
-						sr.Close ();
-
-					} catch (FileNotFoundException readError) {
-						throw new FileNotFoundException ("File read error.", readError);
-					}
+						try {
+							StreamReader sr = new StreamReader (path, Encoding.GetEncoding ("UTF-8"));	
+							text = sr.ReadToEnd ();
+							sr.Close ();
+						} catch (FileNotFoundException readError) {
+							throw readError;
+						}
 					}
 				}
 			}
