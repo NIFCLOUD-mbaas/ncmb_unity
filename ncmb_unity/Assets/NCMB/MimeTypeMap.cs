@@ -27,7 +27,7 @@ using System.Linq;
 
 namespace MimeTypes
 {
-	public static class MimeTypeMap
+	internal static class MimeTypeMap
 	{
 		private static readonly Dictionary<string, string> _mappings = new Dictionary<string, string> (StringComparer.InvariantCultureIgnoreCase) {
 		
