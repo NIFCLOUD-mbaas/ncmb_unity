@@ -107,6 +107,7 @@ namespace NCMB
 						NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
 						if (error != null) {
 							// 失敗
+							this._handleSaveResult (false, null, currentOperations);
 						} else {
 							Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
 							this._handleSaveResult (true, responseDic, currentOperations);
