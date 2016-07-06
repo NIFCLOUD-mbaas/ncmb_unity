@@ -76,7 +76,7 @@ namespace NCMB.Internal
 
 		//コンストラクタ(通常)
 		internal NCMBConnection (String url, ConnectType method, string content, string sessionToken)
-			: this (url, method, content, sessionToken, null)
+			: this (url, method, content, sessionToken, null, CommonConstant.DOMAIN_URL)
 		{
 		}
 
