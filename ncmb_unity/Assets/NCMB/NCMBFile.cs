@@ -156,7 +156,7 @@ namespace NCMB
 					this.estimatedData ["fileData"] = responseData;
 					if (callback != null) {
 						Platform.RunOnMainThread (delegate {
-							callback (null, error);
+							callback (responseData, error);
 						});
 					}
 					return;

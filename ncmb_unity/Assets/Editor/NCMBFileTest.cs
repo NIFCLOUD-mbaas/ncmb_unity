@@ -138,6 +138,7 @@ public class NCMBFileTest : MonoBehaviour
 		NCMBFile getFile = new NCMBFile ("test.txt");
 		getFile.FetchAsync ((byte[] fileData, NCMBException error) => {
 			Assert.Null (error);
+			Assert.AreEqual ("hello", Encoding.UTF8.GetString (fileData));
 			NCMBTestSettings.CallbackFlag = true;
 		});
 
