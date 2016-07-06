@@ -7,6 +7,9 @@ using System;
 
 namespace NCMB
 {
+	/// <summary>
+	/// ファイルを操作するクラスです。
+	/// </summary>
 	[NCMBClassName ("files")]
 	public class NCMBFile : NCMBObject
 	{
