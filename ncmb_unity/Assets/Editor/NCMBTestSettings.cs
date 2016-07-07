@@ -6,7 +6,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 
-public class NCMBTestSettings : MonoBehaviour
+public class NCMBTestSettings
 {
 	public static readonly string APP_KEY = "YOUR_APPLICATION_KEY";
 	public static readonly string CLIENT_KEY = "YOUR_CLIENT_KEY";
@@ -29,7 +29,8 @@ public class NCMBTestSettings : MonoBehaviour
 		);
 		CallbackFlag = false;
 
-		System.Object obj = new NCMBSettings ();
+		GameObject o = new GameObject ("settings");
+		System.Object obj = o.AddComponent<NCMBSettings> ();
 		FieldInfo field = obj.GetType ().GetField ("filePath", BindingFlags.Static | BindingFlags.NonPublic);
 		field.SetValue (obj, Application.persistentDataPath);
 

@@ -625,6 +625,8 @@ namespace NCMB
 						obj = new NCMBInstallation ();
 					} else if (resultClassName.Equals ("push")) {
 						obj = new NCMBPush ();
+					} else if (resultClassName.Equals ("file")) {
+						obj = new NCMBFile ();
 					} else {
 						obj = new NCMBObject (resultClassName);
 					}
@@ -943,7 +945,7 @@ namespace NCMB
 				url = new NCMBInstallation ()._getBaseUrl ();
 			} else if (className.Equals ("file")) {
 				// ファイル検索API
-				//url = new NCMBFile().getBaseUrl();
+				url = new NCMBFile ()._getBaseUrl ();
 			} else if (className.Equals ("user")) {
 				// 会員検索API
 				//url = new NCMBUser().getBaseUrl(NCMBUser.URL_TYPE_USER);
