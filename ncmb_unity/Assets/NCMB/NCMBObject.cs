@@ -384,7 +384,7 @@ namespace NCMB
 		internal static bool _isValidType (object value)
 		{
 			return value == null || value is string || value is NCMBObject || value is NCMBGeoPoint || value is DateTime ||
-				value is IDictionary || value is IList || value is NCMBACL || value.GetType ().IsPrimitive () || value is NCMBRelation<NCMBObject>;
+			value is IDictionary || value is IList || value is NCMBACL || value.GetType ().IsPrimitive () || value is NCMBRelation<NCMBObject>;
 		}
 		//リストの型チェックを行う
 		//RemoveRangeFromList,AddRangeToList,AddRangeUniqueToListの三カ所で使用
@@ -1051,7 +1051,7 @@ namespace NCMB
 		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
 		/// </summary>
 		/// <param name="callback">コールバック</param>
-		public void FetchAsync (NCMBCallback callback)
+		public virtual void FetchAsync (NCMBCallback callback)
 		{
 			//object id をチェック処理
 			if ((this._objectId == null) || (this._objectId == "")) {
@@ -1101,7 +1101,7 @@ namespace NCMB
 		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
 		/// </summary>
 		// オブジェクト保存
-		public void FetchAsync ()
+		public virtual void FetchAsync ()
 		{
 			this.FetchAsync (null);
 		}

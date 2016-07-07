@@ -185,9 +185,9 @@ namespace NCMB.Internal
 
 		//前回のローカルデータから新規ローカルデータの作成
 		public object Apply (object oldValue, NCMBObject obj, string key)
-		{
+		{				
 			//前回のローカルデータ(estimatedDataに指定のキーが無い場合)がNullの場合
-			if (oldValue == null) {
+			if (oldValue == null || oldValue is IList && ((IList)oldValue).Count == 0) {
 				NCMBRelation<T> relation = new NCMBRelation<T> (obj, key);//親のNCMBObjectと指定キーでrelation作成
 				relation.TargetClass = this._targetClass;//親のクラス名をセット
 				return relation;

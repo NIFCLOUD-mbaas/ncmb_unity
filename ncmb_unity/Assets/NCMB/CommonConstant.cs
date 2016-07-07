@@ -41,7 +41,7 @@ namespace NCMB.Internal
 		public static readonly string DOMAIN_URL = "https://mb.api.cloud.nifty.com";//ドメインのURL
 		
 		public static readonly string API_VERSION = "2013-09-01";//APIバージョン
-		public static readonly string SDK_VERSION = "2.1.1"; //SDKバージョン
+		public static readonly string SDK_VERSION = "2.2.0"; //SDKバージョン
 		//DEBUG LOG Setting: NCMBDebugにてdefine設定をしてください
 	}
 }
