@@ -6,7 +6,7 @@ using System.Reflection;
 using NUnit.Framework;
 using NCMB;
 
-public class NCMBRoleTest : MonoBehaviour
+public class NCMBRoleTest
 {
 
 	[TestFixtureSetUp]

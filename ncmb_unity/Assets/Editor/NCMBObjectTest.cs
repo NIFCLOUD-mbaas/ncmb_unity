@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using NCMB;
 
-public class NCMBObjectTest : MonoBehaviour
+public class NCMBObjectTest
 {
 	[TestFixtureSetUp]
 	public void Init ()

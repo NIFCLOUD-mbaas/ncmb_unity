@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System.IO;
 using System.Text;
 
-public class NCMBFileTest : MonoBehaviour
+public class NCMBFileTest
 {
 	
 	[TestFixtureSetUp]
