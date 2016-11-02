@@ -110,6 +110,16 @@ namespace NCMB
 			set { this ["message"] = value; }
 		}
 
+        /// <summary>
+        ///  Set search condition
+        /// </summary>
+        public object searchCondition {
+            get {
+                return (object)this ["searchCondition"];
+            }
+            set { this ["searchCondition"] = value; }
+        }
+
 		/// <summary>
 		/// 配信時間(日付)の取得、または設定を行います。<br/>
 		/// 指定した時間にPushの配信を行います。
