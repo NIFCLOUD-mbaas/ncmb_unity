@@ -34,6 +34,9 @@ using System.IO;
 using System.Security.Cryptography;
 using NCMB.Internal;
 
+using System.Runtime.CompilerServices;
+
+[assembly:InternalsVisibleTo("Assembly-CSharp-Editor")]
 namespace NCMB.Internal
 {
 	internal class NCMBConnection
@@ -76,13 +79,13 @@ namespace NCMB.Internal
 
 		//コンストラクタ(通常)
 		internal NCMBConnection (String url, ConnectType method, string content, string sessionToken)
-			: this (url, method, content, sessionToken, null, CommonConstant.DOMAIN_URL)
+			: this (url, method, content, sessionToken, null, NCMBSettings.DomainURL)
 		{
 		}
 
 		//コンストラクタ(NCMBFile)
 		internal NCMBConnection (String url, ConnectType method, string content, string sessionToken, NCMBFile file)
-			: this (url, method, content, sessionToken, file, CommonConstant.DOMAIN_URL)
+			: this (url, method, content, sessionToken, file, NCMBSettings.DomainURL)
 		{
 		}
 

@@ -5,6 +5,7 @@ using NCMB;
 using NUnit.Framework;
 using System.IO;
 using System.Text;
+using System.Reflection;
 
 public class NCMBFileTest
 {
@@ -87,7 +88,7 @@ public class NCMBFileTest
 	[Test]
 	public void FileUploadImageTest ()
 	{
-		FileStream fileStream = new FileStream ("Assets/Editor/logo.png", FileMode.Open, FileAccess.Read);
+		FileStream fileStream = new FileStream ("Assets/ncmb_unity/ncmb_unity/Assets/Editor/logo.png", FileMode.Open, FileAccess.Read);
 		BinaryReader bin = new BinaryReader (fileStream);
 		byte[] data = bin.ReadBytes ((int)bin.BaseStream.Length);
 		bin.Close ();
@@ -260,4 +261,20 @@ public class NCMBFileTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：_getBaseUrlが返すURLが正しいことを確認する
+     * - 結果：返り値のURLが正しく取得できる事
+     */
+	[Test]
+	public void GetBaseUrlTest ()
+	{
+		// テストデータ作成
+		string fileName = "test.txt";
+		NCMBFile file = new NCMBFile (fileName);
+
+		// internal methodの呼び出し
+		MethodInfo method = file.GetType ().GetMethod ("_getBaseUrl", BindingFlags.NonPublic | BindingFlags.Instance);
+
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/files/test.txt", method.Invoke(file, null).ToString());
+	}
 }

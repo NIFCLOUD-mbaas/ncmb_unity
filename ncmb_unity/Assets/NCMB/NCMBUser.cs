@@ -176,27 +176,27 @@ namespace  NCMB
 		
 		internal override string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/users";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/users";
 		}
 		
 		internal static string _getLogInUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/login";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/login";
 		}
 		
 		internal static string _getLogOutUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/logout";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/logout";
 		}
 		
 		internal static string _getRequestPasswordResetUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/requestPasswordReset";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/requestPasswordReset";
 		}
 
 		private static string _getmailAddressUserEntryUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/requestMailAddressUserEntry";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/requestMailAddressUserEntry";
 		}
 
 		//save後処理 　オーバーライド用　新規登録時のみログインを行う

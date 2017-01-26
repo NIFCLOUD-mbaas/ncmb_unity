@@ -351,7 +351,7 @@ namespace NCMB
 
 		internal override string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/push";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/push";
 		}
 	}
 }
