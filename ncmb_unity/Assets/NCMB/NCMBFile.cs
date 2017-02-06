@@ -187,9 +187,9 @@ namespace NCMB
 		internal override string _getBaseUrl ()
 		{
 			if (this.FileName != null) {
-				return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/files/" + FileName;
+				return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/files/" + FileName;
 			}
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/files";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/files";
 		}
 
 	}

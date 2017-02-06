@@ -41,6 +41,10 @@ namespace NCMB
 		private static bool _usePush = false;
 		//開封通知フラグ
 		private static bool _useAnalytics = false;
+		//ドメインURL
+		private static string _domainURL = "";
+		//APIバージョン
+		private static string _apiVersion = "";
 		//static NG
 		[SerializeField]
 		internal string
@@ -63,6 +67,12 @@ namespace NCMB
 		[SerializeField]
 		internal bool
 			responseValidation = false;
+		[SerializeField]
+		internal string
+			domainURL = "";
+		[SerializeField]
+		internal string
+			apiVersion = "";
 		//Current user
 		private static string _currentUser = null;
 		internal static string filePath = "";
@@ -132,6 +142,30 @@ namespace NCMB
 		}
 
 		/// <summary>
+		/// ドメインURLの取得、または設定を行います。 
+		/// </summary>
+		internal static string DomainURL {
+			get {
+				return _domainURL;
+			}
+			set {
+				_domainURL = value;
+			}
+		}
+
+		/// <summary>
+		/// APIバージョンの取得、または設定を行います。 
+		/// </summary>
+		public static string APIVersion {
+			get {
+				return _apiVersion;
+			}
+			set {
+				_apiVersion = value;
+			}
+		}
+
+		/// <summary>
 		/// コンストラクター
 		/// </summary>
 		public NCMBSettings ()
@@ -143,12 +177,24 @@ namespace NCMB
 		/// </summary>
 		/// <param name="applicationKey">アプリケーションキー</param>
 		/// <param name="clientKey">クライアントキー</param>
-		public static void Initialize (String applicationKey, String clientKey)
+		public static void Initialize (String applicationKey, String clientKey, String domainURL, String apiVersion)
 		{
 			// アプリケーションキーを設定
 			_applicationKey = applicationKey;
 			// クライアントキーを設定
 			_clientKey = clientKey;
+			// ドメインURLを設定
+			if (domainURL == "") {
+				_domainURL = CommonConstant.DOMAIN_URL;
+			} else {
+				_domainURL = domainURL;
+			}
+			// APIバージョンを設定
+			if (domainURL == "") {
+				_apiVersion = CommonConstant.API_VERSION;
+			} else {
+				_apiVersion = apiVersion;
+			}
 		}
 
 		/// <summary>
@@ -206,7 +252,7 @@ namespace NCMB
 				NCMBSettings._isInitialized = true;
 				_responseValidationFlag = responseValidation;
 				DontDestroyOnLoad (base.gameObject);
-				NCMBSettings.Initialize (this.applicationKey, this.clientKey);
+				NCMBSettings.Initialize (this.applicationKey, this.clientKey, this.domainURL, this.apiVersion);
 				//NCMBSettings.RegisterPush(this.usePush, this.androidSenderId, this.getLocation);
 				filePath = Application.persistentDataPath;
 				currentInstallationPath = filePath + "/currentInstallation";

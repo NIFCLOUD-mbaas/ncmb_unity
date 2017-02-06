@@ -5,6 +5,7 @@ using NCMB;
 using NUnit.Framework;
 using System.IO;
 using System.Text;
+using System.Reflection;
 
 public class NCMBFileTest
 {
@@ -260,4 +261,20 @@ public class NCMBFileTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：_getBaseUrlが返すURLが正しいことを確認する
+     * - 結果：返り値のURLが正しく取得できる事
+     */
+	[Test]
+	public void getBaseUrlTest ()
+	{
+		// テストデータ作成
+		string fileName = "test.txt";
+		NCMBFile file = new NCMBFile (fileName);
+
+		// internal methodの呼び出し
+		MethodInfo method = file.GetType ().GetMethod ("_getBaseUrl", BindingFlags.NonPublic | BindingFlags.Instance);
+
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/files/test.txt", method.Invoke(file, null).ToString());
+	}
 }

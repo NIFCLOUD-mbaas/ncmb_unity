@@ -10,6 +10,8 @@ public class NCMBTestSettings
 {
 	public static readonly string APP_KEY = "YOUR_APPLICATION_KEY";
 	public static readonly string CLIENT_KEY = "YOUR_CLIENT_KEY";
+	public static readonly string DOMAIN_URL = "http://localhost:3000";
+	public static readonly string API_VERSION = "2013-09-01";
 	private static bool _callbackFlag = false;
 
 	public static bool CallbackFlag {
@@ -25,7 +27,9 @@ public class NCMBTestSettings
 	{
 		NCMBSettings.Initialize (
 			APP_KEY,
-			CLIENT_KEY
+			CLIENT_KEY,
+			DOMAIN_URL,
+			API_VERSION
 		);
 		CallbackFlag = false;
 
