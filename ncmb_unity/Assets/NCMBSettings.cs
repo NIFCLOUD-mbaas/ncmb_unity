@@ -184,17 +184,9 @@ namespace NCMB
 			// クライアントキーを設定
 			_clientKey = clientKey;
 			// ドメインURLを設定
-			if (domainURL == "") {
-				_domainURL = CommonConstant.DOMAIN_URL;
-			} else {
-				_domainURL = domainURL;
-			}
+			_domainURL = string.IsNullOrEmpty(domainURL) ? CommonConstant.DOMAIN_URL : domainURL;
 			// APIバージョンを設定
-			if (domainURL == "") {
-				_apiVersion = CommonConstant.API_VERSION;
-			} else {
-				_apiVersion = apiVersion;
-			}
+			_apiVersion = string.IsNullOrEmpty(apiVersion) ? CommonConstant.API_VERSION : apiVersion;
 		}
 
 		/// <summary>

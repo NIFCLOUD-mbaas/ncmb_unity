@@ -27,4 +27,68 @@ public class NCMBUserTest {
 
 		Assert.AreEqual ("http://localhost:3000/2013-09-01/users", method.Invoke(user, null).ToString());
 	}
+
+	/**
+     * - 内容：_getLogInUrlが返すURLが正しいことを確認する
+     * - 結果：返り値のURLが正しく取得できる事
+     */
+	[Test]
+	public void getLogInUrlTest ()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+
+		// internal methodの呼び出し
+		MethodInfo method = user.GetType ().GetMethod ("_getLogInUrl", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/login", method.Invoke(user, null).ToString());
+	}
+
+	/**
+     * - 内容：_getLogOutUrlが返すURLが正しいことを確認する
+     * - 結果：返り値のURLが正しく取得できる事
+     */
+	[Test]
+	public void getLogOutUrlTest ()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+
+		// internal methodの呼び出し
+		MethodInfo method = user.GetType ().GetMethod ("_getLogOutUrl", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/logout", method.Invoke(user, null).ToString());
+	}
+
+	/**
+     * - 内容：_getRequestPasswordResetUrlが返すURLが正しいことを確認する
+     * - 結果：返り値のURLが正しく取得できる事
+     */
+	[Test]
+	public void getRequestPasswordResetUrlTest ()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+
+		// internal methodの呼び出し
+		MethodInfo method = user.GetType ().GetMethod ("_getRequestPasswordResetUrl", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/requestPasswordReset", method.Invoke(user, null).ToString());
+	}
+
+	/**
+     * - 内容：_getmailAddressUserEntryUrlが返すURLが正しいことを確認する
+     * - 結果：返り値のURLが正しく取得できる事
+     */
+	[Test]
+	public void getmailAddressUserEntryUrlTest ()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+
+		// internal methodの呼び出し
+		MethodInfo method = user.GetType ().GetMethod ("_getmailAddressUserEntryUrl", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/requestMailAddressUserEntry", method.Invoke(user, null).ToString());
+	}
 }
