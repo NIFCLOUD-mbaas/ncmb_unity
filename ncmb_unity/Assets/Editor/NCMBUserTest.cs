@@ -269,7 +269,7 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがFacebookであること
      */
 	[Test]
-	public void linkWithOauthAsyncFacebook()
+	public void LinkWithOauthAsyncFacebook()
 	{
 		NCMBUser user = new NCMBUser ();
 		user.ObjectId = "dummyUserId";
@@ -374,7 +374,7 @@ public class NCMBUserTest {
 		NCMBUser user = new NCMBUser ();
 		user.ObjectId = "dummyUserId";
 
-		NCMBUser.linkWithOauthAsync ((invalidGoogleParams, error) => {
+		NCMBUser.LinkWithOauthAsync ((invalidGoogleParams, error) => {
 			Assert.AreEqual(NCMBException.OAUTH_ERROR, error.ErrorCode());
 			NCMBTestSettings.CallbackFlag = true;
 		});
@@ -424,7 +424,7 @@ public class NCMBUserTest {
 		NCMBUser user = NCMBUser.CurrentUser ();
 		Assert.True (user.IsLinkWith("twitter"));
 
-		user.UnlinkWithOauthAsync (("twitter", error) => {
+		user.UnLinkWithOauthAsync (("twitter", error) => {
 			Assert.null(error);
 			NCMBTestSettings.CallbackFlag = true;
 		});
@@ -441,7 +441,7 @@ public class NCMBUserTest {
 	[Test]
 	public void UnLinkWithOauthAsyncGoogle()
 	{
-		NCMBUser.logInWithOauthAsync ((googleParams, error) => {
+		NCMBUser.LogInWithOauthAsync ((googleParams, error) => {
 			Assert.Null(error);
 		});
 		NCMBTestSettings.AwaitAsync ();
