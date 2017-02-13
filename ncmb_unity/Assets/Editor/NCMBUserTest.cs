@@ -17,7 +17,7 @@ public class NCMBUserTest {
      * - 結果：返り値のURLが正しく取得できる事
      */
 	[Test]
-	public void getBaseUrlTest ()
+	public void GetBaseUrlTest ()
 	{
 		// テストデータ作成
 		NCMBUser user = new NCMBUser();
@@ -33,7 +33,7 @@ public class NCMBUserTest {
      * - 結果：返り値のURLが正しく取得できる事
      */
 	[Test]
-	public void getLogInUrlTest ()
+	public void GetLogInUrlTest ()
 	{
 		// テストデータ作成
 		NCMBUser user = new NCMBUser();
@@ -49,7 +49,7 @@ public class NCMBUserTest {
      * - 結果：返り値のURLが正しく取得できる事
      */
 	[Test]
-	public void getLogOutUrlTest ()
+	public void GetLogOutUrlTest ()
 	{
 		// テストデータ作成
 		NCMBUser user = new NCMBUser();
@@ -65,7 +65,7 @@ public class NCMBUserTest {
      * - 結果：返り値のURLが正しく取得できる事
      */
 	[Test]
-	public void getRequestPasswordResetUrlTest ()
+	public void GetRequestPasswordResetUrlTest ()
 	{
 		// テストデータ作成
 		NCMBUser user = new NCMBUser();
@@ -81,7 +81,7 @@ public class NCMBUserTest {
      * - 結果：返り値のURLが正しく取得できる事
      */
 	[Test]
-	public void getmailAddressUserEntryUrlTest ()
+	public void GetMailAddressUserEntryUrlTest ()
 	{
 		// テストデータ作成
 		NCMBUser user = new NCMBUser();
