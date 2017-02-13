@@ -18,7 +18,7 @@ public class NCMBObjectTest
      * - 結果：フィールドの値「"test"」が正しく取得できる事
      */
 	[Test]
-	public void doubleQuotationUnescapeTest ()
+	public void DoubleQuotationUnescapeTest ()
 	{
 		// テストデータ作成
 		NCMBObject obj = new NCMBObject ("TestClass");
@@ -54,7 +54,7 @@ public class NCMBObjectTest
      * - 結果：返り値のURLが正しく取得できる事
      */
 	[Test]
-	public void getBaseUrlTest ()
+	public void GetBaseUrlTest ()
 	{
 		// テストデータ作成
 		NCMBObject obj = new NCMBObject("TestClass");

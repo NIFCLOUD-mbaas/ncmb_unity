@@ -21,7 +21,7 @@ public class NCMBRoleTest
      * - 結果：追加されたユーザーをロールから取得し、ローカルのユーザーとobjectIdが一致すること
      */
 	[Test]
-	public void addRoleUserTest ()
+	public void AddRoleUserTest ()
 	{
 		// ユーザー作成
 		NCMBUser expertUser = new NCMBUser ();
@@ -98,7 +98,7 @@ public class NCMBRoleTest
      * - 結果：返り値のURLが正しく取得できる事
      */
 	[Test]
-	public void getBaseUrlTest ()
+	public void GetBaseUrlTest ()
 	{
 		// テストデータ作成
 		NCMBRole expertPlanRole = new NCMBRole ("expertPlan");

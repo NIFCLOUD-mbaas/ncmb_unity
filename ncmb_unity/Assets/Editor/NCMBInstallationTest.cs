@@ -17,7 +17,7 @@ public class NCMBInstallationTest {
      * - 結果：返り値のURLが正しく取得できる事
      */
 	[Test]
-	public void getBaseUrlTest ()
+	public void GetBaseUrlTest ()
 	{
 		// テストデータ作成
 		NCMBInstallation installation = new NCMBInstallation();
