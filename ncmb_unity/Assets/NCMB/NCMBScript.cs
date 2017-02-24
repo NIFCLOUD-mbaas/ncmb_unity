@@ -144,21 +144,43 @@ namespace NCMB
 					content = Json.Serialize (body);
 				}
 
-				//クエリ文字列作成
-				String queryString = "?";
-				if (query != null && query.Count > 0) {
-					int count = query.Count;
-					foreach (KeyValuePair<string, object> pair in query) {
-						queryString += pair.Key + "=" + pair.Value.ToString ();
-						if (count > 1) {
-							queryString += "&";
-							--count;
-						}
-					}
-					scriptUrl += Uri.EscapeUriString (queryString);
-				}
+                //クエリ文字列作成
+                String queryVal = "";
+                String queryString = "?";
+                if (query != null && query.Count > 0)
+                {
+                    int count = query.Count;
+                    foreach (KeyValuePair<string, object> pair in query)
+                    {
+                        if (pair.Value is IList || pair.Value is IDictionary)
+                        {
+                            //value形式:array,ILis,IDictionaryの場合
+                            queryVal = SimpleJSON.Json.Serialize(pair.Value);
+                        }
+                        else if (pair.Value is DateTime)
+                        {
+                            //value形式:DateTimeの場合
+                            queryVal = NCMBUtility.encodeDate((DateTime)pair.Value);
+                        }
+                        else
+                        {
+                            //value形式:上の以外場合
+                            queryVal = pair.Value.ToString();
+                        }
 
-				ServicePointManager.ServerCertificateValidationCallback = delegate {
+                        queryString += pair.Key + "=" + Uri.EscapeDataString(queryVal);
+
+                        if (count > 1)
+                        {
+                            queryString += "&";
+                            --count;
+                        }
+                    }
+
+                    scriptUrl += queryString;
+                }
+
+                ServicePointManager.ServerCertificateValidationCallback = delegate {
 					return true;
 				}; 
 
