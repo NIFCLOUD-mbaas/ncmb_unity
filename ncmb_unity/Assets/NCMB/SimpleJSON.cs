@@ -152,7 +152,6 @@ namespace SimpleJSON
                             builder.Append("\\t");
                             break;
                         default:
-                            int codepoint = Convert.ToInt32(c);
                             builder.Append(c);
                             break;
                     }
