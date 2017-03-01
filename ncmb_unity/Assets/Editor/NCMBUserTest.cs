@@ -4,21 +4,23 @@ using NUnit.Framework;
 using NCMB;
 using System.Reflection;
 using System;
+using MiniJSON;
+using System.Collections.Generic;
 
 public class NCMBUserTest {
 
-	DateTime dummyDate;
+	public static DateTime dummyDate = new DateTime(2017, 2, 7, 1, 2, 3, 4);
 
 	// facebookのダミー認証情報
 	NCMBFacebookParameters facebookParams = new NCMBFacebookParameters(
 		"facebookDummyId",
 		"facebookDummyAccessToken",
-		dummyDate.ToString("2017-02-07T01:02:03.004Z")
+		dummyDate
 	);
 	NCMBFacebookParameters invalidFacebookParams = new NCMBFacebookParameters(
-		"invalidfacebookDummyId",
-		"invalidfacebookDummyAccessToken",
-		dummyDate.ToString("2017-02-07T01:02:03.004Z")
+		"invalidFacebookDummyId",
+		"invalidFacebookDummyAccessToken",
+		dummyDate
 	);
 
 	// Twittterのダミー認証情報
@@ -27,16 +29,16 @@ public class NCMBUserTest {
 		"twitterDummyScreenName",
 		"twitterDummyConsumerKey",
 		"twitterDummyConsumerSecret",
-		"twitterDummyOauthToken",
-		"twitterDummyOauthSecret"
+		"twitterDummyAuthToken",
+		"twitterDummyAuthSecret"
 	);
 	NCMBTwitterParameters invalidTwitterParams = new NCMBTwitterParameters(
 		"invalidTwitterDummyId",
 		"invalidTwitterDummyScreenName",
 		"invalidTwitterDummyConsumerKey",
 		"invalidTwitterDummyConsumerSecret",
-		"invalidTwitterDummyOauthToken",
-		"invalidTwitterDummyOauthSecret"
+		"invalidTwitterDummyAuthToken",
+		"invalidTwitterDummyAuthSecret"
 	);
 
 	// Googleのダミー認証情報
@@ -140,24 +142,32 @@ public class NCMBUserTest {
      * - 結果：各パラメータが正しく取得できること
      */
 	[Test]
-	public void LogInWithOauthAsyncFacebook()
+	public void LogInWithAuthAsyncFacebook()
 	{
-		NCMBUser.LogInWithOauthAsync ((facebookParams, error) => {
-			Assert.Null(error);
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = facebookParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		NCMBUser user = NCMBUser.CurrentUser ();
+		Assert.AreEqual ("dummyObjectId", user.ObjectId);
 
-		Assert.AreEqual (user.ObjectId(), "dummyObjectId");
-		Assert.AreEqual (facebookParams.userId, user.getAuthData("facebook").getString("id"));
-		Assert.AreEqual (facebookParams.accessToken, user.getAuthData("facebook").getString("access_token"));
-		Assert.AreEqual (facebookParams.expirationDate, user.getAuthData("facebook").getJSONObject("expiration_date").getString("iso"));
+		// facebookパラメータ確認
+		Dictionary<string, object> authData = user.getAuthDataForProvider ("facebook");
+		Assert.AreEqual ("facebookDummyId", authData["id"]);
+		Assert.AreEqual ("facebookDummyAccessToken", authData["access_token"]);
+		Assert.AreEqual ("2017-02-07T01:02:03.004Z", authData["expiration_date"]);
 
-		Assert.NotNull (NCMBUser._getCurrentSessionToken());
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("facebook"));
+		// 登録成功の確認
+		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.True (user.IsLinkWith("facebook"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -165,16 +175,24 @@ public class NCMBUserTest {
      * - 結果：session Tokenがnullであること
      */
 	[Test]
-	public void LogInWithOauthAsyncInvalidFacebook()
+	public void LogInWithAuthAsyncInvalidFacebook()
 	{
-		NCMBUser.LogInWithOauthAsync ((invalidFacebookParams, error) => {
-			Assert.AreEqual(NCMBException.OAUTH_ERROR, error.ErrorCode());
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = invalidFacebookParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.Null (NCMBUser._getCurrentSessionToken());
+		// 登録失敗の確認
+		Assert.IsEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.False (user.IsLinkWith("facebook"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -182,26 +200,35 @@ public class NCMBUserTest {
      * - 結果：各パラメータが正しく取得できること
      */
 	[Test]
-	public void LogInWithOauthAsyncTwitter()
+	public void LogInWithAuthAsyncTwitter()
 	{
-		NCMBUser.LogInWithOauthAsync ((twitterParams, error) => {
-			Assert.Null(error);
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = twitterParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		NCMBUser user = NCMBUser.CurrentUser ();
+		Assert.AreEqual ("dummyObjectId", user.ObjectId);
 
-		Assert.AreEqual (user.ObjectId(), "dummyObjectId");
-		Assert.AreEqual (twitterParams.userId, user.getAuthData("twitter").getString("id"));
-		Assert.AreEqual (twitterParams.screenName, user.getAuthData("twitter").getString("screen_name"));
-		Assert.AreEqual (twitterParams.consumerKey, user.getAuthData("twitter").getString("oauth_consumer_key"));
-		Assert.AreEqual (twitterParams.accessToken, user.getAuthData("twitter").getString("oauth_token"));
-		Assert.AreEqual (twitterParams.accessTokenSecret, user.getAuthData("twitter").getString("oauth_token_secret"));
+		// twitterパラメータ確認
+		Dictionary<string, object> authData = user.getAuthDataForProvider ("twitter");
+		Assert.AreEqual ("twitterDummyId", authData["id"]);
+		Assert.AreEqual ("twitterDummyScreenName", authData["screen_name"]);
+		Assert.AreEqual ("twitterDummyConsumerKey", authData["oauth_consumer_key"]);
+		Assert.AreEqual ("twitterDummyConsumerSecret", authData["consumer_secret"]);
+		Assert.AreEqual ("twitterDummyAuthToken", authData["oauth_token"]);
+		Assert.AreEqual ("twitterDummyAuthSecret", authData["oauth_token_secret"]);
 
+		// 登録成功の確認
 		Assert.NotNull (NCMBUser._getCurrentSessionToken());
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("twitter"));
+		Assert.True (user.IsLinkWith("twitter"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -209,17 +236,24 @@ public class NCMBUserTest {
      * - 結果：session Tokenがnullであること
      */
 	[Test]
-	public void LogInWithOauthAsyncInvalidTwitter()
+	public void LogInWithAuthAsyncInvalidTwitter()
 	{
-		NCMBUser.LogInWithOauthAsync ((invalidTwitterParams, error) => {
-			Assert.AreEqual(NCMBException.OAUTH_ERROR, error.ErrorCode());
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = invalidTwitterParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
-		NCMBException err = "";
 
-		Assert.Null (NCMBUser._getCurrentSessionToken());
+		// 登録失敗の確認
+		Assert.IsEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.False (user.IsLinkWith("twitter"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -227,24 +261,31 @@ public class NCMBUserTest {
      * - 結果：各パラメータが正しく取得できること
      */
 	[Test]
-	public void LogInWithOauthAsyncGoogle()
+	public void LogInWithAuthAsyncGoogle()
 	{
-		NCMBUser.LogInWithOauthAsync ((googleParams, error) => {
-			Assert.Null(error);
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = googleParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		NCMBUser user = NCMBUser.CurrentUser ();
+		Assert.AreEqual ("dummyObjectId", user.ObjectId);
 
-		Assert.AreEqual (user.ObjectId(), "dummyObjectId");
-		Assert.AreEqual (googleParams.userId, user.getAuthData("google").getString("id"));
-		Assert.AreEqual (googleParams.accessToken, user.getAuthData("google").getString("access_token"));
-		Assert.AreEqual (facebookParams.expirationDate, user.getAuthData("facebook").getJSONObject("expiration_date").getString("iso"));
+		// googleパラメータ確認
+		Dictionary<string, object> authData = user.getAuthDataForProvider ("google");
+		Assert.AreEqual ("googleDummyId", authData["id"]);
+		Assert.AreEqual ("googleDummyAccessToken", authData["access_token"]);
 
+		// 登録成功の確認
 		Assert.NotNull (NCMBUser._getCurrentSessionToken());
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("google"));
+		Assert.True (user.IsLinkWith("google"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -252,16 +293,23 @@ public class NCMBUserTest {
      * - 結果：session Tokenがnullであること
      */
 	[Test]
-	public void LogInWithOauthAsyncInvalidGoogle()
+	public void LogInWithAuthAsyncInvalidGoogle()
 	{
-		NCMBUser.LogInWithOauthAsync ((invalidGoogleParams, error) => {
-			Assert.AreEqual(NCMBException.OAUTH_ERROR, error.ErrorCode());
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = invalidGoogleParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.Null (NCMBUser._getCurrentSessionToken());
+		// 登録失敗の確認
+		Assert.IsEmpty (NCMBUser._getCurrentSessionToken());
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -269,19 +317,31 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがFacebookであること
      */
 	[Test]
-	public void LinkWithOauthAsyncFacebook()
+	public void LinkWithAuthAsyncFacebook()
 	{
+		// テストデータ作成
 		NCMBUser user = new NCMBUser ();
-		user.ObjectId = "dummyUserId";
+		user.AuthData = twitterParams.param;
 
-		NCMBUser.LinkWithOauthAsync ((facebookParams, error) => {
-			Assert.Null(error);
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
+		});
+		NCMBTestSettings.AwaitAsync ();
+
+		// authData追加
+		user.LinkWithAuthAsync (facebookParams.param, (NCMBException e1) => {
+			Assert.Null(e1);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("facebook"));
+		// 追加成功の確認
+		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.True (user.IsLinkWith("twitter"));
+		Assert.True (user.IsLinkWith("facebook"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -289,19 +349,31 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがFacebookでないこと
      */
 	[Test]
-	public void LinkWithOauthAsyncInvalidFacebook()
+	public void LinkWithAuthAsyncInvalidFacebook()
 	{
+		// テストデータ作成
 		NCMBUser user = new NCMBUser ();
-		user.ObjectId = "dummyUserId";
+		user.AuthData = twitterParams.param;
 
-		NCMBUser.LinkWithOauthAsync ((invalidFacebookParams, error) => {
-			Assert.AreEqual(NCMBException.OAUTH_ERROR, error.ErrorCode());
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
+		});
+		NCMBTestSettings.AwaitAsync ();
+
+		// authData追加
+		user.LinkWithAuthAsync (invalidFacebookParams.param, (NCMBException e) => {
+			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("facebook"));
+		// 追加失敗の確認
+		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.True (user.IsLinkWith("twitter"));
+		Assert.False (user.IsLinkWith("facebook"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -309,19 +381,31 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがTwitterであること
      */
 	[Test]
-	public void LinkWithOauthAsyncTwitter()
+	public void LinkWithAuthAsyncTwitter()
 	{
+		// テストデータ作成
 		NCMBUser user = new NCMBUser ();
-		user.ObjectId = "dummyUserId";
+		user.AuthData = googleParams.param;
 
-		NCMBUser.LinkWithOauthAsync ((twitterParams, error) => {
-			Assert.Null(error);
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
+		});
+		NCMBTestSettings.AwaitAsync ();
+
+		// authData追加
+		user.LinkWithAuthAsync (twitterParams.param, (NCMBException e1) => {
+			Assert.Null(e1);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("twitter"));
+		// 追加成功の確認
+		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.True (user.IsLinkWith("google"));
+		Assert.True (user.IsLinkWith("twitter"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -329,19 +413,31 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがTwitterでないこと
      */
 	[Test]
-	public void LinkWithOauthAsyncInvalidTwitter()
+	public void LinkWithAuthAsyncInvalidTwitter()
 	{
+		// テストデータ作成
 		NCMBUser user = new NCMBUser ();
-		user.ObjectId = "dummyUserId";
+		user.AuthData = googleParams.param;
 
-		NCMBUser.LinkWithOauthAsync ((invalidTwitterParams, error) => {
-			Assert.AreEqual(NCMBException.OAUTH_ERROR, error.ErrorCode());
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
+		});
+		NCMBTestSettings.AwaitAsync ();
+
+		// authData追加
+		user.LinkWithAuthAsync (invalidTwitterParams.param, (NCMBException e) => {
+			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("twitter"));
+		// 追加失敗の確認
+		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.True (user.IsLinkWith("google"));
+		Assert.False (user.IsLinkWith("twitter"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -349,19 +445,31 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがGoogleであること
      */
 	[Test]
-	public void LinkWithOauthAsyncGoogle()
+	public void LinkWithAuthAsyncGoogle()
 	{
+		// テストデータ作成
 		NCMBUser user = new NCMBUser ();
-		user.ObjectId = "dummyUserId";
+		user.AuthData = facebookParams.param;
 
-		NCMBUser.LinkWithOauthAsync ((googleParams, error) => {
-			Assert.Null(error);
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
+		});
+		NCMBTestSettings.AwaitAsync ();
+
+		// authData追加
+		user.LinkWithAuthAsync (googleParams.param, (NCMBException e1) => {
+			Assert.Null(e1);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("google"));
+		// 登録成功の確認
+		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.True (user.IsLinkWith("facebook"));
+		Assert.True (user.IsLinkWith("google"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -369,19 +477,31 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがGoogleでないこと
      */
 	[Test]
-	public void LinkWithOauthAsyncInvalidGoogle()
+	public void LinkWithAuthAsyncInvalidGoogle()
 	{
+		// テストデータ作成
 		NCMBUser user = new NCMBUser ();
-		user.ObjectId = "dummyUserId";
+		user.AuthData = facebookParams.param;
 
-		NCMBUser.LinkWithOauthAsync ((invalidGoogleParams, error) => {
-			Assert.AreEqual(NCMBException.OAUTH_ERROR, error.ErrorCode());
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
+		});
+		NCMBTestSettings.AwaitAsync ();
+
+		// authData追加
+		user.LinkWithAuthAsync (invalidGoogleParams.param, (NCMBException e) => {
+			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.True (NCMBUser.CurrentUser().IsLinkWith("google"));
+		// 追加失敗の確認
+		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.True (user.IsLinkWith("facebook"));
+		Assert.False (user.IsLinkWith("google"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -389,24 +509,31 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがFacebookでないこと
      */
 	[Test]
-	public void UnLinkWithOauthAsyncFacebook()
+	public void UnLinkWithAuthAsyncFacebook()
 	{
-		NCMBUser.LogInWithOauthAsync ((facebookParams, error) => {
-			Assert.Null(error);
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = facebookParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		NCMBUser user = NCMBUser.CurrentUser ();
 		Assert.True (user.IsLinkWith("facebook"));
 
-		user.UnLinkWithOauthAsync (("facebook", error) => {
-			Assert.null(error);
+		// authData削除
+		user.UnLinkWithAuthAsync ("facebook", (NCMBException e1) => {
+			Assert.Null(e1);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.False (IsLinkWith("facebook"));
+		// 削除成功の確認
+		Assert.False (user.IsLinkWith("facebook"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -414,24 +541,31 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがTwitterでないこと
      */
 	[Test]
-	public void UnLinkWithOauthAsyncTwitter()
+	public void UnLinkWithAuthAsyncTwitter()
 	{
-		NCMBUser.LogInWithOauthAsync ((twitterParams, error) => {
-			Assert.Null(error);
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = twitterParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		NCMBUser user = NCMBUser.CurrentUser ();
 		Assert.True (user.IsLinkWith("twitter"));
 
-		user.UnLinkWithOauthAsync (("twitter", error) => {
-			Assert.null(error);
+		// authData削除
+		user.UnLinkWithAuthAsync ("twitter", (NCMBException e1) => {
+			Assert.Null(e1);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.False (IsLinkWith("twitter"));
+		// 削除成功の確認
+		Assert.False (user.IsLinkWith("twitter"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
 	/**
@@ -439,24 +573,69 @@ public class NCMBUserTest {
      * - 結果：リンクしているauth dataがGoogleでないこと
      */
 	[Test]
-	public void UnLinkWithOauthAsyncGoogle()
+	public void UnLinkWithAuthAsyncGoogle()
 	{
-		NCMBUser.LogInWithOauthAsync ((googleParams, error) => {
-			Assert.Null(error);
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = googleParams.param;
+
+		// authData作成
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		NCMBUser user = NCMBUser.CurrentUser ();
 		Assert.True (user.IsLinkWith("google"));
 
-		user.UnLinkWithOauthAsync (("google", error) => {
-			Assert.null(error);
+		// authData削除
+		user.UnLinkWithAuthAsync ("google", (NCMBException e1) => {
+			Assert.Null(e1);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		NCMBTestSettings.AwaitAsync ();
 
-		Assert.False (IsLinkWith("google"));
+		// 削除成功の確認
+		Assert.False (user.IsLinkWith("google"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
 	}
 
+	/**
+     * - 内容：facebookでloginし、twitterでlinkした後、facebookがunlinkできるかを確認する
+     * - 結果：auth dataにfacebookの値がないこと
+     */
+	[Test]
+	public void UnLinkFacebookLinkTwitter()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser ();
+		user.AuthData = facebookParams.param;
+
+		// authData登録
+		user.LogInWithAuthAsync ((NCMBException e) => {
+			Assert.Null(e);
+		});
+		NCMBTestSettings.AwaitAsync ();
+
+		// authData追加
+		user.LinkWithAuthAsync (twitterParams.param, (NCMBException e1) => {
+			Assert.Null(e1);
+		});
+		NCMBTestSettings.AwaitAsync ();
+		Assert.True (user.IsLinkWith("twitter"));
+
+		// authData削除
+		user.UnLinkWithAuthAsync ("facebook", (NCMBException e2) => {
+			Assert.Null(e2);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		NCMBTestSettings.AwaitAsync ();
+
+		// 削除成功の確認
+		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken());
+		Assert.True (user.IsLinkWith("twitter"));
+		Assert.False (user.IsLinkWith("facebook"));
+		Assert.True (NCMBTestSettings.CallbackFlag);
+		NCMBUser.LogOutAsync ();
+	}
 }
