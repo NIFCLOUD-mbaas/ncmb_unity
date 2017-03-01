@@ -158,7 +158,7 @@ public class NCMBUserTest {
 		Assert.AreEqual ("dummyObjectId", user.ObjectId);
 
 		// facebookパラメータ確認
-		Dictionary<string, object> authData = user.getAuthDataForProvider ("facebook");
+		Dictionary<string, object> authData = user.GetAuthDataForProvider ("facebook");
 		Assert.AreEqual ("facebookDummyId", authData["id"]);
 		Assert.AreEqual ("facebookDummyAccessToken", authData["access_token"]);
 		Assert.AreEqual ("2017-02-07T01:02:03.004Z", authData["expiration_date"]);
@@ -216,7 +216,7 @@ public class NCMBUserTest {
 		Assert.AreEqual ("dummyObjectId", user.ObjectId);
 
 		// twitterパラメータ確認
-		Dictionary<string, object> authData = user.getAuthDataForProvider ("twitter");
+		Dictionary<string, object> authData = user.GetAuthDataForProvider ("twitter");
 		Assert.AreEqual ("twitterDummyId", authData["id"]);
 		Assert.AreEqual ("twitterDummyScreenName", authData["screen_name"]);
 		Assert.AreEqual ("twitterDummyConsumerKey", authData["oauth_consumer_key"]);
@@ -277,7 +277,7 @@ public class NCMBUserTest {
 		Assert.AreEqual ("dummyObjectId", user.ObjectId);
 
 		// googleパラメータ確認
-		Dictionary<string, object> authData = user.getAuthDataForProvider ("google");
+		Dictionary<string, object> authData = user.GetAuthDataForProvider ("google");
 		Assert.AreEqual ("googleDummyId", authData["id"]);
 		Assert.AreEqual ("googleDummyAccessToken", authData["access_token"]);
 
