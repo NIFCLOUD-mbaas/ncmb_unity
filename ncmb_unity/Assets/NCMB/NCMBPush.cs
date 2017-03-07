@@ -113,7 +113,7 @@ namespace NCMB
         /// <summary>
         ///  Set search condition
         /// </summary>
-        public object searchCondition {
+        public object SearchCondition {
             get {
                 return (object)this ["searchCondition"];
             }
