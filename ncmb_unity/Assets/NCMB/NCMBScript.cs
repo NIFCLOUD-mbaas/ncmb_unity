@@ -155,7 +155,7 @@ namespace NCMB
                         if (pair.Value is IList || pair.Value is IDictionary)
                         {
                             //value形式:array,ILis,IDictionaryの場合
-                            queryVal = SimpleJSON.Json.Serialize(pair.Value);
+                            queryVal = Json.Serialize(pair.Value);
                         }
                         else if (pair.Value is DateTime)
                         {
