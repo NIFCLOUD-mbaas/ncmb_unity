@@ -22,6 +22,7 @@ using MiniJSON;
 using NCMB.Internal;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace NCMB
 {
@@ -45,6 +46,7 @@ namespace NCMB
 		private string _objectId;
 		private DateTime? _updateDate;
 		private DateTime? _createDate;
+		private Dictionary<string,object> _responseAuthData;
 
 		/// <summary>
 		/// オブジェクトの取得、または設定を行います。
@@ -156,6 +158,18 @@ namespace NCMB
 			}
 			set {
 				this._createDate = value;
+			}
+		}
+
+		/// <summary>
+		/// authDataの取得、または設定を行います。。
+		/// </summary>
+		public Dictionary<string,object> ResponseAuthData { 	
+			get {
+				return this._responseAuthData;
+			}
+			set {
+				this._responseAuthData = value;
 			}
 		}
 
@@ -1205,6 +1219,10 @@ namespace NCMB
 					this._setUpdateDate ((string)value);
 					responseDic.Remove ("updateDate");
 				}
+				if (responseDic.TryGetValue ("authData", out value)) {
+					this._responseAuthData = (Dictionary<string, object>)value;
+					responseDic.Remove ("authData");
+				}
 
 				//更新日時を更新する
 				if ((!this._updateDate.HasValue) && this._createDate != null) {
@@ -1454,6 +1472,9 @@ namespace NCMB
 				}
 				if (this._objectId != null) {
 					dictionary ["objectId"] = this._objectId; 
+				}
+				if (this._responseAuthData != null) {
+					dictionary ["authData"] = this._responseAuthData; 
 				}
 				dictionary ["className"] = this._className; 
 				jsonString = Json.Serialize (dictionary);
