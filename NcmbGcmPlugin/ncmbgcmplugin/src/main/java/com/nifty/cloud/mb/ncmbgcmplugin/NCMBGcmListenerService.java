@@ -37,6 +37,7 @@ public class NCMBGcmListenerService extends GcmListenerService {
 
     //<meta-data>
     static final String SMALL_ICON_KEY = "smallIcon";   //AndroidManifestから情報を取得
+    static final String SMALL_ICON_COLOR_KEY = "smallIconColor"; //AndroidManifestから情報を取得
     private final String TAG = "NCMBGcmListenerService";
     public static final String NS = "NCMB_SPLITTER";
 
@@ -111,11 +112,14 @@ public class NCMBGcmListenerService extends GcmListenerService {
             //それ以外はアプリのアイコンを設定する
             icon = appInfo.icon;
         }
+        //SmallIconカラーを設定
+        int smallIconColor = appInfo.metaData.getInt(SMALL_ICON_COLOR_KEY);
 
         //Notification作成
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(icon)//通知エリアのアイコン
+                .setColor(smallIconColor)//通知エリアのアイコンカラー
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)//通知をタップしたら自動で削除する
