@@ -143,44 +143,44 @@ namespace NCMB
 				if (body != null) {
 					content = Json.Serialize (body);
 				}
+				
+				//クエリ文字列作成
+				String queryVal = "";
+				String queryString = "?";
+				if (query != null && query.Count > 0)
+				{
+					int count = query.Count;
+					foreach (KeyValuePair<string, object> pair in query)
+					{
+						if (pair.Value is IList || pair.Value is IDictionary)
+						{
+							//value形式:array,ILis,IDictionaryの場合
+							queryVal = SimpleJSON.Json.Serialize(pair.Value);
+						}
+						else if (pair.Value is DateTime)
+						{
+							//value形式:DateTimeの場合
+							queryVal = NCMBUtility.encodeDate((DateTime)pair.Value);
+						}
+						else
+						{
+							//value形式:上の以外場合
+							queryVal = pair.Value.ToString();
+						}
 
-                //クエリ文字列作成
-                String queryVal = "";
-                String queryString = "?";
-                if (query != null && query.Count > 0)
-                {
-                    int count = query.Count;
-                    foreach (KeyValuePair<string, object> pair in query)
-                    {
-                        if (pair.Value is IList || pair.Value is IDictionary)
-                        {
-                            //value形式:array,ILis,IDictionaryの場合
-                            queryVal = Json.Serialize(pair.Value);
-                        }
-                        else if (pair.Value is DateTime)
-                        {
-                            //value形式:DateTimeの場合
-                            queryVal = NCMBUtility.encodeDate((DateTime)pair.Value);
-                        }
-                        else
-                        {
-                            //value形式:上の以外場合
-                            queryVal = pair.Value.ToString();
-                        }
+						queryString += pair.Key + "=" + Uri.EscapeDataString(queryVal);
 
-                        queryString += pair.Key + "=" + Uri.EscapeDataString(queryVal);
+						if (count > 1)
+						{
+							queryString += "&";
+							--count;
+						}
+					}
 
-                        if (count > 1)
-                        {
-                            queryString += "&";
-                            --count;
-                        }
-                    }
+					scriptUrl += queryString;
+				}
 
-                    scriptUrl += queryString;
-                }
-
-                ServicePointManager.ServerCertificateValidationCallback = delegate {
+				ServicePointManager.ServerCertificateValidationCallback = delegate {
 					return true;
 				}; 
 
