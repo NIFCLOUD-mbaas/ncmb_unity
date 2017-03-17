@@ -854,14 +854,17 @@ namespace  NCMB
 			switch(provider)
 			{
 			case "facebook":
-				var facebookParam = (Dictionary<string, object>)CurrentUser.ResponseAuthData ["facebook"];
-				var facebookParamDate = (Dictionary<string, object>)facebookParam ["expiration_date"];
+				var facebookAuthData = (Dictionary<string, object>)this["authData"];
+				Debug.Log (Json.Serialize(this["authData"]));
+				var facebookParam = (Dictionary<string, object>)facebookAuthData ["facebook"];
 				authData.Add ("id", facebookParam["id"]);
 				authData.Add ("access_token", facebookParam["access_token"]);
-				authData.Add ("expiration_date", facebookParamDate["iso"]);
+				authData.Add ("expiration_date", NCMBUtility.encodeDate((DateTime)facebookParam["expiration_date"]));
 				break;
 			case "twitter":
-				var twitterParam = (Dictionary<string, object>)CurrentUser.ResponseAuthData ["twitter"];
+				var twitterAuthData = (Dictionary<string, object>)this["authData"];
+				Debug.Log (Json.Serialize(this["authData"]));
+				var twitterParam = (Dictionary<string, object>)twitterAuthData ["twitter"];
 				authData.Add ("id", twitterParam["id"]);
 				authData.Add ("screen_name", twitterParam["screen_name"]);
 				authData.Add ("oauth_consumer_key", twitterParam["oauth_consumer_key"]);
