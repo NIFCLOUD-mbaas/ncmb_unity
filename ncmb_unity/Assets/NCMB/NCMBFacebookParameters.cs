@@ -35,23 +35,23 @@ namespace NCMB
 		/// <summary>
 		/// コンストラクター。
 		/// </summary>	
-		public NCMBFacebookParameters(string aUserId, string anAccessToken, DateTime anExpirationDate)
+		public NCMBFacebookParameters(string userId, string accessToken, DateTime expirationDate)
 		{
-			if (string.IsNullOrEmpty (aUserId) ||
-				string.IsNullOrEmpty (anAccessToken) ||
-				string.IsNullOrEmpty (NCMBUtility.encodeDate (anExpirationDate))
+			if (string.IsNullOrEmpty (userId) ||
+				string.IsNullOrEmpty (accessToken) ||
+				string.IsNullOrEmpty (NCMBUtility.encodeDate (expirationDate))
 			) 
 			{
-				throw new NCMBException (new ArgumentException ("aUserId or anAccessToken or anExpirationDate must not be null."));
+				throw new NCMBException (new ArgumentException ("userId or accessToken or expirationDate must not be null."));
 			}
 
 			Dictionary<string, object> objDate = new Dictionary<string, object> () {
 				{"__type", "Date"},
-				{"iso", NCMBUtility.encodeDate (anExpirationDate)}
+				{"iso", NCMBUtility.encodeDate (expirationDate)}
 			};
 			Dictionary<string, object> facebookParam = new Dictionary<string, object> () {
-				{"id", aUserId},
-				{"access_token", anAccessToken},
+				{"id", userId},
+				{"access_token", accessToken},
 				{"expiration_date", objDate}
 			};
 

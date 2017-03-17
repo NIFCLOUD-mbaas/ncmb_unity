@@ -36,32 +36,32 @@ namespace NCMB
 		/// コンストラクター。
 		/// </summary>	
 		public NCMBTwitterParameters(
-			string aUserId,
-			string aScreenName,
-			string aConsumerKey,
-			string aConsumerSecret,
-			string anAccessToken,
-			string anAccessTokenSecret
+			string userId,
+			string screenName,
+			string consumerKey,
+			string consumerSecret,
+			string accessToken,
+			string accessTokenSecret
 		)
 		{
-			if (string.IsNullOrEmpty (aUserId) ||
-				string.IsNullOrEmpty (aScreenName) ||
-				string.IsNullOrEmpty (aConsumerKey) ||
-				string.IsNullOrEmpty (aConsumerSecret) ||
-				string.IsNullOrEmpty (anAccessToken) ||
-				string.IsNullOrEmpty (anAccessTokenSecret)
+			if (string.IsNullOrEmpty (userId) ||
+				string.IsNullOrEmpty (screenName) ||
+				string.IsNullOrEmpty (consumerKey) ||
+				string.IsNullOrEmpty (consumerSecret) ||
+				string.IsNullOrEmpty (accessToken) ||
+				string.IsNullOrEmpty (accessTokenSecret)
 			)
 			{
 				throw new NCMBException (new ArgumentException ("constructor parameters must not be null."));
 			}
 
 			Dictionary<string, object> twitterParam = new Dictionary<string, object> () {
-				{"id", aUserId},
-				{"screen_name", aScreenName},
-				{"oauth_consumer_key", aConsumerKey},
-				{"consumer_secret", aConsumerSecret},
-				{"oauth_token", anAccessToken},
-				{"oauth_token_secret", anAccessTokenSecret}
+				{"id", userId},
+				{"screen_name", screenName},
+				{"oauth_consumer_key", consumerKey},
+				{"consumer_secret", consumerSecret},
+				{"oauth_token", accessToken},
+				{"oauth_token_secret", accessTokenSecret}
 			};
 
 			param.Add ("twitter", twitterParam);
