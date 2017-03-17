@@ -855,7 +855,6 @@ namespace  NCMB
 			{
 			case "facebook":
 				var facebookAuthData = (Dictionary<string, object>)this["authData"];
-				Debug.Log (Json.Serialize(this["authData"]));
 				var facebookParam = (Dictionary<string, object>)facebookAuthData ["facebook"];
 				authData.Add ("id", facebookParam["id"]);
 				authData.Add ("access_token", facebookParam["access_token"]);
@@ -863,7 +862,6 @@ namespace  NCMB
 				break;
 			case "twitter":
 				var twitterAuthData = (Dictionary<string, object>)this["authData"];
-				Debug.Log (Json.Serialize(this["authData"]));
 				var twitterParam = (Dictionary<string, object>)twitterAuthData ["twitter"];
 				authData.Add ("id", twitterParam["id"]);
 				authData.Add ("screen_name", twitterParam["screen_name"]);
