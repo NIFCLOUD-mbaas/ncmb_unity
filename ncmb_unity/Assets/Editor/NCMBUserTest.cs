@@ -659,7 +659,7 @@ public class NCMBUserTest {
 		NCMBUser user = new NCMBUser ();
 		user.UserName = "tarou";
 		user.Password = "tarou";
-		user.Email = "tarou@aaa.com";
+		user.Email = "sample@example.com";
 
 		// 会員登録
 		user.SignUpAsync ((NCMBException e) => {
