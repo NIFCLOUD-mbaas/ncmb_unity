@@ -256,7 +256,7 @@ public class NCMBUserTest {
 		Assert.True (NCMBTestSettings.CallbackFlag);
 		NCMBUser.LogOutAsync ();
 	}
-		
+
 	/**
      * - 内容：LogInWithAuthDataAsyncがGoogleで成功する事を確認する
      * - 結果：各パラメータが正しく取得できること
