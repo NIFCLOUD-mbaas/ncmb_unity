@@ -212,7 +212,7 @@ namespace NCMB.Internal
 						if (null != responseData && unescapeResponseData != NCMBUtility.unicodeUnescape(responseData))
 						{
 							//データに絵文字があればUnicodeアンエスケープし、レスポンスシグネチャ計算用に対応する
-							//一般のエスケープ表記データ(ダブルクォーテーション..)はこの処理をしないのが正しいです。
+							//一般のエスケープ表記データ(ダブルクォーテーション..)はこの処理をしないのが正しいです
 							unescapeResponseData = NCMBUtility.unicodeUnescape(responseData);
 						}
 						//レスポンスシグネチャのチェック実施

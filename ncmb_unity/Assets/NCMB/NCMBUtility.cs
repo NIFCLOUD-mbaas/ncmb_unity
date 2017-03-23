@@ -326,7 +326,7 @@ namespace NCMB.Internal
 			return builder.ToString ();
 		}
 
-		//文字列中、4桁の16進数で表記されたUnicode文字(\uXXXX)のみをデコードする
+		//文字列中、4桁の16進数で表記されたUnicode文字(\uXXXX)のみをデコード
 		static internal string unicodeUnescape(string targetText)
 		{
 			string retval = Regex.Replace
