@@ -326,22 +326,22 @@ namespace NCMB.Internal
 			return builder.ToString ();
 		}
 
-        //文字列中、4桁の16進数で表記されたUnicode文字(\uXXXX)のみをデコードする
-        static internal string unicodeUnescape(string targetText)
-        {
-            string retval = Regex.Replace
-            (
-                targetText,
-                @"\\[Uu]([0-9A-Fa-f]{4})",
-                x =>
-                {
-                    ushort code = ushort.Parse(x.Groups[1].Value, NumberStyles.AllowHexSpecifier);
-                    return ((char)code).ToString();
-                }
-            );
+		//文字列中、4桁の16進数で表記されたUnicode文字(\uXXXX)のみをデコードする
+		static internal string unicodeUnescape(string targetText)
+		{
+			string retval = Regex.Replace
+			(
+				targetText,
+				@"\\[Uu]([0-9A-Fa-f]{4})",
+				x =>
+				{
+					ushort code = ushort.Parse(x.Groups[1].Value, NumberStyles.AllowHexSpecifier);
+					return ((char)code).ToString();
+				}
+			);
 
-            return retval.ToString();
-        }
+			return retval.ToString();
+		}
 
     }
 	

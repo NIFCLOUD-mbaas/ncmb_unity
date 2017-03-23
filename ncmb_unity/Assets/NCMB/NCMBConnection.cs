@@ -207,16 +207,16 @@ namespace NCMB.Internal
 					if (httpResponse.Headers.GetValues (RESPONSE_SIGNATURE) != null) {
 						string responseSignature = httpResponse.Headers.GetValues (RESPONSE_SIGNATURE) [0];
 
-                        //レスポンスデータをmobile backend上と同一にします
-                        string unescapeResponseData = responseData;
-                        if (null != responseData && unescapeResponseData != NCMBUtility.unicodeUnescape(responseData))
-                        {
-                            //データに絵文字があればUnicodeアンエスケープし、レスポンスシグネチャ計算用に対応する
-                            //一般のエスケープ表記データ(ダブルクォーテーション..)はこの処理をしないのが正しいです。
-                            unescapeResponseData = NCMBUtility.unicodeUnescape(responseData);
-                        }
-                        //レスポンスシグネチャのチェック実施
-                        _signatureCheck(responseSignature, ref statusCode, ref unescapeResponseData, ref responseByte, ref error);
+						//レスポンスデータをmobile backend上と同一にします
+						string unescapeResponseData = responseData;
+						if (null != responseData && unescapeResponseData != NCMBUtility.unicodeUnescape(responseData))
+						{
+							//データに絵文字があればUnicodeアンエスケープし、レスポンスシグネチャ計算用に対応する
+							//一般のエスケープ表記データ(ダブルクォーテーション..)はこの処理をしないのが正しいです。
+							unescapeResponseData = NCMBUtility.unicodeUnescape(responseData);
+						}
+						//レスポンスシグネチャのチェック実施
+						_signatureCheck(responseSignature, ref statusCode, ref unescapeResponseData, ref responseByte, ref error);
 					} else {
 						statusCode = 100;
 						responseData = "{}";
@@ -225,7 +225,6 @@ namespace NCMB.Internal
 						error.ErrorMessage = "Authentication error by response signature incorrect.";
 					}
 				}
-
 
 				if (fileCallback != null) {
 					fileCallback (statusCode, responseByte, error);
