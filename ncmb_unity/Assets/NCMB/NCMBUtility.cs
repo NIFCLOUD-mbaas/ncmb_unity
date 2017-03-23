@@ -19,7 +19,8 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace NCMB.Internal
 {
@@ -324,7 +325,25 @@ namespace NCMB.Internal
 			}
 			return builder.ToString ();
 		}
-	}
+
+        //文字列中、4桁の16進数で表記されたUnicode文字(\uXXXX)のみをデコードする
+        static internal string unicodeUnescape(string targetText)
+        {
+            string retval = Regex.Replace
+            (
+                targetText,
+                @"\\[Uu]([0-9A-Fa-f]{4})",
+                x =>
+                {
+                    ushort code = ushort.Parse(x.Groups[1].Value, NumberStyles.AllowHexSpecifier);
+                    return ((char)code).ToString();
+                }
+            );
+
+            return retval.ToString();
+        }
+
+    }
 	
 }
 

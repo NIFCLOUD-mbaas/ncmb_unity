@@ -201,18 +201,22 @@ namespace NCMB.Internal
 					_checkInvalidSessionToken (error.ErrorCode);
 				}
 
-				//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
-				var unescapeResponseData = responseData;
-				if (unescapeResponseData != null && unescapeResponseData != Regex.Unescape (unescapeResponseData)) {
-					unescapeResponseData = Regex.Unescape (unescapeResponseData);	
-				}  
-
 				//レスポンスシグネチャのチェック
 				if (NCMBSettings._responseValidationFlag && httpResponse != null) {
 					//レスポンスシグネチャが無い場合はE100001エラー
 					if (httpResponse.Headers.GetValues (RESPONSE_SIGNATURE) != null) {
 						string responseSignature = httpResponse.Headers.GetValues (RESPONSE_SIGNATURE) [0];
-						_signatureCheck (responseSignature, ref statusCode, ref unescapeResponseData, ref responseByte, ref error);
+
+                        //レスポンスデータをmobile backend上と同一にします
+                        string unescapeResponseData = responseData;
+                        if (null != responseData && unescapeResponseData != NCMBUtility.unicodeUnescape(responseData))
+                        {
+                            //データに絵文字があればUnicodeアンエスケープし、レスポンスシグネチャ計算用に対応する
+                            //一般のエスケープ表記データ(ダブルクォーテーション..)はこの処理をしないのが正しいです。
+                            unescapeResponseData = NCMBUtility.unicodeUnescape(responseData);
+                        }
+                        //レスポンスシグネチャのチェック実施
+                        _signatureCheck(responseSignature, ref statusCode, ref unescapeResponseData, ref responseByte, ref error);
 					} else {
 						statusCode = 100;
 						responseData = "{}";
@@ -423,7 +427,7 @@ namespace NCMB.Internal
 				NCMBDebug.Log ("Session token :" + _sessionToken);
 			}
 			req.Headers.Add (HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-			return req;
+            return req;
 		}
 
 		private StringBuilder _makeSignatureHashData ()
