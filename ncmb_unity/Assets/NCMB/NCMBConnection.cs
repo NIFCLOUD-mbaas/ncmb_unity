@@ -1,12 +1,12 @@
 ﻿/*******
  Copyright 2014 NIFTY Corporation All Rights Reserved.
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,6 +58,11 @@ namespace NCMB.Internal
 		//Access-Control　キー
 		private static readonly string HEADER_SESSION_TOKEN = "X-NCMB-Apps-Session-Token";
 		//セッショントークン
+		private static readonly string HEADER_USER_AGENT_KEY = "X-NCMB-SDK-Version";
+		//UserAgent キー
+		private static readonly string HEADER_USER_AGENT_VALUE = "unity-"+CommonConstant.SDK_VERSION;//unity-x.x.x
+		//UserAgent 値
+
 		private static readonly int REQUEST_TIME_OUT = 10000;
 		private string _applicationKey = "";
 		private string _clientKey = "";
@@ -98,7 +103,7 @@ namespace NCMB.Internal
 			this._domainUri = new Uri (domain);
 			this._file = file;
 		}
-			
+
 		// 通信処理(File_GET)
 		internal void Connect (HttpClientFileDataCallback callback)
 		{
@@ -118,7 +123,7 @@ namespace NCMB.Internal
 			//SSLサイトにアクセス
 			ServicePointManager.ServerCertificateValidationCallback = delegate {
 				return true;
-			}; 
+			};
 
 			int statusCode = 0;
 			string responseData = null;
@@ -133,7 +138,7 @@ namespace NCMB.Internal
 					// 通常
 					req = this._sendRequest (req, ref error);
 				}
-					
+
 				//書き込みでエラーがあれば終了
 				if (error != null) {
 					callback (statusCode, responseData, error);
@@ -149,7 +154,7 @@ namespace NCMB.Internal
 				// 通信結果取得
 				httpResponse = (HttpWebResponse)req.GetResponse ();
 				streamResponse = httpResponse.GetResponseStream ();
-				statusCode = (int)httpResponse.StatusCode; 
+				statusCode = (int)httpResponse.StatusCode;
 				streamRead = new StreamReader (streamResponse);
 				if (fileCallback != null) {
 					// File_GET
@@ -178,7 +183,7 @@ namespace NCMB.Internal
 						responseData = streamRead.ReadToEnd ();
 						var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;
 						var hashtableData = new Hashtable (jsonData);
-					
+
 						// エラー内容の設定
 						error.ErrorCode = (hashtableData ["code"].ToString ());
 						error.ErrorMessage = (hashtableData ["error"].ToString ());
@@ -204,8 +209,8 @@ namespace NCMB.Internal
 				//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
 				var unescapeResponseData = responseData;
 				if (unescapeResponseData != null && unescapeResponseData != Regex.Unescape (unescapeResponseData)) {
-					unescapeResponseData = Regex.Unescape (unescapeResponseData);	
-				}  
+					unescapeResponseData = Regex.Unescape (unescapeResponseData);
+				}
 
 				//レスポンスシグネチャのチェック
 				if (NCMBSettings._responseValidationFlag && httpResponse != null) {
@@ -277,7 +282,7 @@ namespace NCMB.Internal
 			//証明書更新　更新しないとSSLサイトにアクセス出来ない
 			ServicePointManager.ServerCertificateValidationCallback = delegate {
 				return true;
-			}; 
+			};
 			//リクエストの作成
 			HttpWebRequest req = _returnRequest ();
 			//非同期データ送信　BeginGetRequestStreamでくくらなければ同期通信
@@ -320,7 +325,7 @@ namespace NCMB.Internal
 		//同期データ送信
 		private HttpWebRequest _sendRequest (HttpWebRequest req, ref NCMBException error)
 		{
-			byte[] postDataBytes = Encoding.Default.GetBytes (_content); 
+			byte[] postDataBytes = Encoding.Default.GetBytes (_content);
 			Stream stream = null;
 			try {
 				stream = req.GetRequestStream ();
@@ -392,7 +397,7 @@ namespace NCMB.Internal
 			req.Timeout = REQUEST_TIME_OUT;
 			StringBuilder stringHashData = _makeSignatureHashData ();
 			string result = _makeSignature (stringHashData.ToString ()); //シグネチャ生成
-			//ヘッダー設定 
+			//ヘッダー設定
 			//メソッド追加
 			switch (_method) {
 			case ConnectType.POST:
@@ -418,6 +423,7 @@ namespace NCMB.Internal
 			req.Headers.Add (HEADER_APPLICATION_KEY, _applicationKey);
 			req.Headers.Add (HEADER_SIGNATURE, result);
 			req.Headers.Add (HEADER_TIMESTAMP_KEY, _headerTimestamp);
+			req.Headers.Add (HEADER_USER_AGENT_KEY, HEADER_USER_AGENT_VALUE);
 			if ((_sessionToken != null) && (_sessionToken != "")) {
 				req.Headers.Add (HEADER_SESSION_TOKEN, _sessionToken);
 				NCMBDebug.Log ("Session token :" + _sessionToken);
@@ -437,7 +443,7 @@ namespace NCMB.Internal
 				parameter = temp [1];
 			}
 			Hashtable hashValue = new Hashtable (); //昇順に必要なデータを格納するリスト
-			hashValue [SIGNATURE_METHOD_KEY] = SIGNATURE_METHOD_VALUE;//シグネチャキー 
+			hashValue [SIGNATURE_METHOD_KEY] = SIGNATURE_METHOD_VALUE;//シグネチャキー
 			hashValue [SIGNATURE_VERSION_KEY] = SIGNATURE_VERSION_VALUE; // シグネチャバージョン
 			hashValue [HEADER_APPLICATION_KEY] = _applicationKey;
 			hashValue [HEADER_TIMESTAMP_KEY] = _headerTimestamp;
@@ -463,7 +469,7 @@ namespace NCMB.Internal
 			data.Append (path); //パスの追加
 			data.Append ("\n");
 			foreach (string tmp in tmpAscendingList) {
-				data.Append (tmp + "=" + hashValue [tmp] + "&"); 
+				data.Append (tmp + "=" + hashValue [tmp] + "&");
 			}
 			data.Remove (data.Length - 1, 1); //最後の&を削除
 			return data;
