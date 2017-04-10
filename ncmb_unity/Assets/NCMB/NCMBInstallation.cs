@@ -167,10 +167,8 @@ namespace  NCMB
 		{
 			NCMBInstallation currentInstallation = null;
 			try {
-				//null check
-				NCMBManager manager = new NCMBManager ();
 				//ローカルファイルに配信端末情報があれば取得、なければ新規作成
-				string currentInstallationData = manager.GetCurrentInstallation ();
+				string currentInstallationData = NCMBManager.GetCurrentInstallation ();
 				if (currentInstallationData != "") {
 					//ローカルファイルから端末情報を取得
 					currentInstallation = new NCMBInstallation (currentInstallationData);
