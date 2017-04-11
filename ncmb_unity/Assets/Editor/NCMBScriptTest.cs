@@ -182,6 +182,30 @@ public class NCMBScriptTest
 		NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
+
+    [Test]
+    public void ExecuteCallbackWhenExecuteScriptObjectTest_GET()
+    {
+        string[] strArray = { "tarou1", "tarou2" };
+        NCMBScript script = new NCMBScript("testScriptObject_GET.js", NCMBScript.MethodType.GET, _endPoint);
+        Dictionary<string, object> query = new Dictionary<string, object>() { { "name", strArray } };
+        script.ExecuteAsync(null, null, query, (byte[] result, NCMBException e) => {
+            if (e == null)
+            {
+                string cmd = System.Text.Encoding.UTF8.GetString(result);
+                cmd = cmd.TrimEnd('\0');//終端文字の削除
+                Assert.AreEqual("{\"name\":\"[\\\"tarou1\\\",\\\"tarou2\\\"]\"}", cmd);
+            }
+            else
+            {
+                Assert.Fail(e.ErrorMessage);
+            }
+            NCMBTestSettings.CallbackFlag = true;
+        });
+
+        NCMBTestSettings.AwaitAsync();
+        Assert.True(NCMBTestSettings.CallbackFlag);
+    }
 }
 
 
