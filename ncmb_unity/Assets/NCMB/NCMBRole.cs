@@ -141,7 +141,7 @@ namespace NCMB
 		//オーバーライド
 		internal override string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/roles";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/roles";
 		}
 	}
 }

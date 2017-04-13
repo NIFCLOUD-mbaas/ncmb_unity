@@ -194,7 +194,7 @@ namespace  NCMB
 
 		internal override string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/installations";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/installations";
 		}
 
 		//SaveAsync通信後の処理

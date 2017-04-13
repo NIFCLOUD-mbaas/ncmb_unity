@@ -831,7 +831,7 @@ namespace NCMB
 		//通信URLの取得
 		internal virtual string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/classes/" + ClassName;
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/classes/" + ClassName;
 		}
 
 		/// <summary>
