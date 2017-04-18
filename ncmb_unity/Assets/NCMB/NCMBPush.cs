@@ -1,5 +1,5 @@
 /*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -108,6 +108,16 @@ namespace NCMB
 				return (string)this ["message"];
 			}
 			set { this ["message"] = value; }
+		}
+
+		/// <summary>
+		///  Set search condition
+		/// </summary>
+		public object SearchCondition {
+			get {
+				return (object)this ["searchCondition"];
+			}
+			set { this ["searchCondition"] = value; }
 		}
 
 		/// <summary>
@@ -351,7 +361,7 @@ namespace NCMB
 
 		internal override string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/push";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/push";
 		}
 	}
 }

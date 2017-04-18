@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -831,7 +831,7 @@ namespace NCMB
 		//通信URLの取得
 		internal virtual string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/classes/" + ClassName;
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/classes/" + ClassName;
 		}
 
 		/// <summary>

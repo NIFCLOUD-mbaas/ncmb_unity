@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -78,6 +78,18 @@ namespace  NCMB
 				} finally {
 					Monitor.Exit (obj);
 				}
+			}
+		}
+
+		/// <summary>
+		/// ログイン中のユーザセッショントークンを取得を行います。
+		/// </summary>
+		public Dictionary<string,object> AuthData {
+			get {
+				return (Dictionary<string,object>)this ["authData"];
+			}
+			internal set {
+				this ["authData"] = value;
 			}
 		}
 		
@@ -176,27 +188,27 @@ namespace  NCMB
 		
 		internal override string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/users";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/users";
 		}
 		
 		internal static string _getLogInUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/login";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/login";
 		}
 		
 		internal static string _getLogOutUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/logout";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/logout";
 		}
 		
 		internal static string _getRequestPasswordResetUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/requestPasswordReset";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/requestPasswordReset";
 		}
 
 		private static string _getmailAddressUserEntryUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/requestMailAddressUserEntry";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/requestMailAddressUserEntry";
 		}
 
 		//save後処理 　オーバーライド用　新規登録時のみログインを行う
@@ -652,7 +664,215 @@ namespace  NCMB
 			
 			base._mergeFromServer (responseDic, completeData);
 		}
-		
+
+		/// <summary>
+		/// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
+		/// 既存会員のauthData登録はLinkWithAuthDataAsyncメソッドをご利用下さい。<br/>
+		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
+		/// </summary>
+		/// <param name="callback">コールバック</param>
+		public void LogInWithAuthDataAsync (NCMBCallback callback)
+		{
+			if (this.AuthData == null) 
+			{
+				throw new NCMBException (new ArgumentException ("Post authData not exist"));
+			}
+			SignUpAsync ((NCMBException error) => {
+				if (error != null) {
+					// authDataの削除
+					this.AuthData.Clear();
+				}
+
+				if (callback != null) {
+					// callbackを実施
+					Platform.RunOnMainThread (delegate {
+						callback (error);
+					});
+				}
+			});
+		}
+
+		/// <summary>
+		/// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
+		/// ユーザ登録が成功の場合、自動的にログインの状態になります。<br/>
+		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+		/// </summary>
+		public void LogInWithAuthDataAsync ()
+		{
+			this.LogInWithAuthDataAsync (null);
+		}
+
+		/// <summary>
+		/// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
+		/// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
+		/// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
+		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
+		/// </summary>
+		/// <param name="linkParam">authData</param>
+		/// <param name="callback">コールバック</param>
+		public void LinkWithAuthDataAsync (Dictionary<string, object> linkParam, NCMBCallback callback)
+		{
+			if (this.AuthData == null)
+			{
+				// authDataの登録
+				this.AuthData = linkParam;
+				LogInWithAuthDataAsync (callback);
+			}
+
+			// authDataの退避
+			Dictionary<string, object> currentParam = new Dictionary<string, object> ();
+			currentParam = this.AuthData;
+
+			this.AuthData = linkParam;
+
+			SignUpAsync ((NCMBException error) => {
+				if (error == null) {
+					// authDataのmerge
+					var mergeParam = linkParam.Concat(currentParam).ToDictionary(x => x.Key, x => x.Value);
+					this.AuthData = mergeParam;
+				} else
+				{
+					this.AuthData = currentParam;
+				}
+
+				if (callback != null) {
+					// callbackを実施
+					Platform.RunOnMainThread (delegate {
+						callback (error);
+					});
+				}
+			});
+		}
+
+		/// <summary>
+		/// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
+		/// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
+		/// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
+		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+		/// </summary>
+		/// <param name="linkParam">authData</param>
+		public void LinkWithAuthDataAsync (Dictionary<string, object> linkParam)
+		{
+			this.LinkWithAuthDataAsync (linkParam, null);
+		}
+
+		/// <summary>
+		/// 非同期処理で現在ログインしているユーザのauthDataの削除を行います。<br/>
+		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
+		/// </summary>
+		/// <param name="provider">SNS名</param>
+		/// <param name="callback">コールバック</param>
+		public void UnLinkWithAuthDataAsync (string provider, NCMBCallback callback)
+		{
+			if (this.AuthData == null)
+			{
+				throw new NCMBException (new ArgumentException ("Current User authData not exist"));
+			}
+
+			List<string> providerList = new List<string> () {"facebook", "twitter"};
+
+			if (string.IsNullOrEmpty(provider) || !providerList.Contains(provider)) 
+			{
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+			}
+				
+			// authDataの退避
+			Dictionary<string, object> currentParam = new Dictionary<string, object> ();
+			currentParam = this.AuthData;
+
+			Dictionary<string, object> providerParam = new Dictionary<string, object> () {
+				{provider, null}
+			};
+			this.AuthData = providerParam;
+
+			SignUpAsync ((NCMBException error) => {
+				if (error == null) {
+					// authDataの削除
+					currentParam.Remove(provider);
+					this.AuthData = currentParam;
+				} else
+				{
+					this.AuthData = currentParam;
+				}
+
+				if (callback != null) {
+					// callbackを実施
+					Platform.RunOnMainThread (delegate {
+						callback (error);
+					});
+				}
+			});
+		}
+
+		/// <summary>
+		/// 非同期処理で現在ログインしているユーザのauthDataの削除を行います。<br/>
+		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+		/// </summary>
+		/// <param name="provider">SNS名</param>
+		public void UnLinkWithAuthDataAsync (string provider)
+		{
+			this.UnLinkWithAuthDataAsync (provider, null);
+		}
+
+		/// <summary>
+		/// SNSのauthDataが登録されているか判定を行います。
+		/// </summary>
+		/// <param name="provider">SNS名</param>
+		/// <returns> true:登録済　false:未登録 </returns>
+		public bool IsLinkWith (string provider)
+		{
+			List<string> providerList = new List<string> () {"facebook", "twitter"};
+
+			if (string.IsNullOrEmpty(provider) || !providerList.Contains(provider)) 
+			{
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+			}
+
+			if (this.AuthData == null) {
+				return false;
+			} else 
+			{
+				return (this.AuthData.ContainsKey( provider ));
+			}
+		}
+
+		/// <summary>
+		/// 指定されたSNSのauthDataを取得します。
+		/// </summary>
+		/// <param name="provider">SNS名</param>
+		/// <returns>指定されたSNSのauthData</returns>
+		public Dictionary<string, object> GetAuthDataForProvider(string provider)
+		{
+			List<string> providerList = new List<string> () {"facebook", "twitter"};
+			if (string.IsNullOrEmpty(provider) || !providerList.Contains(provider)) 
+			{
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+			}
+
+			Dictionary<string, object> authData = new Dictionary<string, object> ();
+
+			switch(provider)
+			{
+			case "facebook":
+				var facebookAuthData = (Dictionary<string, object>)this["authData"];
+				var facebookParam = (Dictionary<string, object>)facebookAuthData ["facebook"];
+				authData.Add ("id", facebookParam["id"]);
+				authData.Add ("access_token", facebookParam["access_token"]);
+				authData.Add ("expiration_date", NCMBUtility.encodeDate((DateTime)facebookParam["expiration_date"]));
+				break;
+			case "twitter":
+				var twitterAuthData = (Dictionary<string, object>)this["authData"];
+				var twitterParam = (Dictionary<string, object>)twitterAuthData ["twitter"];
+				authData.Add ("id", twitterParam["id"]);
+				authData.Add ("screen_name", twitterParam["screen_name"]);
+				authData.Add ("oauth_consumer_key", twitterParam["oauth_consumer_key"]);
+				authData.Add ("consumer_secret", twitterParam["consumer_secret"]);
+				authData.Add ("oauth_token", twitterParam["oauth_token"]);
+				authData.Add ("oauth_token_secret", twitterParam["oauth_token_secret"]);
+				break;
+			}
+
+			return authData;
+		}
 	}
 }
-

@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -24,13 +24,16 @@ using NCMB.Internal;
 using System.Linq;
 using UnityEngine;
 
+using System.Runtime.CompilerServices;
+
+[assembly:InternalsVisibleTo("Assembly-CSharp-Editor")]
 namespace  NCMB
 {
 	/// <summary>
 	/// 開封通知操作を扱います。
 	/// </summary>
 	[NCMBClassName ("analytics")]
-	internal static class NCMBAnalytics
+	internal class NCMBAnalytics
 	{
 		internal static void TrackAppOpened (string _pushId)	//(Android/iOS)-NCMBManager.onAnalyticsReceived-this.NCMBAnalytics
 		{
@@ -52,7 +55,7 @@ namespace  NCMB
 				};
 
 				var json = Json.Serialize (requestData);
-				string url = CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/push/" + _pushId + "/openNumber";
+				string url = NCMBAnalytics._getBaseUrl(_pushId);
 				ConnectType type = ConnectType.POST;
 				string content = json.ToString ();
 				NCMBDebug.Log ("content:" + content);
@@ -78,6 +81,17 @@ namespace  NCMB
 				#endif
 
 			}
+		}
+		/// <summary>
+		/// コンストラクター
+		/// </summary>
+		internal NCMBAnalytics ()
+		{
+		}
+		//オーバーライド
+		internal static string _getBaseUrl (string _pushId)
+		{
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/push/" + _pushId + "/openNumber";
 		}
 	}
 }

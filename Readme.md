@@ -28,9 +28,9 @@
 
 ## 動作環境
 
-- Unity 4.6 / Unity 5.2
-- Android 4.x〜5.x
-- iOS 6.x〜9.x
+- Unity 5.x
+- Android 5.x
+- iOS 7.x〜10.x
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 

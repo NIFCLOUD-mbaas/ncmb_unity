@@ -1,5 +1,5 @@
 /*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -51,6 +51,9 @@
 // For Push
 #include "NCMBRichPushView.h"
 #include <stdio.h>
+#if __has_include(<UserNotifications/UserNotifications.h>)
+#import  <UserNotifications/UserNotifications.h>
+#endif
 
 // Converts C style string to NSString
 #define GetStringParam( _x_ ) ( _x_ != NULL ) ? [NSString stringWithUTF8String:_x_] : [NSString stringWithUTF8String:""]
@@ -88,6 +91,7 @@ void notifyUnityError(const char * method, NSError * error)
 // Native code
 extern "C"
 {
+    
     // Use location or not
     bool getLocation;
     bool useAnalytics;
@@ -97,21 +101,52 @@ extern "C"
     
     void registerCommon()
     {
-        if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1){
-            UIUserNotificationType type = UIRemoteNotificationTypeAlert |
-            UIRemoteNotificationTypeBadge |
-            UIRemoteNotificationTypeSound;
-            UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:type
-                                                                                    categories:nil];
+        if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){8, 0, 0}]){
+            
+            //iOS10未満での、DeviceToken要求方法
+            
+            //通知のタイプを設定したsettingを用意
+            UIUserNotificationType type = UIUserNotificationTypeAlert |
+            UIUserNotificationTypeBadge |
+            UIUserNotificationTypeSound;
+            UIUserNotificationSettings *setting;
+            setting = [UIUserNotificationSettings settingsForTypes:type
+                                                        categories:nil];
+            
+            //通知のタイプを設定
             [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
+            
+            //DeviceTokenを要求
             [[UIApplication sharedApplication] registerForRemoteNotifications];
         } else {
+            
+            //iOS8未満での、DeviceToken要求方法
             [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
              (UIRemoteNotificationTypeAlert |
               UIRemoteNotificationTypeBadge |
               UIRemoteNotificationTypeSound)];
         }
         
+        #if __has_include(<UserNotifications/UserNotifications.h>)
+        if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){10, 0, 0}]){
+            
+            //iOS10以上での、DeviceToken要求方法
+            UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+            [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert |
+                                                     UNAuthorizationOptionBadge |
+                                                     UNAuthorizationOptionSound)
+                                  completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                                      if (error) {
+                                          return;
+                                      }
+                                      if (granted) {
+                                          //通知を許可にした場合DeviceTokenを要求
+                                          [[UIApplication sharedApplication] registerForRemoteNotifications];
+                                      }
+                                  }];
+            
+        }
+        #endif
     }
     
     void registerNotification(BOOL _useAnalytics)

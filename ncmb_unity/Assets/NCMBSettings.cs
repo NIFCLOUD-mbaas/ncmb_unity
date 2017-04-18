@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -41,6 +41,10 @@ namespace NCMB
 		private static bool _usePush = false;
 		//開封通知フラグ
 		private static bool _useAnalytics = false;
+		//ドメインURL
+		private static string _domainURL = "";
+		//APIバージョン
+		private static string _apiVersion = "";
 		//static NG
 		[SerializeField]
 		internal string
@@ -63,6 +67,12 @@ namespace NCMB
 		[SerializeField]
 		internal bool
 			responseValidation = false;
+
+		internal string
+			domainURL = "";
+
+		internal string
+			apiVersion = "";
 		//Current user
 		private static string _currentUser = null;
 		internal static string filePath = "";
@@ -132,6 +142,30 @@ namespace NCMB
 		}
 
 		/// <summary>
+		/// ドメインURLの取得、または設定を行います。 
+		/// </summary>
+		internal static string DomainURL {
+			get {
+				return _domainURL;
+			}
+			set {
+				_domainURL = value;
+			}
+		}
+
+		/// <summary>
+		/// APIバージョンの取得、または設定を行います。 
+		/// </summary>
+		 internal static string APIVersion {
+			get {
+				return _apiVersion;
+			}
+			set {
+				_apiVersion = value;
+			}
+		}
+
+		/// <summary>
 		/// コンストラクター
 		/// </summary>
 		public NCMBSettings ()
@@ -143,12 +177,18 @@ namespace NCMB
 		/// </summary>
 		/// <param name="applicationKey">アプリケーションキー</param>
 		/// <param name="clientKey">クライアントキー</param>
-		public static void Initialize (String applicationKey, String clientKey)
+		/// <param name="domainURL">ドメイン</param>
+		/// <param name="apiVersion">APIバージョン</param>
+		public static void Initialize (String applicationKey, String clientKey, String domainURL, String apiVersion)
 		{
 			// アプリケーションキーを設定
 			_applicationKey = applicationKey;
 			// クライアントキーを設定
 			_clientKey = clientKey;
+			// ドメインURLを設定
+			_domainURL = string.IsNullOrEmpty(domainURL) ? CommonConstant.DOMAIN_URL : domainURL;
+			// APIバージョンを設定
+			_apiVersion = string.IsNullOrEmpty(apiVersion) ? CommonConstant.API_VERSION : apiVersion;
 		}
 
 		/// <summary>
@@ -206,7 +246,7 @@ namespace NCMB
 				NCMBSettings._isInitialized = true;
 				_responseValidationFlag = responseValidation;
 				DontDestroyOnLoad (base.gameObject);
-				NCMBSettings.Initialize (this.applicationKey, this.clientKey);
+				NCMBSettings.Initialize (this.applicationKey, this.clientKey, this.domainURL, this.apiVersion);
 				//NCMBSettings.RegisterPush(this.usePush, this.androidSenderId, this.getLocation);
 				filePath = Application.persistentDataPath;
 				currentInstallationPath = filePath + "/currentInstallation";
