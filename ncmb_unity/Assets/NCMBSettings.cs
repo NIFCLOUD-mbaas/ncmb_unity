@@ -67,10 +67,10 @@ namespace NCMB
 		[SerializeField]
 		internal bool
 			responseValidation = false;
-		[SerializeField]
+
 		internal string
 			domainURL = "";
-		[SerializeField]
+
 		internal string
 			apiVersion = "";
 		//Current user
@@ -156,7 +156,7 @@ namespace NCMB
 		/// <summary>
 		/// APIバージョンの取得、または設定を行います。 
 		/// </summary>
-		public static string APIVersion {
+		 internal static string APIVersion {
 			get {
 				return _apiVersion;
 			}
