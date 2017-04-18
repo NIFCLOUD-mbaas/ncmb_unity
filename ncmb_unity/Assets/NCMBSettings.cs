@@ -177,6 +177,8 @@ namespace NCMB
 		/// </summary>
 		/// <param name="applicationKey">アプリケーションキー</param>
 		/// <param name="clientKey">クライアントキー</param>
+		/// <param name="domainURL">ドメイン</param>
+		/// <param name="apiVersion">APIバージョン</param>
 		public static void Initialize (String applicationKey, String clientKey, String domainURL, String apiVersion)
 		{
 			// アプリケーションキーを設定
