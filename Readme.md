@@ -32,6 +32,8 @@
 - Android 5.x
 - iOS 7.x〜10.x
 
+※ Windows Phone 等、他のプラットフォームはサポートしていません。
+
 ## ライセンス
 
 このSDKのライセンスはApache License Version 2.0に従います。
