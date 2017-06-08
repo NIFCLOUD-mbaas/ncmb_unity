@@ -41,12 +41,12 @@ namespace  NCMB
 			if (_pushId != null && NCMBManager._token != null && NCMBSettings.UseAnalytics) {
 
 				string deviceType = "";
-				if (SystemInfo.operatingSystem.IndexOf ("Android") != -1) {
-					deviceType = "android";
-				} else if (SystemInfo.operatingSystem.IndexOf ("iPhone") != -1) {
-					deviceType = "ios";
-				}
-					
+				#if UNITY_ANDROID
+				deviceType = "android";
+				#elif UNITY_IOS
+				deviceType = "ios";
+				#endif
+
 				//RESTリクエストデータ生成
 				Dictionary<string,object> requestData = new Dictionary<string,object> { 
 					{ "pushId", _pushId },
