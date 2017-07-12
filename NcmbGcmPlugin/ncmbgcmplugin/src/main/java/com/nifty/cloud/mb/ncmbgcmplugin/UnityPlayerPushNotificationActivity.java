@@ -22,8 +22,8 @@ import android.util.Log;
 
 import com.unity3d.player.UnityPlayer;
 
-public class UnityPlayerNativeActivity extends
-        com.unity3d.player.UnityPlayerNativeActivity {
+public class UnityPlayerPushNotificationActivity extends
+        com.unity3d.player.UnityPlayerActivity {
     private ActivityProxyObjectHelper _proxyHelper;
 
     protected void onCreate(Bundle savedInstanceState) {

@@ -27,7 +27,7 @@ public class UnityPlayerProxyActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         String[] classNames = {"com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity",
-                "com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerNativeActivity"};
+                "com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerPushNotificationActivity"};
         try {
             boolean supportsNative = Build.VERSION.SDK_INT >= 9;
             Class<?> activity = null;
