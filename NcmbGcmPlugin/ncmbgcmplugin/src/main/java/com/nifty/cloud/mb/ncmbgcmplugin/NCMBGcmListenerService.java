@@ -29,6 +29,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.unity3d.player.UnityPlayer;
+import java.util.Random;
 
 /**
  * GCM push notification receive class
@@ -57,7 +58,7 @@ public class NCMBGcmListenerService extends GcmListenerService {
         NotificationCompat.Builder notificationBuilder = notificationSettings(pushData);
 
         //デフォルト複数表示
-        int notificationId = (int) System.currentTimeMillis();
+        int notificationId = new Random().nextInt();
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -86,7 +87,7 @@ public class NCMBGcmListenerService extends GcmListenerService {
         Intent intent = new Intent(this, com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtras(pushData);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, new Random().nextInt(), intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         //pushDataから情報を取得
