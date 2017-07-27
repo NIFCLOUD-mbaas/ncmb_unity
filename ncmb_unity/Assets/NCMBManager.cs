@@ -212,12 +212,12 @@ namespace NCMB
 				//v1の場合
 				#if UNITY_IOS && !UNITY_EDITOR
 				//既存のcurrentInstallationパス
-				path = Application.persistentDataPath;	//var/mobile/Applications/{GUID}/Documents
+				path = NCMBSettings.filePath;	//var/mobile/Applications/{GUID}/Documents
 				path = path.Replace ("Documents", "");
 				path += "Library/Private Documents/NCMB/currentInstallation";
 				#elif UNITY_ANDROID && !UNITY_EDITOR
 				//既存のcurrentInstallationパス
-				path = Application.persistentDataPath;	//data/data/(PackageName)/files
+				path = NCMBSettings.filePath;	//data/data/(PackageName)/files
 				path = path.Replace ("files", "");
 				path += "app_NCMB/currentInstallation";
 				#endif
