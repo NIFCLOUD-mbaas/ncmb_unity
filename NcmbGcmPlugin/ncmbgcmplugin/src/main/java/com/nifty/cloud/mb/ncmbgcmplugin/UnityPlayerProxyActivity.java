@@ -26,19 +26,8 @@ public class UnityPlayerProxyActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String[] classNames = {"com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity",
-                "com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerPushNotificationActivity"};
         try {
-            boolean supportsNative = Build.VERSION.SDK_INT >= 9;
-            Class<?> activity = null;
-
-            if (supportsNative) {
-                activity = Class.forName(classNames[1]);
-            } else {
-                activity = Class.forName(classNames[0]);
-            }
-
-            Intent intent = new Intent(this, activity);
+            Intent intent = new Intent(this, com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity.class);
             intent.addFlags(65536);
 
             Bundle extras = getIntent().getExtras();
@@ -50,7 +39,7 @@ public class UnityPlayerProxyActivity extends Activity {
                 intent.setData(data);
             }
             startActivity(intent);    //アクティビティ開始
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             finish();
