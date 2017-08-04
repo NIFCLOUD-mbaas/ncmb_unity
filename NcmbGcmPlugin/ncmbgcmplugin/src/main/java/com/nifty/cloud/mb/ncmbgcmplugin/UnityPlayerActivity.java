@@ -49,24 +49,16 @@ public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity 
 
 	public void onResume() {
 		super.onResume();
-		if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD){
-			//リッチプッシュ処理
-			NCMBPush.richPushHandler(this, getIntent());
-			getIntent().removeExtra("com.nifty.RichUrl");        //再表示させたくない場合はintentからURLを削除します
+		//リッチプッシュ処理
+		NCMBPush.richPushHandler(this, getIntent());
+		getIntent().removeExtra("com.nifty.RichUrl");        //再表示させたくない場合はintentからURLを削除します
 
-			//開封通知処理
-			String pushId = getIntent().getStringExtra("com.nifty.PushId");        //プッシュIDがあればUnityへ送る
-			if (pushId != null) {
-				UnityPlayer.UnitySendMessage("NCMBManager", "onAnalyticsReceived", pushId);    //Unityの開封通知メソッド呼び出し
-				getIntent().removeExtra("com.nifty.PushId");
-			}
+		//開封通知処理
+		String pushId = getIntent().getStringExtra("com.nifty.PushId");        //プッシュIDがあればUnityへ送る
+		if (pushId != null) {
+			UnityPlayer.UnitySendMessage("NCMBManager", "onAnalyticsReceived", pushId);    //Unityの開封通知メソッド呼び出し
+			getIntent().removeExtra("com.nifty.PushId");
 		}
 		this._proxyHelper.invokeZeroParameterMethod("onResume");
-	}
-	
-	public void onCreate(){
-		if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.GINGERBREAD) {
-			this._proxyHelper.invokeZeroParameterMethod("onCreate");
-		}
 	}
 }
