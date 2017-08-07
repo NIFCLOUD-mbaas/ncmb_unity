@@ -83,7 +83,7 @@ public class NCMBGcmListenerService extends GcmListenerService {
         }
 
         //通知エリアに表示されるプッシュ通知をタップした際に起動するアクティビティ画面を設定する
-        Intent intent = new Intent(this, UnityPlayerNativeActivity.class);
+        Intent intent = new Intent(this, com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtras(pushData);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
