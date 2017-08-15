@@ -39,6 +39,8 @@ public class NCMBTestSettings
 		field.SetValue (obj, Application.persistentDataPath);
 
 		NCMBUser.LogOutAsync ();
+
+        MockServer.startMock();
 	}
 
 	// 非同期のコールバックが実行されるまで待機
