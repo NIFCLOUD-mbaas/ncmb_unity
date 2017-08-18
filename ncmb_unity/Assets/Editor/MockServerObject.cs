@@ -1,25 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
 using System.Net;
-using SimpleJSON;
+using System;
+using System.IO;
+using System.Reflection;
 
+using YamlDotNet.RepresentationModel;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Linq;
 public class MockServerObject {
-    
-    public string successJson = "";
-    public string failJson = "";
-    public string content = null;
-    public int status = 404;
-    public string method = "GET";
-    public HttpListenerRequest request;
 
-    public string GetResponseJson()
-    {
-        if (status == 200 || status == 201){
-            return successJson;
-        }
-        return failJson; 
-    }
+    public string   method  = "GET";
+    public string   body    = null;
+    public string   query   = null;
+    public string   header  = null;
+
+    public string   url { get; set; }
+    public int      status  = 404;
+
+	public string   responseJson = "";
+
+    public HttpListenerRequest request;
 
     public void validate()
     {
@@ -29,23 +30,30 @@ public class MockServerObject {
             status = 404;
             return;
         }
-
-
         //check Header 
         for (int i = 0; i < request.Headers.Count; i++)
         {
-            string key = request.Headers.GetKey(i);
-            string[] headerValue = request.Headers.GetValues(i);
-            return;
+            Dictionary<string, string> headerDic = request.Headers.AllKeys.ToDictionary(t => t, t => request.Headers[t]);
 
-        }
-
-        //Check Content 
-        if(request.ContentEncoding != null){
-            if(content == null || !request.ContentEncoding.Equals(content)){
-                status = 404;
-                return;
+            if(header != null){
+				string pattern = @"\""(?<key>[^\""]+)\""\:\""?(?<value>[^\"",}]+)\""?\,?";
+				foreach (Match m in Regex.Matches(header, pattern))
+				{
+					if (m.Success)
+					{
+                        if(headerDic.ContainsKey(m.Groups["key"].Value)){
+                            if(!String.Equals(m.Groups["value"].Value, headerDic[m.Groups["key"].Value])){
+                                status = 404;
+                                return;
+                            }
+                        } else {
+                            status = 404;
+                            return;
+                        }
+					}
+				}
             }
+			
         }
 
     }

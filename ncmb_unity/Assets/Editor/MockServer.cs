@@ -1,26 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Net;
 using System;
 using System.IO;
 using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Threading;
-using System.Diagnostics;
-using System.Linq;
+using UnityEngine;
+using System.Security.Cryptography;
+using System.Collections;
 
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+using YamlDotNet.RepresentationModel;
+
+using YamlDotNet.Core;
+using YamlDotNet.Core.Events;
+
+using System.Text.RegularExpressions;
+using System.Web;
+using NCMB;
 public class MockServer
 {
-    
-    private static MockServer instance = null;
     private HttpListener listener = null;
-    public event EventHandler CommandReceived;
-
+	private static MockServer instance = null;
     public static String SERVER = "http://localhost:3000/";
-
-    Dictionary<string, MockServerObject> jsonDictionary;
+    Dictionary<string, List<MockServerObject>> mockObjectDic = new Dictionary<string, List<MockServerObject>>();
 
     public MockServer()
     {
@@ -32,21 +34,18 @@ public class MockServer
         listener.Prefixes.Add(SERVER + "2013-09-01/classes/");
         listener.Prefixes.Add(SERVER + "2013-09-01/installation/");
 		listener.Start();
-
         instance = this;
-        jsonDictionary = new Dictionary<string, MockServerObject>();
-
-        StartListen();
-        InitJson();
+        WaitForNewRequest();
     }
 
     public static void startMock(){
         if(instance == null){
             instance = new MockServer();
+            instance.ReadMockData();	
         }
     }
 
-    public void StartListen()
+    private void WaitForNewRequest()
     {
         try
         {
@@ -56,14 +55,13 @@ public class MockServer
                 HttpListenerContext context = l.EndGetContext(ar);
                 HttpListenerRequest request = context.Request;
                 checkAndResponse(request, context.Response);
-                StartListen();
+                WaitForNewRequest();
             }, listener);
         }
         catch (Exception e)
         {
-
+            Debug.Log(e.Message);
         }
-
     }
 
     public void StopListen()
@@ -73,29 +71,49 @@ public class MockServer
 
     private void checkAndResponse(HttpListenerRequest request, HttpListenerResponse response)
     {
-        response.Headers.Clear();
-        response.SendChunked = false;
-        response.Headers.Add("Server", String.Empty);
-        response.Headers.Add("Date", String.Empty);
+        
+		response.Headers.Clear();
+        NCMBSettings._responseValidationFlag = false;
         // Construct a response.
         MockServerObject mockObj = null;
 
+		StreamReader stream = new StreamReader(request.InputStream);
+		string bodyJson = stream.ReadToEnd();
         //Test Connection
         if(request.HttpMethod.Equals("GET") && request.Url.ToString().Equals(SERVER)){
             mockObj = new MockServerObject();
             mockObj.status = 200;
             
         } else {
-			foreach (var element in jsonDictionary)
-			{
-                if (String.Equals(element.Key, request.Url.ToString(), StringComparison.OrdinalIgnoreCase))
+            foreach (MockServerObject mock in mockObjectDic[request.HttpMethod]){
+				if (request.Url.ToString().Equals(mock.url))
 				{
-					mockObj = element.Value;
-					mockObj.request = request;
-					mockObj.validate();
-					break;
+					if (bodyJson.Length > 0)
+					{
+                        if (bodyJson.Equals(mock.body) || request.ContentType.Equals("multipart/form-data; boundary=_NCMBBoundary"))
+						{
+                            mockObj = mock;
+							mockObj.request = request;
+							mockObj.validate();
+							if (mockObj.status == 200 || mockObj.status == 201)
+							{
+								break;
+							}
+						}
+					}
+					else
+					{
+                        mockObj = mock;
+						mockObj.request = request;
+						mockObj.validate();
+						if (mockObj.status == 200 || mockObj.status == 201)
+						{
+							break;
+						}
+					}
 				}
-			}
+            }
+
         }
 
         if (mockObj == null){
@@ -103,7 +121,7 @@ public class MockServer
         }
 
         response.StatusCode = mockObj.status;
-        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(mockObj.GetResponseJson());
+        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(mockObj.responseJson);
 		// Get a response stream and write the response to it.
 		response.ContentLength64 = buffer.Length;
 		System.IO.Stream output =  response.OutputStream;
@@ -112,49 +130,104 @@ public class MockServer
 		response.Close();
     }
 
-    public void InitJson(){
-        
-		//** TEST testScript_GET COUNT **//
-		MockServerObject mock = new MockServerObject();
-        mock.successJson = "{\"count:2\"}";
-        mock.failJson = "{\"count:0\"}";
-        mock.method = "GET";
-        mock.status = 200;
-        jsonDictionary.Add(SERVER + "2015-09-01/script/testScript_GET.js?name=tarou&message=hello", mock);
+    private void ReadMockData()
+    {
+        mockObjectDic.Clear();
+        mockObjectDic.Add("GET", new List<MockServerObject>());
+        mockObjectDic.Add("POST", new List<MockServerObject>());
+        mockObjectDic.Add("PUT", new List<MockServerObject>());
+        mockObjectDic.Add("DELETE", new List<MockServerObject>());
+        //Get yaml string 
+        string yamlString = LoadFileData("Editor/mbaas.yaml", null);
 
-        //** FILE ACL TEST **/
-        mock = new MockServerObject();
-		mock.successJson = "{\"results\":[{\"fileName\":\"ACL.txt\",\"mimeType\":\"text/plain\",\"fileSize\":8,\"createDate\":\"2017-07-19T02:27:55.867Z\",\"updateDate\":\"2017-07-19T02:27:55.867Z\",\"acl\":{\"*\":{\"read\":true}}}]}";
-		mock.failJson = "{\"code\":\"E403001\",\"error\":\"No access with ACL.\"}";
-		mock.method = "POST";
-		mock.status = 200;
-        mock.content = "{\"fileName\":\"ACL.txt\",\"fileData\":[97,99,108,32,116,101,115,116],\"acl\":{\"*\":{\"read\":true}}}";
-		jsonDictionary.Add(SERVER + "2013-09-01/files/ACL.txt", mock);
 
-        mock = new MockServerObject();
-		mock.successJson = "{\"results\":[{\"fileName\":\"ACL.txt\",\"mimeType\":\"text/plain\",\"fileSize\":8,\"createDate\":\"2017-07-19T02:27:55.867Z\",\"updateDate\":\"2017-07-19T02:27:55.867Z\",\"acl\":{\"*\":{\"read\":true}}}]}";
-		mock.failJson = "{\"code\":\"E403001\",\"error\":\"No access with ACL.\"}";
-		mock.method = "GET";
-		mock.status = 200;
-		jsonDictionary.Add(SERVER + "2013-09-01/files?where={\"fileName\":\"ACL.txt\"}", mock);
+        // Setup the input
+        var input = new StringReader(yamlString);
 
-        // LINK DATA ASYNC
-		mock = new MockServerObject();
-		mock.successJson = "{\"createDate\":\"2017-01-01T00:00:00.000Z\",\"objectId\":\"dummyObjectId\",\"userName\":\"Nifty Tarou\",\"authData\":{\"twitter\":{\"id\":\"twitterDummyId\",\"screen_name\":\"twitterDummyScreenName\",\"oauth_consumer_key\":\"twitterDummyConsumerKey\",\"consumer_secret\":\"twitterDummyConsumerSecret\",\"oauth_token\":\"twitterDummyAuthToken\",\"oauth_token_secret\":\"twitterDummyAuthSecret\"}},\"sessionToken\":\"dummySessionToken\"}";
-		mock.failJson = "{\"code\":\"E403001\",\"error\":\"No access with ACL.\"}";
-		mock.method = "POST";
-		mock.status = 201;
-        mock.content = "{\"authData\":{\"twitter\":{\"id\":\"twitterDummyId\",\"screen_name\":\"twitterDummyScreenName\",\"oauth_consumer_key\":\"twitterDummyConsumerKey\",\"consumer_secret\":\"twitterDummyConsumerSecret\",\"oauth_token\":\"twitterDummyAuthToken\",\"oauth_token_secret\":\"twitterDummyAuthSecret\"}}}";
-		jsonDictionary.Add(SERVER + "2013-09-01/users", mock);
+        // Load the stream
+        var yaml = new YamlStream();
+        yaml.Load(input);
 
-		mock = new MockServerObject();
-		mock.successJson = "{\"updateDate\":\"2017-02-04T11:28:30.348Z\"}";
-		mock.failJson = "{\"code\":\"E403001\",\"error\":\"No access with ACL.\"}";
-		mock.method = "PUT";
-		mock.status = 200;
-        mock.content = "{\"authData\":{\"facebook\":{\"id\":\"facebookDummyId\",\"access_token\":\"facebookDummyAccessToken\",\"expiration_date\":{\"__type\":\"Date\",\"iso\":\"2017-02-07T01:02:03.004Z\"}}}}";
-		jsonDictionary.Add(SERVER + "2013-09-01/users/dummyObjectId", mock);
+        int docCount = yaml.Documents.Count;
+
+        var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(new CamelCaseNamingConvention())
+                .Build();
+        var serializer = new SerializerBuilder()
+                .JsonCompatible()
+                .Build();
+
+        for (int i = 0; i < docCount; i++)
+        {
+            // Examine the stream
+            var mapping = (YamlMappingNode)yaml.Documents[i].RootNode;
+
+            MockServerObject mock = new MockServerObject();
+            var request = (YamlMappingNode)mapping.Children[new YamlScalarNode("request")];
+            var response = (YamlMappingNode)mapping.Children[new YamlScalarNode("response")];
+
+            YamlScalarNode method = (YamlScalarNode)request.Children[new YamlScalarNode("method")];
+            mock.method = method.Value;
+
+            if (request.Children.Keys.Contains(new YamlScalarNode("body")))
+            {
+                var body = request.Children[new YamlScalarNode("body")];
+                mock.body = body.ToJson().Replace("\"[","[").Replace("]\"", "]");
+            }
+
+            if (request.Children.Keys.Contains(new YamlScalarNode("query")))
+            {
+				var query = request.Children[new YamlScalarNode("query")];
+                String queryString = "";
+
+                if(query is YamlMappingNode){
+                    YamlMappingNode queryMapNode = (YamlMappingNode)query;
+                    foreach(var item in queryMapNode.Children){
+						if (queryString.Length > 0)
+						{
+							queryString += "&";
+						}
+                        queryString += item.Key + "=" + (item.Value is YamlMappingNode ? item.Value.ToJson() : item.Value);
+                    }
+                } 
+                mock.query = queryString;
+            }
+
+            if (request.Children.Keys.Contains(new YamlScalarNode("header")))
+            {
+				var header = request.Children[new YamlScalarNode("header")];
+                mock.header = header.ToJson();
+            }
+
+			YamlScalarNode url = (YamlScalarNode)request.Children[new YamlScalarNode("url")];
+
+            if(mock.query != null && mock.query.Length > 0){
+                mock.url = MockServer.SERVER + url.Value + "?" + mock.query;
+            } else {
+                mock.url = MockServer.SERVER + url.Value;
+            }
+
+            YamlScalarNode status = (YamlScalarNode)response.Children[new YamlScalarNode("status")];
+            mock.status = Convert.ToInt32(status.Value);
+
+            YamlScalarNode file = (YamlScalarNode)response.Children[new YamlScalarNode("file")];
+            mock.responseJson = LoadFileData("Editor" + file.Value, "");
+            mockObjectDic[mock.method].Add(mock);
+
+        }
+
+    }
+
+	private string LoadFileData(String path, String defaultString)
+	{
+        string filePath = Path.Combine(Application.dataPath, path);
+		if (File.Exists(filePath))
+		{
+			// Read from file into a string
+			string content = File.ReadAllText(filePath);
+            return content.Replace("\n", "");
+		}
+
+        return defaultString;
 	}
-
-
 }
