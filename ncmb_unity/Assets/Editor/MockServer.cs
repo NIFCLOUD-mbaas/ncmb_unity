@@ -2,31 +2,21 @@
 using System.Net;
 using System;
 using System.IO;
-using System.Text;
 using UnityEngine;
-using System.Security.Cryptography;
-using System.Collections;
-
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.RepresentationModel;
-
-using YamlDotNet.Core;
-using YamlDotNet.Core.Events;
-
-using System.Text.RegularExpressions;
-using System.Web;
 using NCMB;
 public class MockServer
 {
+    public static String SERVER = NCMBTestSettings.DOMAIN_URL + "/";
     private HttpListener listener = null;
 	private static MockServer instance = null;
-    public static String SERVER = "http://localhost:3000/";
+    //Dictionary to store all mock data 
     Dictionary<string, List<MockServerObject>> mockObjectDic = new Dictionary<string, List<MockServerObject>>();
 
     public MockServer()
     {
 		listener = new HttpListener();
+        //Add allowed prefixes for listener
 		listener.Prefixes.Add(SERVER);
         listener.Prefixes.Add(SERVER + "2013-09-01/users/");
         listener.Prefixes.Add(SERVER + "2013-09-01/file/");
@@ -35,6 +25,7 @@ public class MockServer
         listener.Prefixes.Add(SERVER + "2013-09-01/installation/");
 		listener.Start();
         instance = this;
+        //Call to listen request
         WaitForNewRequest();
     }
 
@@ -54,7 +45,9 @@ public class MockServer
                 HttpListener l = (HttpListener)ar.AsyncState;
                 HttpListenerContext context = l.EndGetContext(ar);
                 HttpListenerRequest request = context.Request;
+                //Check request with mock data for response 
                 checkAndResponse(request, context.Response);
+                //Listen new request
                 WaitForNewRequest();
             }, listener);
         }
@@ -64,22 +57,13 @@ public class MockServer
         }
     }
 
-    public void StopListen()
-    {
-        listener.Stop();
-    }
-
     private void checkAndResponse(HttpListenerRequest request, HttpListenerResponse response)
     {
-        
-		response.Headers.Clear();
         NCMBSettings._responseValidationFlag = false;
-        // Construct a response.
         MockServerObject mockObj = null;
 
 		StreamReader stream = new StreamReader(request.InputStream);
 		string bodyJson = stream.ReadToEnd();
-        //Test Connection
         if(request.HttpMethod.Equals("GET") && request.Url.ToString().Equals(SERVER)){
             mockObj = new MockServerObject();
             mockObj.status = 200;
@@ -113,7 +97,6 @@ public class MockServer
 					}
 				}
             }
-
         }
 
         if (mockObj == null){
@@ -132,6 +115,7 @@ public class MockServer
 
     private void ReadMockData()
     {
+        //Read mock data from yaml and json files 
         mockObjectDic.Clear();
         mockObjectDic.Add("GET", new List<MockServerObject>());
         mockObjectDic.Add("POST", new List<MockServerObject>());
@@ -139,33 +123,20 @@ public class MockServer
         mockObjectDic.Add("DELETE", new List<MockServerObject>());
         //Get yaml string 
         string yamlString = LoadFileData("Editor/mbaas.yaml", null);
-
-
         // Setup the input
         var input = new StringReader(yamlString);
-
         // Load the stream
         var yaml = new YamlStream();
         yaml.Load(input);
-
         int docCount = yaml.Documents.Count;
-
-        var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(new CamelCaseNamingConvention())
-                .Build();
-        var serializer = new SerializerBuilder()
-                .JsonCompatible()
-                .Build();
 
         for (int i = 0; i < docCount; i++)
         {
-            // Examine the stream
             var mapping = (YamlMappingNode)yaml.Documents[i].RootNode;
 
             MockServerObject mock = new MockServerObject();
             var request = (YamlMappingNode)mapping.Children[new YamlScalarNode("request")];
             var response = (YamlMappingNode)mapping.Children[new YamlScalarNode("response")];
-
             YamlScalarNode method = (YamlScalarNode)request.Children[new YamlScalarNode("method")];
             mock.method = method.Value;
 
@@ -200,7 +171,6 @@ public class MockServer
             }
 
 			YamlScalarNode url = (YamlScalarNode)request.Children[new YamlScalarNode("url")];
-
             if(mock.query != null && mock.query.Length > 0){
                 mock.url = MockServer.SERVER + url.Value + "?" + mock.query;
             } else {
@@ -213,9 +183,7 @@ public class MockServer
             YamlScalarNode file = (YamlScalarNode)response.Children[new YamlScalarNode("file")];
             mock.responseJson = LoadFileData("Editor" + file.Value, "");
             mockObjectDic[mock.method].Add(mock);
-
         }
-
     }
 
 	private string LoadFileData(String path, String defaultString)
