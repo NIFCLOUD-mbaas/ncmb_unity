@@ -561,7 +561,7 @@ public class NCMBDialogActivity extends Activity {
         String str = getIntent().getExtras().getString(INTENT_EXTRA_LAUNCH_CLASS);
         Intent launch = new Intent();
         launch.putExtras(getIntent().getBundleExtra("com.nifty.OriginalData"));
-        launch.setClassName(getApplicationContext(), "com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerNativeActivity");
+        launch.setClassName(getApplicationContext(), "com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity");
         launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getApplicationContext().startActivity(launch);
 
