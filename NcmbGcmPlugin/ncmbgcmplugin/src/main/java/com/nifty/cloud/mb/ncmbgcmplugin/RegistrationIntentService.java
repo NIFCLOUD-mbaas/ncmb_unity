@@ -34,6 +34,7 @@ package com.nifty.cloud.mb.ncmbgcmplugin;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Build;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -57,6 +58,11 @@ public class RegistrationIntentService extends IntentService {
             senderId = intent.getStringExtra("senderId");  //UnityのNCMBSettingsからsenderIdを受け取ります
             final String token = instanceID.getToken(senderId,
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                NCMBNotificationUtils utils = new NCMBNotificationUtils(this);
+                utils.settingDefaultChannels();
+            }
             UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
                 public void run() {
                     if (token != null) {
