@@ -298,9 +298,11 @@ static NCMBRichPushView *rv;
     if ([urlStr isKindOfClass:[NSString class]]) {
         if (rv == nil){
             rv = [[NCMBRichPushView alloc]init];
-            UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
-            [rv appearWebView:orientation url:urlStr];
         }
+        // リッチビューが表示する
+        UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
+        [rv appearWebView:orientation url:urlStr];
+
         NSURL *url = [NSURL URLWithString:urlStr];
         NSURLRequest *req = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
         [rv loadRequest:req];
