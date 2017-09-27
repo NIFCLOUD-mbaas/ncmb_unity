@@ -1,0 +1,12 @@
+language: csharp
+os: osx
+before_install:
+  - chmod +x ./Scripts/install.sh
+install:
+ - ./Scripts/install.sh
+before_script:
+  - chmod +x ./Scripts/build.sh
+  - chmod +rw ./Scripts/unity_build.log
+  - chmod +rw ./Scripts/test_runner_result.xml
+script:
+ - ./Scripts/build.sh
