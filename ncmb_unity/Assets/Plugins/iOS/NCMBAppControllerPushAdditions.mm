@@ -207,13 +207,14 @@ extern "C"
         }
         
         if([userInfo objectForKey:@"aps"]){
-            if ([[(NSDictionary *)[userInfo objectForKey:@"aps"] objectForKey:@"sound"] isEqual:[NSNull null]]) {
-                NSMutableDictionary *beforeUserInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
-                NSMutableDictionary *aps = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"aps"]];
+            NSMutableDictionary *beforeUserInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+            NSMutableDictionary *aps = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"aps"]];
+            if ([[aps objectForKey:@"sound"] isEqual:[NSNull null]]) {
                 [aps removeObjectForKey:@"sound"];
-                [beforeUserInfo setObject:aps forKey:@"aps"];
-                userInfo = (NSMutableDictionary *)beforeUserInfo;
             }
+            [beforeUserInfo setObject:aps forKey:@"aps"];
+            [beforeUserInfo setObject:[[aps objectForKey:@"alert"] objectForKey:@"title"] forKey:@"com.nifty.Title"]; //Titleを追加
+            userInfo = (NSMutableDictionary *)beforeUserInfo;
         }
         
         AppController_SendNotificationWithArg(kUnityDidReceiveRemoteNotification, userInfo);
