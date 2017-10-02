@@ -365,6 +365,12 @@ namespace NCMB
 				return this.operationSetQueue.Last.Value;
 			}
 		}
+        //Use to remove first operation dictionary in operationSetQueue 
+        protected void _removeFirstOperationIfMoreThanOneExists(){
+            if(this.operationSetQueue.Count > 1 ){
+                this.operationSetQueue.RemoveFirst();
+            }
+        }
 		//一番最後の履歴の取り出し、空のリスト(次に入る履歴の入れ物)の追加
 		internal IDictionary<string, INCMBFieldOperation> StartSave ()
 		{
