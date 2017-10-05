@@ -87,6 +87,7 @@ void notifyUnityError(const char * method, NSError * error)
 }
 
 #pragma mark - C#から呼び出し
+extern bool _unityAppReady;
 
 // Native code
 extern "C"
@@ -189,10 +190,7 @@ extern "C"
         // NCMB Handle Rich Push
         if ([userInfo.allKeys containsObject:@"com.nifty.RichUrl"])
         {
-            if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
-            {
-                [NCMBRichPushView handleRichPush:userInfo];
-            }
+            [NCMBRichPushView handleRichPush:userInfo];
         }
         
         // NCMB Handle Analytics
@@ -297,15 +295,27 @@ extern "C"
 
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
-    NCMBPushHandle(userInfo);
+    [self handleRichPushIfReady:userInfo];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
-    NCMBPushHandle(userInfo);
+    [self handleRichPushIfReady:userInfo];
     if (handler)
     {
         handler(UIBackgroundFetchResultNoData);
+    }
+}
+
+-(void)handleRichPushIfReady:(NSDictionary*)userInfo
+{
+    if(_unityAppReady){
+        NCMBPushHandle(userInfo);
+    } else {
+        //Delay 1 second to wait _unityAppReady
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            NCMBPushHandle(userInfo);
+        });
     }
 }
 
