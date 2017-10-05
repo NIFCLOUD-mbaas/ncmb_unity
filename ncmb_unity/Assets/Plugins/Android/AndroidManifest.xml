@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
+    xmlns:tools="http://schemas.android.com/tools"
     package="YOUR_PACKAGE_NAME" >
 	<!-- Put your package name here. -->
 
-	 <uses-sdk android:minSdkVersion="10"/>
+	 <uses-sdk android:minSdkVersion="14"/>
 
     <!-- [START gcm_permission] -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -32,12 +32,6 @@
         </activity>
 
         <activity android:name="com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity"
-            android:launchMode="singleTop"
-            android:label="@string/app_name"
-            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
-        </activity>
-
-        <activity android:name="com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerNativeActivity"
             android:launchMode="singleTop"
             android:label="@string/app_name"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
