@@ -1,7 +1,7 @@
 # Set project path
 project_path=$(pwd)/ncmb_unity
 # Log file path
-log_file=$(pwd)/Scripts/unity_build.log
+log_file=$(pwd)/TravisScripts/unity_build.log
 
 error_code=0
 
@@ -20,10 +20,10 @@ else
   echo "* Building Mac OS failed. Exited with $?."
   error_code=1
 fi
-# Show log
-#cat $log_file 
+echo "* Unity build log"
+cat $log_file 
 
-test_result_file=$(pwd)/Scripts/test_runner_result.xml
+test_result_file=$(pwd)/TravisScripts/test_runner_result.xml
 echo "* Execute Test Runner"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
 -runTests \
