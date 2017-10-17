@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using System.Net;
 using System;
 using System.IO;
@@ -129,7 +129,7 @@ public class MockServer
         mockObjectDic.Add("PUT", new List<MockServerObject>());
         mockObjectDic.Add("DELETE", new List<MockServerObject>());
         //Get yaml string 
-        string yamlString = LoadFileData("Editor/mbaas.yaml", null);
+        string yamlString = LoadFileData("Editor/mbaas.yaml", false, null);
         // Setup the input
         var input = new StringReader(yamlString);
         // Load the stream
@@ -193,19 +193,22 @@ public class MockServer
             mock.status = Convert.ToInt32(status.Value);
 
             YamlScalarNode file = (YamlScalarNode)response.Children[new YamlScalarNode("file")];
-            mock.responseJson = LoadFileData("Editor" + file.Value, "");
+            mock.responseJson = LoadFileData("Editor" + file.Value, true, "");
             mockObjectDic[mock.method].Add(mock);
         }
     }
 
-    private string LoadFileData(String path, String defaultString)
+    private string LoadFileData(String path, bool removeBreakline, String defaultString)
     {
         string filePath = Path.Combine(Application.dataPath, path);
         if (File.Exists(filePath))
         {
             // Read from file into a string
             string content = File.ReadAllText(filePath);
-            return content.Replace("\n", "");
+            if(removeBreakline){
+                return content.Replace("\n", "");
+            }
+            return content;
         }
 
         return defaultString;
