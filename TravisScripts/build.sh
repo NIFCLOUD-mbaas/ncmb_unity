@@ -34,6 +34,16 @@ echo "* Execute Test Runner"
 echo '* Test Runner result'
 cat $test_result_file 
 
+total=$(echo 'cat //test-run/@total' | xmllint --shell $test_result_file | awk -F\" 'NR % 2 == 0 { print $2 }')
+passed=$(echo 'cat //test-run/@passed' | xmllint --shell $test_result_file | awk -F\" 'NR % 2 == 0 { print $2 }')
+failed=$(echo 'cat //test-run/@failed' | xmllint --shell $test_result_file | awk -F\" 'NR % 2 == 0 { print $2 }')
+
+echo "Total:$total  Passed:$passed Failed:$failed" 
+
+if [ $failed > 0 ] ; then
+  error_code=2
+fi
+
 echo "* Finishing with code $error_code"
 exit $error_code
 
