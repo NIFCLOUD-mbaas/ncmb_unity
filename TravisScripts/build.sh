@@ -38,13 +38,26 @@ total=$(echo 'cat //test-run/@total' | xmllint --shell $test_result_file | awk -
 passed=$(echo 'cat //test-run/@passed' | xmllint --shell $test_result_file | awk -F\" 'NR % 2 == 0 { print $2 }')
 failed=$(echo 'cat //test-run/@failed' | xmllint --shell $test_result_file | awk -F\" 'NR % 2 == 0 { print $2 }')
 
-echo "Total:$total  Passed:$passed Failed:$failed" 
-
-if [ $failed > 0 ] ; then
-  error_code=2
+if [ $failed -gt 0 ] 
+then
+  error_code=$((error_code+2))
 fi
 
-echo "* Finishing with code $error_code"
+echo "______________________________________________________________________"
+case "$error_code" in
+0)  echo "o Building Mac OS completed successfully."
+    echo "o Test Runner completed successfully [ Total:$total  Passed:$passed Failed:$failed ]" 
+    ;;
+1)  echo "x Building Mac OS completed failed."
+    echo "o Test Runner completed successfully [ Total:$total  Passed:$passed Failed:$failed ]"
+    ;;
+2)  echo "o Building Mac OS completed successfully."
+    echo "x Test Runner completed failed [ Total:$total  Passed:$passed Failed:$failed ]"
+    ;;
+3)  echo "x Building Mac OS completed failed."
+    echo "x Test Runner completed failed [ Total:$total  Passed:$passed Failed:$failed ]"
+    ;;
+esac
 exit $error_code
 
 
