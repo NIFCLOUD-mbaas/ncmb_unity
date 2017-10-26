@@ -452,9 +452,11 @@ namespace NCMB.Internal
 			hashValue [HEADER_TIMESTAMP_KEY] = _headerTimestamp;
 			String[] tempParameter;
 			if (parameter != null) {
-				foreach (string param in parameter.Split('&')) {
-					tempParameter = param.Split ('=');
-					hashValue [tempParameter [0]] = tempParameter [1];
+				if (_method.Equals(ConnectType.GET)) {
+					foreach (string param in parameter.Split('&')) {
+						tempParameter = param.Split ('=');
+						hashValue [tempParameter [0]] = tempParameter [1];
+					}
 				}
 			}
 			//sort hashTable base on key
