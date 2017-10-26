@@ -452,7 +452,7 @@ namespace NCMB.Internal
 			hashValue [HEADER_TIMESTAMP_KEY] = _headerTimestamp;
 			String[] tempParameter;
 			if (parameter != null) {
-				if (_method.Equals(ConnectType.GET)) {
+				if (_method == ConnectType.GET) {
 					foreach (string param in parameter.Split('&')) {
 						tempParameter = param.Split ('=');
 						hashValue [tempParameter [0]] = tempParameter [1];
