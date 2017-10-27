@@ -88,7 +88,7 @@ public class NCMBFileTest
 	[Test]
 	public void FileUploadImageTest ()
 	{
-		FileStream fileStream = new FileStream ("Assets/ncmb_unity/ncmb_unity/Assets/Editor/logo.png", FileMode.Open, FileAccess.Read);
+		FileStream fileStream = new FileStream ("Assets/Editor/logo.png", FileMode.Open, FileAccess.Read);
 		BinaryReader bin = new BinaryReader (fileStream);
 		byte[] data = bin.ReadBytes ((int)bin.BaseStream.Length);
 		bin.Close ();
