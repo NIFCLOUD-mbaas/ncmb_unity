@@ -55,6 +55,7 @@
 #import  <UserNotifications/UserNotifications.h>
 #endif
 
+#define MAX_PUSH_DELAY_COUNT 20
 // Converts C style string to NSString
 #define GetStringParam( _x_ ) ( _x_ != NULL ) ? [NSString stringWithUTF8String:_x_] : [NSString stringWithUTF8String:""]
 
@@ -229,6 +230,7 @@ extern "C"
 
 @implementation UnityAppController(PushAdditions)
 
+NSInteger pushDelayCount = 0;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -309,13 +311,16 @@ extern "C"
 
 -(void)handleRichPushIfReady:(NSDictionary*)userInfo
 {
-    if(_unityAppReady){
-        NCMBPushHandle(userInfo);
-    } else {
-        //Delay 1 second to wait _unityAppReady
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    //Limit to avoid infinite loop
+    if(pushDelayCount < MAX_PUSH_DELAY_COUNT){
+        if(_unityAppReady){
             NCMBPushHandle(userInfo);
-        });
+            pushDelayCount = 0;
+        } else {
+            pushDelayCount++;
+            //Delay for 100 miliseconds
+            [self performSelector:@selector(handleRichPushIfReady:) withObject:userInfo afterDelay:0.1];
+        }
     }
 }
 
