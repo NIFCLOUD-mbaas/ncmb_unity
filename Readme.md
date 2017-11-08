@@ -42,6 +42,6 @@
 
 ## 参考URL集
 
-- [ニフティクラウド mobile backend](http://mb.cloud.nifty.com)
+- [ニフクラ mobile backend](http://mb.cloud.nifty.com)
 - [ドキュメント](http://mb.cloud.nifty.com/doc/current)
 - [ユーザーコミュニティ](https://github.com/NIFTYCloud-mbaas/UserCommunity)
