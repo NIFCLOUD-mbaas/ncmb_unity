@@ -1,10 +1,10 @@
-# ニフティクラウド mobile backend Unity SDKについて
+# ニフクラ mobile backend Unity SDKについて
 
 ## 概要
 
-ニフティクラウド mobile backend Unity SDKは、
+ニフクラ mobile backend Unity SDKは、
 モバイルアプリのバックエンド機能を提供するクラウドサービス
-[ニフティクラウド mobile backend](http://mb.cloud.nifty.com)用のUnity SDKです。
+[ニフクラ mobile backend](http://mb.cloud.nifty.com)用のUnity SDKです。
 
 - プッシュ通知
 - データストア
@@ -14,8 +14,8 @@
 
 といった機能をアプリから利用することが可能です。
 
-このSDKを利用する前に、ニフティクラウドmobile backendのアカウントを作成する必要があります。
-[ニフティクラウド mobile backend](http://mb.cloud.nifty.com)のサービスサイトからアカウント登録を行ってください。
+このSDKを利用する前に、ニフクラ mobile backendのアカウントを作成する必要があります。
+[ニフクラ mobile backend](http://mb.cloud.nifty.com)のサービスサイトからアカウント登録を行ってください。
 
 アカウント作成後のSDK導入手順については、
 [クイックスタート](http://mb.cloud.nifty.com/doc/current/introduction/quickstart_unity.html)をご覧ください。
@@ -42,6 +42,6 @@
 
 ## 参考URL集
 
-- [ニフティクラウド mobile backend](http://mb.cloud.nifty.com)
+- [ニフクラ mobile backend](http://mb.cloud.nifty.com)
 - [ドキュメント](http://mb.cloud.nifty.com/doc/current)
 - [ユーザーコミュニティ](https://github.com/NIFTYCloud-mbaas/UserCommunity)
