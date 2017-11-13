@@ -483,7 +483,7 @@ namespace  NCMB
 						logInUser._handleFetchResult (true, responseDic);
 						//save Current user
 						_saveCurrentUser (logInUser);
-                        //logInUser._removeFirstOperationIfMoreThanOneExists();
+                        logInUser._removeFirstOperationIfMoreThanOneExists();
 						
 					}
 				} catch (Exception e) {
