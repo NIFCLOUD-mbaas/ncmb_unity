@@ -1,12 +1,12 @@
 language: csharp
 os: osx
 before_install:
-  - chmod +x ./Scripts/install.sh
+  - chmod +x ./TravisScripts/install.sh
 install:
- - ./Scripts/install.sh
+ - ./TravisScripts/install.sh
 before_script:
-  - chmod +x ./Scripts/build.sh
-  - chmod +rw ./Scripts/unity_build.log
-  - chmod +rw ./Scripts/test_runner_result.xml
+  - chmod +x ./TravisScripts/build.sh
+  - chmod +rw ./TravisScripts/unity_build.log
+  - chmod +rw ./TravisScripts/test_runner_result.xml
 script:
- - ./Scripts/build.sh
+ - ./TravisScripts/build.sh

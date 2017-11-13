@@ -118,7 +118,7 @@ public class NCMBGcmListenerService extends GcmListenerService {
 
         //Notification作成
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,NCMBNotificationUtils.getDefaultChannel())
                 .setSmallIcon(icon)//通知エリアのアイコン
                 .setColor(smallIconColor)//通知エリアのアイコンカラー
                 .setContentTitle(title)
