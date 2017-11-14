@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -214,7 +214,7 @@ namespace  NCMB
 		//save後処理 　オーバーライド用　新規登録時のみログインを行う
 		internal override void _afterSave (int statusCode, NCMBException error)
 		{
-			if (statusCode == 201 && error == null) {
+			if ((statusCode == 201 || statusCode == 200) && error == null) {
 				_saveCurrentUser ((NCMBUser)this);
 			}
 		}
@@ -483,6 +483,7 @@ namespace  NCMB
 						logInUser._handleFetchResult (true, responseDic);
 						//save Current user
 						_saveCurrentUser (logInUser);
+                        logInUser._removeFirstOperationIfMoreThanOneExists();
 						
 					}
 				} catch (Exception e) {
