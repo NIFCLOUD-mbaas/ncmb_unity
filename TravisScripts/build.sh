@@ -97,9 +97,9 @@ if [[ -z "${total}" ]]; then
   test_error=3
 fi
 
-echo "${bold}${green}o Building Mac OS completed successfully.${normal} Retry: $((build_count-1))"
+echo -e "\n\n${bold}${green}o Building Mac OS completed successfully.${normal} Retry: $((build_count-1))"
 case "$test_error" in
-0)  echo "${bold}${green}o Test Runner completed successfully [ Total:$total  Passed:$passed Failed:$failed ]. Retry: $((test_count-1))${normal}"
+0)  echo "${bold}${green}o Test Runner completed successfully [ Total:$total  Passed:$passed Failed:$failed ].${normal} Retry: $((test_count-1))"
     ;;
 2)  echo "${bold}${red}x Test Runner completed failed [ Total:$total  Passed:$passed Failed:$failed ].${normal} Retry: $((test_count-1))"
     ;;
