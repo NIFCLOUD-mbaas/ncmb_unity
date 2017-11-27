@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_IOS
+using System;
 using System.IO;
 using UnityEngine;
 using UnityEditor;
@@ -40,5 +41,6 @@ public class UpdateXcodeProject
 		File.WriteAllText (projectPath, pbxProject.WriteToString());
 	}
 }
+#endif
 
 

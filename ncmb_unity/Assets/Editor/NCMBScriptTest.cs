@@ -115,7 +115,7 @@ public class NCMBScriptTest
 			if (e == null) {
 				string cmd = System.Text.Encoding.UTF8.GetString (result);
 				cmd = cmd.TrimEnd ('\0');//終端文字の削除
-				Assert.AreEqual ("count:2", cmd);
+				Assert.AreEqual ("{\"count:2\"}", cmd);
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}

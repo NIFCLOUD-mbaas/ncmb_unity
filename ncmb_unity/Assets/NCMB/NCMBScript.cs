@@ -188,6 +188,13 @@ namespace NCMB
 				NCMBConnection connection = new NCMBConnection (scriptUrl, type, content, NCMBUser._getCurrentSessionToken (), null, endpoint);
 				HttpWebRequest request = connection._returnRequest ();
 
+				//オリジナルヘッダー設定
+				if (header != null && header.Count > 0) {
+					foreach (KeyValuePair<string, object> pair in header) {
+						request.Headers.Add (pair.Key, pair.Value.ToString ());
+					}
+				}
+
 				//コンテント設定
 				if (content != null) {
 					byte[] postDataBytes = Encoding.Default.GetBytes (content); 
@@ -199,13 +206,6 @@ namespace NCMB
 						if (stream != null) {
 							stream.Close ();
 						}
-					}
-				}
-
-				//オリジナルヘッダー設定
-				if (header != null && header.Count > 0) {
-					foreach (KeyValuePair<string, object> pair in header) {
-						request.Headers.Add (pair.Key, pair.Value.ToString ());
 					}
 				}
 

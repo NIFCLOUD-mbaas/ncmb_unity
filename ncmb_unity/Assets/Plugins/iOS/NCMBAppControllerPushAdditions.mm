@@ -55,6 +55,7 @@
 #import  <UserNotifications/UserNotifications.h>
 #endif
 
+#define MAX_PUSH_DELAY_COUNT 20
 // Converts C style string to NSString
 #define GetStringParam( _x_ ) ( _x_ != NULL ) ? [NSString stringWithUTF8String:_x_] : [NSString stringWithUTF8String:""]
 
@@ -87,6 +88,7 @@ void notifyUnityError(const char * method, NSError * error)
 }
 
 #pragma mark - C#から呼び出し
+extern bool _unityAppReady;
 
 // Native code
 extern "C"
@@ -189,10 +191,7 @@ extern "C"
         // NCMB Handle Rich Push
         if ([userInfo.allKeys containsObject:@"com.nifty.RichUrl"])
         {
-            if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
-            {
-                [NCMBRichPushView handleRichPush:userInfo];
-            }
+            [NCMBRichPushView handleRichPush:userInfo];
         }
         
         // NCMB Handle Analytics
@@ -231,6 +230,7 @@ extern "C"
 
 @implementation UnityAppController(PushAdditions)
 
+NSInteger pushDelayCount = 0;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -297,15 +297,30 @@ extern "C"
 
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
-    NCMBPushHandle(userInfo);
+    [self handleRichPushIfReady:userInfo];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
-    NCMBPushHandle(userInfo);
+    [self handleRichPushIfReady:userInfo];
     if (handler)
     {
         handler(UIBackgroundFetchResultNoData);
+    }
+}
+
+-(void)handleRichPushIfReady:(NSDictionary*)userInfo
+{
+    //Limit to avoid infinite loop
+    if(pushDelayCount < MAX_PUSH_DELAY_COUNT){
+        if(_unityAppReady){
+            NCMBPushHandle(userInfo);
+            pushDelayCount = 0;
+        } else {
+            pushDelayCount++;
+            //Delay for 100 miliseconds
+            [self performSelector:@selector(handleRichPushIfReady:) withObject:userInfo afterDelay:0.1];
+        }
     }
 }
 

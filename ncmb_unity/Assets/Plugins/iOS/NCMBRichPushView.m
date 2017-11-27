@@ -211,6 +211,8 @@ enum{
     self.wv = nil;
     self.cv = nil;
     
+    [rv removeFromSuperview];
+    rv = nil;
     // define selector
     SEL selector = NSSelectorFromString(@"resetRichPushView");
 }
