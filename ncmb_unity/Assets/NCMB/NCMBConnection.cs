@@ -26,6 +26,10 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using MiniJSON;
 using MimeTypes;
+using UnityEngine;
+using UnityEngine.Networking;
+
+using System.Linq;
 
 //Dictionary
 using System.IO;
@@ -36,10 +40,10 @@ using NCMB.Internal;
 
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Assembly-CSharp-Editor")]
+[assembly:InternalsVisibleTo ("Assembly-CSharp-Editor")]
 namespace NCMB.Internal
 {
-	internal class NCMBConnection
+	public class NCMBConnection
 	{
 		private static readonly string RESPONSE_SIGNATURE = "X-NCMB-Response-Signature";
 		//レスポンスシグネチャ　キー
@@ -57,16 +61,17 @@ namespace NCMB.Internal
 		//アプリケションキー　キー
 		private static readonly string HEADER_TIMESTAMP_KEY = "X-NCMB-Timestamp";
 		//タイムスタンプ　キー
-		private static readonly string HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-		//Access-Control　キー
 		private static readonly string HEADER_SESSION_TOKEN = "X-NCMB-Apps-Session-Token";
 		//セッショントークン
 		private static readonly string HEADER_USER_AGENT_KEY = "X-NCMB-SDK-Version";
 		//UserAgent キー
-		private static readonly string HEADER_USER_AGENT_VALUE = "unity-"+CommonConstant.SDK_VERSION;//unity-x.x.x
+		private static readonly string HEADER_USER_AGENT_VALUE = "unity-" + CommonConstant.SDK_VERSION;
+		//unity-x.x.x
 		//UserAgent 値
 
-		private static readonly int REQUEST_TIME_OUT = 10000;
+		// time out 10 sec
+		private static readonly int REQUEST_TIME_OUT = 10;
+
 		private string _applicationKey = "";
 		private string _clientKey = "";
 		private string _headerTimestamp = "";
@@ -81,6 +86,8 @@ namespace NCMB.Internal
 		//domain Uri
 		private Uri _domainUri = null;
 		private NCMBFile _file = null;
+		internal UnityWebRequest _request = null;
+
 
 		//コンストラクタ(通常)
 		internal NCMBConnection (String url, ConnectType method, string content, string sessionToken)
@@ -105,149 +112,42 @@ namespace NCMB.Internal
 			this._clientKey = NCMBSettings.ClientKey;
 			this._domainUri = new Uri (domain);
 			this._file = file;
+			this._request = _returnRequest ();
+
 		}
 
 		// 通信処理(File_GET)
 		internal void Connect (HttpClientFileDataCallback callback)
 		{
-			HttpWebRequest req = _returnRequest ();
-			_Connection (req, null, callback);
+			_Connection (callback);
 		}
 
 		// 通信処理(通常)
 		internal void Connect (HttpClientCallback callback)
 		{
-			HttpWebRequest req = _returnRequest ();
-			_Connection (req, callback, null);
+			_Connection (callback);
 		}
 
-		private void _Connection (HttpWebRequest req, HttpClientCallback callback, HttpClientFileDataCallback fileCallback)
+
+
+		private void _Connection (object callback)
 		{
-			//SSLサイトにアクセス
-			ServicePointManager.ServerCertificateValidationCallback = delegate {
-				return true;
-			};
-
-			int statusCode = 0;
-			string responseData = null;
-			NCMBException error = null;
-
-			//Post,Put時のコンテントデータ書き込み
-			if (_method == ConnectType.POST || _method == ConnectType.PUT) {
-				if (_file != null) {
-					// File
-					req = this._sendRequestForFile (req, ref error);
-				} else {
-					// 通常
-					req = this._sendRequest (req, ref error);
-				}
-
-				//書き込みでエラーがあれば終了
-				if (error != null) {
-					callback (statusCode, responseData, error);
-					return;
-				}
-			}
-
-			HttpWebResponse httpResponse = null;
-			Stream streamResponse = null;
-			StreamReader streamRead = null;
-			byte[] responseByte = null;
-			try {
-				// 通信結果取得
-				httpResponse = (HttpWebResponse)req.GetResponse ();
-				streamResponse = httpResponse.GetResponseStream ();
-				statusCode = (int)httpResponse.StatusCode;
-				streamRead = new StreamReader (streamResponse);
-				if (fileCallback != null) {
-					// File_GET
-					MemoryStream memoryStream = new MemoryStream (0x10000);
-					byte[] buffer = new byte[0x1000];
-					int bytes;
-					while ((bytes = streamResponse.Read (buffer, 0, buffer.Length)) > 0) {
-						memoryStream.Write (buffer, 0, bytes);
-					}
-					responseByte = memoryStream.ToArray ();
-				} else {
-					// 通常
-					responseData = streamRead.ReadToEnd ();
-				}
-			} catch (WebException ex) {
-				// 通信失敗
-				using (WebResponse webResponse = ex.Response) {
-					error = new NCMBException ();
-					error.ErrorMessage = ex.Message;
-
-					// mBaaSエラー
-					if (webResponse != null) {
-						// エラーのJSON書き出し
-						streamResponse = webResponse.GetResponseStream ();
-						streamRead = new StreamReader (streamResponse);
-						responseData = streamRead.ReadToEnd ();
-						var jsonData = MiniJSON.Json.Deserialize (responseData) as Dictionary<string,object>;
-						var hashtableData = new Hashtable (jsonData);
-
-						// エラー内容の設定
-						error.ErrorCode = (hashtableData ["code"].ToString ());
-						error.ErrorMessage = (hashtableData ["error"].ToString ());
-						httpResponse = (HttpWebResponse)webResponse;
-						statusCode = (int)httpResponse.StatusCode;
-					}
-				}
-			} finally {
-				if (httpResponse != null) {
-					httpResponse.Close ();
-				}
-				if (streamResponse != null) {
-					streamResponse.Close ();
-				}
-				if (streamRead != null) {
-					streamRead.Close ();
-				}
-				//check if session token error have or not
-				if (error != null) {
-					_checkInvalidSessionToken (error.ErrorCode);
-				}
-
-				//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
-				var unescapeResponseData = responseData;
-				if (unescapeResponseData != null && unescapeResponseData != Regex.Unescape (unescapeResponseData)) {
-					unescapeResponseData = Regex.Unescape (unescapeResponseData);
-				}
-
-				//レスポンスシグネチャのチェック
-				if (NCMBSettings._responseValidationFlag && httpResponse != null) {
-					//レスポンスシグネチャが無い場合はE100001エラー
-					if (httpResponse.Headers.GetValues (RESPONSE_SIGNATURE) != null) {
-						string responseSignature = httpResponse.Headers.GetValues (RESPONSE_SIGNATURE) [0];
-						_signatureCheck (responseSignature, ref statusCode, ref unescapeResponseData, ref responseByte, ref error);
-					} else {
-						statusCode = 100;
-						responseData = "{}";
-						error = new NCMBException ();
-						error.ErrorCode = "E100001";
-						error.ErrorMessage = "Authentication error by response signature incorrect.";
-					}
-				}
-
-
-				if (fileCallback != null) {
-					fileCallback (statusCode, responseByte, error);
-				} else {
-					callback (statusCode, responseData, error);
-				}
-			}
+			GameObject gameObj = GameObject.Find ("NCMBSettings");
+			NCMBSettings settings = gameObj.GetComponent<NCMBSettings> ();
+			settings.Connection (this, callback);
 		}
 
-		private void _signatureCheck (string responseSignature, ref int statusCode, ref string responseData, ref byte[] responseByte, ref NCMBException error)
+		private void _signatureCheck (string responseSignature, string statusCode, string responseData, byte[] responseByte, ref NCMBException error)
 		{
 			//hashデータ作成
 			StringBuilder stringHashData = _makeSignatureHashData ();
 
-			//レスポンスデータ追加 Delete時はレスポンスデータが無いためチェックする
-			if (responseData != null && responseData != "") {
+			//レスポンスデータ追加 Delete時はレスポンスデータが無いため追加しない
+			if (responseByte.Any () && responseData != "") {
+				// 通常時
 				stringHashData.Append ("\n" + responseData);
-			} else if (responseByte != null) {
+			} else if (responseByte.Any ()) {
+				// ファイル取得時など
 				stringHashData.Append ("\n" + AsHex (responseByte));
 			}
 
@@ -256,7 +156,7 @@ namespace NCMB.Internal
 
 			//レスポンスシグネチャと生成したシグネチャが違う場合はエラー
 			if (responseSignature != responseMakeSignature) {
-				statusCode = 100;
+				statusCode = "100";
 				responseData = "{}";
 				error = new NCMBException ();
 				error.ErrorCode = "E100001";
@@ -278,160 +178,95 @@ namespace NCMB.Internal
 			}
 			return sb.ToString ();
 		}
-		/*
-		//通信処理(非同期通)
-		internal void ConnectAsync (HttpClientCallback callback)
+			
+		// ファイルデータ設定
+		private UnityWebRequest _setUploadHandlerForFile (UnityWebRequest req)
 		{
-			//証明書更新　更新しないとSSLサイトにアクセス出来ない
-			ServicePointManager.ServerCertificateValidationCallback = delegate {
-				return true;
-			};
-			//リクエストの作成
-			HttpWebRequest req = _returnRequest ();
-			//非同期データ送信　BeginGetRequestStreamでくくらなければ同期通信
-			if (_method == ConnectType.POST || _method == ConnectType.PUT) {
-				//リクエスト非同期処理
-				IAsyncResult requestResult = req.BeginGetRequestStream (ar => {
-					Stream postStream = req.EndGetRequestStream (ar);                //非同期要求を終了
-					byte[] postDataBytes = Encoding.Default.GetBytes (_content);    //送信データ作成。バイト型配列に変換
-					postStream.Write (postDataBytes, 0, postDataBytes.Length);      //送信
-					postStream.Close ();                                           //リリース
-					IAsyncResult responsResult = req.BeginGetResponse (ar2 => {
-						HttpWebResponse response = (HttpWebResponse)req.EndGetResponse (ar2); //非同期要求を終了
-						Stream streamResponse = response.GetResponseStream (); //応答データを受信するためのStreamを取得
-						int statusCode = (int)response.StatusCode; //ステータスコード取得
-						StreamReader streamRead = new StreamReader (streamResponse); //レスポンスデータ取得
-						string responseData = streamRead.ReadToEnd ();
-						// 閉じる.リリース
-						streamResponse.Close ();
-						streamRead.Close ();
-						response.Close ();
-						callback (statusCode, responseData, null);//コールバックを返す
-					}, null);
-				}, null);
-			} else if (_method == ConnectType.GET || _method == ConnectType.DELETE) {  //コールバックをメソッドにしなくてもこう言う書き方も有りです
-				IAsyncResult responseResult = req.BeginGetResponse (ar => {
-					try {
-						HttpWebResponse res = (HttpWebResponse)req.EndGetResponse (ar);
-						int statusCode = (int)res.StatusCode;
-						Stream streamResponse = res.GetResponseStream ();
-						StreamReader streamRead = new StreamReader (streamResponse); //レスポンスデータ取得
-						string responseData = streamRead.ReadToEnd ();
-						callback (statusCode, responseData, null);
-					} catch (WebException e) {
-						NCMBDebug.LogError ("失敗error:" + e);
-					}
-				}, null);
+			string newLine = "\r\n";
+			string boundary = "_NCMBBoundary";
+			string formData = "--" + boundary + newLine;
+			byte[] endBoundary = Encoding.Default.GetBytes (newLine + "--" + boundary + "--");
+			
+			formData += "Content-Disposition: form-data; name=\"file\"; filename=" + Uri.EscapeUriString (_file.FileName) + newLine;
+			formData += "Content-Type: " + MimeTypeMap.GetMimeType (System.IO.Path.GetExtension (_file.FileName)) + newLine + newLine;
+			byte[] fileFormData = Encoding.Default.GetBytes (formData);
+
+			// BodyData連結
+			if (_file.FileData != null) {
+				fileFormData = Enumerable.Concat (fileFormData, _file.FileData).ToArray ();
 			}
-		}
-		*/
-		//同期データ送信
-		private HttpWebRequest _sendRequest (HttpWebRequest req, ref NCMBException error)
-		{
-			byte[] postDataBytes = Encoding.Default.GetBytes (_content);
-			Stream stream = null;
-			try {
-				stream = req.GetRequestStream ();
-				stream.Write (postDataBytes, 0, postDataBytes.Length);
-			} catch (SystemException cause) {
-				//エラー処理
-				error = new NCMBException (cause);
-			} finally {
-				if (stream != null) {
-					stream.Close ();
-				}
+			
+			// ACL更新処理
+			if (_file.ACL != null && _file.ACL._toJSONObject ().Count > 0) {
+				string aclString = Json.Serialize (_file.ACL._toJSONObject ());
+				formData = newLine + "--" + boundary + newLine;
+				formData += "Content-Disposition: form-data; name=acl; filename=acl" + newLine + newLine;
+				formData += aclString;
+				byte[] aclFormData = Encoding.Default.GetBytes (formData);
+				fileFormData = Enumerable.Concat (fileFormData, aclFormData).ToArray ();
 			}
-			return req;
-		}
 
-		//ファイルデータ送信
-		private HttpWebRequest _sendRequestForFile (HttpWebRequest req, ref NCMBException error)
-		{
-			Stream stream = null;
-			try {
-				stream = req.GetRequestStream ();
-				string newLine = "\r\n";
-				string boundary = "_NCMBBoundary";
-				string formData = "--" + boundary + newLine;
-				byte[] endBoundary = Encoding.Default.GetBytes (newLine + "--" + boundary + "--");
+			fileFormData = Enumerable.Concat (fileFormData, endBoundary).ToArray ();
+			req.uploadHandler = (UploadHandler)new UploadHandlerRaw (fileFormData);
 
-
-				formData += "Content-Disposition: form-data; name=\"file\"; filename=" + Uri.EscapeUriString (_file.FileName) + newLine;
-				formData += "Content-Type: " + MimeTypeMap.GetMimeType (System.IO.Path.GetExtension (_file.FileName)) + newLine + newLine;
-				byte[] fileFormData = Encoding.Default.GetBytes (formData);
-				stream.Write (fileFormData, 0, fileFormData.Length);
-				if (_file.FileData != null) {
-					stream.Write (_file.FileData, 0, _file.FileData.Length);
-				}
-
-				// ACL更新処理
-				if (_file.ACL != null && _file.ACL._toJSONObject ().Count > 0) {
-					string aclString = Json.Serialize (_file.ACL._toJSONObject ());
-					formData = newLine + "--" + boundary + newLine;
-					formData += "Content-Disposition: form-data; name=acl; filename=acl" + newLine + newLine;
-					formData += aclString;
-					byte[] aclFormData = Encoding.Default.GetBytes (formData);
-					stream.Write (aclFormData, 0, aclFormData.Length);
-				}
-
-				stream.Write (endBoundary, 0, endBoundary.Length);
-			} catch (SystemException cause) {
-				//エラー処理
-				error = new NCMBException (cause);
-			} finally {
-				if (stream != null) {
-					stream.Close ();
-				}
-			}
 			return req;
 		}
 
 		/// <summary>
 		/// リクエストの生成を行う
 		/// </summary>
-		internal HttpWebRequest _returnRequest ()
+		internal UnityWebRequest _returnRequest ()
 		{
 			//URLをエンコード
 			var uri = new Uri (_url);
 			_url = uri.AbsoluteUri;
 
-			HttpWebRequest req = (HttpWebRequest)WebRequest.Create (_url); //デフォルトの生成
-			_makeTimeStamp (); //タイムスタンプの生成
-			req.Timeout = REQUEST_TIME_OUT;
-			StringBuilder stringHashData = _makeSignatureHashData ();
-			string result = _makeSignature (stringHashData.ToString ()); //シグネチャ生成
-			//ヘッダー設定
 			//メソッド追加
+			String method = "";
 			switch (_method) {
 			case ConnectType.POST:
-				req.Method = "POST";
+				method = "POST";
 				break;
 			case ConnectType.PUT:
-				req.Method = "PUT";
+				method = "PUT";
 				break;
 			case ConnectType.GET:
-				req.Method = "GET";
+				method = "GET";
 				break;
 			case ConnectType.DELETE:
-				req.Method = "DELETE";
+				method = "DELETE";
 				break;
 			}
 
-			if (req.Method.Equals ("POST") && _file != null || req.Method.Equals ("PUT") && _file != null) {
-				req.ContentType = "multipart/form-data; boundary=_NCMBBoundary";
+			UnityWebRequest req = new UnityWebRequest (_url, method);
+			_makeTimeStamp (); //タイムスタンプの生成
+			StringBuilder stringHashData = _makeSignatureHashData ();
+			string result = _makeSignature (stringHashData.ToString ()); //シグネチャ生成
+
+			// ContentType設定
+			if (req.method.Equals ("POST") && _file != null || req.method.Equals ("PUT") && _file != null) {
+				req.SetRequestHeader ("Content-Type", "multipart/form-data; boundary=_NCMBBoundary");
 			} else {
-				req.ContentType = "application/json";
+				req.SetRequestHeader ("Content-Type", "application/json");
 			}
 
-			req.Headers.Add (HEADER_APPLICATION_KEY, _applicationKey);
-			req.Headers.Add (HEADER_SIGNATURE, result);
-			req.Headers.Add (HEADER_TIMESTAMP_KEY, _headerTimestamp);
-			req.Headers.Add (HEADER_USER_AGENT_KEY, HEADER_USER_AGENT_VALUE);
+			//ヘッダー設定
+			req.SetRequestHeader (HEADER_APPLICATION_KEY, _applicationKey);
+			req.SetRequestHeader (HEADER_SIGNATURE, result);
+			req.SetRequestHeader (HEADER_TIMESTAMP_KEY, _headerTimestamp);
+			req.SetRequestHeader (HEADER_USER_AGENT_KEY, HEADER_USER_AGENT_VALUE);
 			if ((_sessionToken != null) && (_sessionToken != "")) {
-				req.Headers.Add (HEADER_SESSION_TOKEN, _sessionToken);
+				req.SetRequestHeader (HEADER_SESSION_TOKEN, _sessionToken);
 				NCMBDebug.Log ("Session token :" + _sessionToken);
 			}
-			req.Headers.Add (HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+			//req.SetRequestHeader (HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+			if (_content != null && req.GetRequestHeader ("Content-Type").Equals ("multipart/form-data; boundary=_NCMBBoundary")) {
+				_setUploadHandlerForFile (req);
+			} else if (_content != null) {
+				byte[] bodyRaw = Encoding.UTF8.GetBytes (_content);
+				req.uploadHandler = (UploadHandler)new UploadHandlerRaw (bodyRaw);
+			}
+			req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer ();
 			return req;
 		}
 
@@ -477,6 +312,7 @@ namespace NCMB.Internal
 				data.Append (tmp + "=" + hashValue [tmp] + "&");
 			}
 			data.Remove (data.Length - 1, 1); //最後の&を削除
+
 			return data;
 		}
 
@@ -486,7 +322,6 @@ namespace NCMB.Internal
 		//シグネチャ（ハッシュデータ）生成
 		private string _makeSignature (string stringData)
 		{
-
 			//署名(シグネチャ)生成
 			string result = null; //シグネチャ結果の収納
 			byte[] secretKeyBArr = Encoding.UTF8.GetBytes (_clientKey); //秘密鍵(クライアントキー)
@@ -521,6 +356,111 @@ namespace NCMB.Internal
 					NCMBUser._logOutEvent ();
 				NCMBDebug.Log ("CurrentUser is found, sessionToken info error, delete localdata");
 			}
+		}
+
+		/// <summary>
+		/// セッショントークン有効稼働かの処理を行う
+		/// </summary>
+		internal void _checkResponseSignature (string code, string responseData, UnityWebRequest req, ref NCMBException error)
+		{
+			//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
+			var unescapeResponseData = responseData;
+			if (unescapeResponseData != null && unescapeResponseData != Regex.Unescape (unescapeResponseData)) {
+				unescapeResponseData = Regex.Unescape (unescapeResponseData);
+			}
+				
+			//レスポンスシグネチャのチェック
+			if (NCMBSettings._responseValidationFlag && req.error == null && error == null && req.GetResponseHeader (RESPONSE_SIGNATURE) != null) {
+				string responseSignature = req.GetResponseHeader (RESPONSE_SIGNATURE).ToString ();
+				_signatureCheck (responseSignature, code, unescapeResponseData, req.downloadHandler.data, ref error);
+			}
+		}
+
+		internal static IEnumerator SendRequest (NCMBConnection connection, UnityWebRequest req, object callback)
+		{
+			NCMBException error = null;
+			byte[] byteData = new byte[32768];
+			string json = "";
+			string responseCode = "";
+
+			// 通信実行
+			// yield return req.Send ();
+
+			// 通信実行
+			#if UNITY_5 
+			req.Send ();
+			#else
+			req.SendWebRequest ();
+			#endif
+
+			// タイムアウト処理
+			float elapsedTime = 0.0f;
+			float waitTime = 0.2f;
+			while (!req.isDone) {
+				//elapsedTime += Time.deltaTime;
+				elapsedTime += waitTime;
+				if (elapsedTime >= REQUEST_TIME_OUT) { 
+					req.Abort ();
+					error = new NCMBException ();
+					break;
+				}
+				//yield return new WaitForEndOfFrame ();
+				yield return new WaitForSeconds (waitTime);
+			}
+
+			// 通信結果判定
+			if (error != null) {
+				// タイムアウト
+				error.ErrorCode = "408";
+				error.ErrorMessage = "Request Timeout.";
+				#if UNITY_5
+			} else if (req.isError) {
+				#else 
+			} else if (req.isNetworkError) {
+				#endif
+				// 通信エラー
+				error = new NCMBException ();
+				error.ErrorCode = req.responseCode.ToString ();
+				error.ErrorMessage = req.error;
+			} else if (req.responseCode != 200 && req.responseCode != 201) {
+				// mBaaSエラー
+				error = new NCMBException ();
+				var jsonData = MiniJSON.Json.Deserialize (req.downloadHandler.text) as Dictionary<string,object>;
+				error.ErrorCode = jsonData ["code"].ToString ();
+				error.ErrorMessage = jsonData ["error"].ToString ();
+			} else {
+				// 通信成功
+				byteData = req.downloadHandler.data;
+				json = req.downloadHandler.text;
+			}
+
+			//check E401001 error
+			if (error != null) {
+				connection._checkInvalidSessionToken (error.ErrorCode);
+			}
+
+			// check response signature 
+			if (callback != null && !(callback is NCMBExecuteScriptCallback)) {
+				// スクリプト機能はレスポンスシグネチャ検証外
+				responseCode = req.responseCode.ToString ();
+				string responsText = req.downloadHandler.text;
+				if (callback is HttpClientFileDataCallback) {
+					// NCMBFileのGETではbyteでシグネチャ計算を行うよう空文字にする
+					responsText = "";
+				}
+				connection._checkResponseSignature (responseCode, responsText, req, ref error);
+			}
+
+			if (callback != null) {
+				if (callback is NCMBExecuteScriptCallback) {
+					((NCMBExecuteScriptCallback)callback) (byteData, error);
+				} else if (callback is HttpClientCallback) {
+					((HttpClientCallback)callback) ((int)req.responseCode, json, error);
+				} else if (callback is HttpClientFileDataCallback) {
+					((HttpClientFileDataCallback)callback) ((int)req.responseCode, byteData, error);
+				}
+			}
+
 		}
 	}
 }

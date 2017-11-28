@@ -36,7 +36,7 @@ namespace NCMB
 		//シグネチャチェックフラグ
 		internal static bool _responseValidationFlag = false;
 		//初回のみ実行フラグ
-		private static bool _isInitialized = false;
+		internal static bool _isInitialized = false;
 		//PUSH通知フラグ
 		private static bool _usePush = false;
 		//開封通知フラグ
@@ -156,7 +156,7 @@ namespace NCMB
 		/// <summary>
 		/// APIバージョンの取得、または設定を行います。 
 		/// </summary>
-		 internal static string APIVersion {
+		internal static string APIVersion {
 			get {
 				return _apiVersion;
 			}
@@ -186,9 +186,9 @@ namespace NCMB
 			// クライアントキーを設定
 			_clientKey = clientKey;
 			// ドメインURLを設定
-			_domainURL = string.IsNullOrEmpty(domainURL) ? CommonConstant.DOMAIN_URL : domainURL;
+			_domainURL = string.IsNullOrEmpty (domainURL) ? CommonConstant.DOMAIN_URL : domainURL;
 			// APIバージョンを設定
-			_apiVersion = string.IsNullOrEmpty(apiVersion) ? CommonConstant.API_VERSION : apiVersion;
+			_apiVersion = string.IsNullOrEmpty (apiVersion) ? CommonConstant.API_VERSION : apiVersion;
 		}
 
 		/// <summary>
@@ -251,8 +251,12 @@ namespace NCMB
 				filePath = Application.persistentDataPath;
 				currentInstallationPath = filePath + "/currentInstallation";
 				NCMBSettings.RegisterPush (this.usePush, this.useAnalytics, this.androidSenderId, false);
-				base.StartCoroutine (Platform.RunLoop ());
 			}
+		}
+
+		public void Connection (NCMBConnection connection, object callback)
+		{
+			StartCoroutine (NCMBConnection.SendRequest (connection, connection._request, callback));
 		}
 	}
 }

@@ -26,7 +26,7 @@ using UnityEngine;
 
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Assembly-CSharp-Editor")]
+[assembly:InternalsVisibleTo ("Assembly-CSharp-Editor")]
 namespace  NCMB
 {
 	/// <summary>
@@ -55,10 +55,10 @@ namespace  NCMB
 				};
 
 				var json = Json.Serialize (requestData);
-				string url = NCMBAnalytics._getBaseUrl(_pushId);
+				string url = NCMBAnalytics._getBaseUrl (_pushId);
 				ConnectType type = ConnectType.POST;
 				string content = json.ToString ();
-				NCMBDebug.Log ("content:" + content);
+
 				//ログを確認（通信前）
 				NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 				// 通信処理
@@ -73,15 +73,12 @@ namespace  NCMB
 				});    
 
 				#if UNITY_IOS
-					#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-					NotificationServices.ClearRemoteNotifications ();
-					#else
 					UnityEngine.iOS.NotificationServices.ClearRemoteNotifications ();
-					#endif
 				#endif
 
 			}
 		}
+
 		/// <summary>
 		/// コンストラクター
 		/// </summary>

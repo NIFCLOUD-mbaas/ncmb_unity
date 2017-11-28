@@ -30,15 +30,18 @@ namespace NCMB
 	/// </summary>
 	public class NCMBQuery<T> where T : NCMBObject
 	{
-		private readonly Dictionary<string, object> _where;//where以降のパスを保存
+		//where以降のパスを保存
+		private readonly Dictionary<string, object> _where;
 		private readonly string WHERE_URL = "?";
 		private string _className;
-		private int _limit;//取得件数
-		private int _skip;//取得開始位置
-		private List<string> _order;//降順、昇順
-		private List<string> _include;//子の情報の取得有無
-		private delegate void AsyncDelegate ();
-
+		//取得件数
+		private int _limit;
+		//取得開始位置
+		private int _skip;
+		//降順、昇順
+		private List<string> _order;
+		//子の情報の取得有無
+		private List<string> _include;
 
 		/// <summary>
 		/// コンストラクター。
@@ -545,11 +548,7 @@ namespace NCMB
 			if (callback == null) {
 				throw new ArgumentException ("It is necessary to always set a callback.");
 			}
-
-			new AsyncDelegate (delegate {
-				this.Find (callback);
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+			this.Find (callback);
 		}
 
 		/// <summary>
@@ -567,7 +566,7 @@ namespace NCMB
 			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
 			//通信処理
 			NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
-			con.Connect (delegate(int statusCode , string responseData, NCMBException error) {
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
 				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
 
 				Dictionary<string , object> resultObj;
@@ -585,10 +584,8 @@ namespace NCMB
 				} catch (Exception e) {
 					error = new NCMBException (e);
 				}
-
-				Platform.RunOnMainThread (delegate {
-					callback (resultList, error);
-				});
+							
+				callback (resultList, error);
 
 				return;
 			});
@@ -648,34 +645,29 @@ namespace NCMB
 			if (callback == null) {
 				throw new ArgumentException ("It is necessary to always set a callback.");
 			}
-
-			new AsyncDelegate (delegate {
-
-				string url = _getSearchUrl (this._className);//クラス毎のURL作成
-				//オブジェクト取得API
-				url += "/" + objectId;
-				ConnectType type = ConnectType.GET;//メソッドタイプの設定
-				//通信処理
-				NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
-				con.Connect (delegate(int statusCode , string responseData, NCMBException error) {
-					Dictionary<string , object> resultObj;
-					NCMBObject objectData = null;
-					try {
-						if (error == null) {
-							resultObj = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
-							objectData = _convertGetResponse (resultObj);
-						}
-					} catch (Exception e) {
-						error = new NCMBException (e);
+				
+			string url = _getSearchUrl (this._className);//クラス毎のURL作成
+			//オブジェクト取得API
+			url += "/" + objectId;
+			ConnectType type = ConnectType.GET;//メソッドタイプの設定
+			//通信処理
+			NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+				Dictionary<string , object> resultObj;
+				NCMBObject objectData = null;
+				try {
+					if (error == null) {
+						resultObj = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
+						objectData = _convertGetResponse (resultObj);
 					}
-					//引数はリスト(中身NCMBObject)とエラーをユーザーに返す
-					Platform.RunOnMainThread (delegate {
-						callback ((T)objectData, error);
-					});
-					return;
-				});
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+				} catch (Exception e) {
+					error = new NCMBException (e);
+				}
+				//引数はリスト(中身NCMBObject)とエラーをユーザーに返す
+				callback ((T)objectData, error);
+				return;
+			});
+
 		}
 
 
@@ -715,42 +707,39 @@ namespace NCMB
 				throw new ArgumentException ("It is necessary to always set a callback.");
 			}
 
-			new AsyncDelegate (delegate {
-				string url = _getSearchUrl (this._className);//クラス毎のURL作成
-				url += WHERE_URL;//「?」をつける
 
-				Dictionary<string, object> beforeJsonData = _getFindParams ();//パラメータDictionaryの作成
+			string url = _getSearchUrl (this._className);//クラス毎のURL作成
+			url += WHERE_URL;//「?」をつける
 
-				beforeJsonData ["count"] = 1;// カウント条件を追加する
+			Dictionary<string, object> beforeJsonData = _getFindParams ();//パラメータDictionaryの作成
 
-				url = _makeWhereUrl (url, beforeJsonData);//urlにパラメータDictionaryを変換して結合
+			beforeJsonData ["count"] = 1;// カウント条件を追加する
 
-				ConnectType type = ConnectType.GET;//メソッドタイプの設定
-				//通信処理
-				NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
-				con.Connect (delegate(int statusCode , string responseData, NCMBException error) {
+			url = _makeWhereUrl (url, beforeJsonData);//urlにパラメータDictionaryを変換して結合
 
-					Dictionary<string, object> resultObj;
-					int count = 0;
-					if (error == null) {
-						try {
-							resultObj = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
-							object objectCount = null;
-							if (resultObj.TryGetValue ("count", out objectCount)) {
-								count = Convert.ToInt32 (objectCount);//キーcountの値は必ず同じ型なので型チェック時の変換チェックは無し
-							}
-						} catch (Exception e) {
-							error = new NCMBException (e);
+			ConnectType type = ConnectType.GET;//メソッドタイプの設定
+			//通信処理
+			NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+
+				Dictionary<string, object> resultObj;
+				int count = 0;
+				if (error == null) {
+					try {
+						resultObj = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
+						object objectCount = null;
+						if (resultObj.TryGetValue ("count", out objectCount)) {
+							count = Convert.ToInt32 (objectCount);//キーcountの値は必ず同じ型なので型チェック時の変換チェックは無し
 						}
+					} catch (Exception e) {
+						error = new NCMBException (e);
 					}
-					//引数は検索条件のカウント数とエラーをユーザーに返す
-					Platform.RunOnMainThread (delegate {
-						callback (count, error);
-					});
-					return;
-				});
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+				}
+				//引数は検索条件のカウント数とエラーをユーザーに返す
+				callback (count, error);
+				
+				return;
+			});
 		}
 
 		//beforejsonDataの各値をJSON化→エンコードしurlに結合する
