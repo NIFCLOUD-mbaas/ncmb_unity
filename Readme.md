@@ -44,4 +44,4 @@
 
 - [ニフクラ mobile backend](http://mb.cloud.nifty.com)
 - [ドキュメント](http://mb.cloud.nifty.com/doc/current)
-- [ユーザーコミュニティ](https://github.com/NIFTYCloud-mbaas/UserCommunity)
+- [ユーザーコミュニティ](https://github.com/NIFCloud-mbaas/UserCommunity)
