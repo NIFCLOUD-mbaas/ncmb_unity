@@ -387,10 +387,10 @@ namespace NCMB.Internal
 			// yield return req.Send ();
 
 			// 通信実行
-			#if UNITY_5 
-			req.Send ();
-			#else
+			#if UNITY_2017_2_OR_NEWER
 			req.SendWebRequest ();
+			#else
+			req.Send ();
 			#endif
 
 			// タイムアウト処理
@@ -413,10 +413,10 @@ namespace NCMB.Internal
 				// タイムアウト
 				error.ErrorCode = "408";
 				error.ErrorMessage = "Request Timeout.";
-				#if UNITY_5
-			} else if (req.isError) {
-				#else 
+				#if UNITY_2017_1_OR_NEWER
 			} else if (req.isNetworkError) {
+				#else 
+			} else if (req.isError) {
 				#endif
 				// 通信エラー
 				error = new NCMBException ();
