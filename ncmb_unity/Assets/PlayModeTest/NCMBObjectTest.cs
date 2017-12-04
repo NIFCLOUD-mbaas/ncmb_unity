@@ -14,6 +14,10 @@ public class NCMBObjectTest
 		NCMBTestSettings.Initialize ();
 	}
 
+	/**
+     * - 内容：ダブルクォーテーションが含まれた文字列が正しく保存出来るか確認する
+     * - 結果：値が正しく設定されていること
+     */
 	[UnityTest]
 	public IEnumerator DoubleQuotationUnescapeTest ()
 	{

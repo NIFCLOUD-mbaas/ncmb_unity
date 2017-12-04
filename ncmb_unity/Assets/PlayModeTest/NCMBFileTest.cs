@@ -89,11 +89,11 @@ public class NCMBFileTest
 	[UnityTest]
 	public IEnumerator FileUploadImageTest ()
 	{
-		FileStream fileStream = new FileStream ("Assets/PlayModeTest/logo.png", FileMode.Open, FileAccess.Read);
+		FileStream fileStream = new FileStream ("Assets/PlayModeTest/Test.png", FileMode.Open, FileAccess.Read);
 		BinaryReader bin = new BinaryReader (fileStream);
 		byte[] data = bin.ReadBytes ((int)bin.BaseStream.Length);
 		bin.Close ();
-		NCMBFile file = new NCMBFile ("logo.png", data);
+		NCMBFile file = new NCMBFile ("Test.png", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
 			NCMBTestSettings.CallbackFlag = true;

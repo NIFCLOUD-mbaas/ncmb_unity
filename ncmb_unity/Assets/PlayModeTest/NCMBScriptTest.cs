@@ -41,6 +41,10 @@ public class NCMBScriptTest
 		NCMBTestSettings.Initialize ();
 	}
 
+	/**
+     * - 内容：アプリケーションキーおよびクライアントキーが正しく設定されているか確認する
+     * - 結果：値が正しく設定されていること
+     */
 	[Test]
 	public void ReturnAPIKeyTest ()
 	{
@@ -48,6 +52,10 @@ public class NCMBScriptTest
 		Assert.AreEqual (NCMBSettings.ClientKey, NCMBTestSettings.CLIENT_KEY);
 	}
 
+	/**
+     * - 内容：スクリプト実行APIメソッド(POST)で正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_POST ()
 	{
@@ -67,6 +75,10 @@ public class NCMBScriptTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：スクリプト実行APIメソッド(PUT)で正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_PUT ()
 	{
@@ -87,6 +99,10 @@ public class NCMBScriptTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：スクリプト実行APIメソッド(GET)でクエリを一つ指定して正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_GET ()
 	{
@@ -107,6 +123,10 @@ public class NCMBScriptTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：スクリプト実行APIメソッド(GET)でクエリを二つ指定して正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_GET_Count ()
 	{
@@ -127,6 +147,10 @@ public class NCMBScriptTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：スクリプト実行APIメソッド(DELETE)で正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_DELETE ()
 	{
@@ -146,6 +170,10 @@ public class NCMBScriptTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：スクリプト実行APIメソッドでエラーが返却された際に正常に処理されるか確認する
+     * - 結果：エラーが発生すること
+     */
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_Error ()
 	{
@@ -164,6 +192,10 @@ public class NCMBScriptTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：スクリプト実行APIメソッドでヘッダー指定された際に正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_Header ()
 	{
@@ -184,6 +216,10 @@ public class NCMBScriptTest
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
+	/**
+     * - 内容：スクリプト実行APIメソッド(GET)でクエリに辞書型を指定して正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptObjectTest_GET ()
 	{

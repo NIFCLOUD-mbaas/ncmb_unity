@@ -254,7 +254,10 @@ namespace NCMB
 			}
 		}
 
-		public void Connection (NCMBConnection connection, object callback)
+		/// <summary>
+		/// mobile backendと通信を行います。
+		/// </summary>
+		internal void Connection (NCMBConnection connection, object callback)
 		{
 			StartCoroutine (NCMBConnection.SendRequest (connection, connection._request, callback));
 		}
