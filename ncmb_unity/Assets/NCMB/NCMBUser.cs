@@ -448,55 +448,65 @@ namespace  NCMB
 			}, null);
 		}
 
-		private  static void _ncmbLogIn (string name, string password, string email, NCMBCallback callback)
-		{
-			string url = _getLogInUrl ();//URL作成
-			ConnectType type = ConnectType.GET;
-			//set username, password
-			NCMBUser logInUser = new NCMBUser ();
+        private static void _ncmbLogIn(string name, string password, string email, NCMBCallback callback)
+        {
+            string url = _getLogInUrl();
+            ConnectType type = ConnectType.GET;
 
-			logInUser.Password = password;
+            Dictionary<string, object> paramDic = new Dictionary<string, object>();
+            paramDic["password"] = password;
 
-			//nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
-			if (name != null) {
-				logInUser.UserName = name;
-			} else if (email != null) {
-				logInUser.Email = email;
-			} else {
-				throw new NCMBException (new ArgumentException ("UserName or Email can not be null."));
-			}
+            //nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
+            if (name != null)
+            {
+                paramDic["userName"] = name;
+            }
+            else if (email != null)
+            {
+                paramDic["mailAddress"] = email;
+            }
+            else
+            {
+                throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
+            }
 
-			string content = logInUser._toJSONObjectForSaving (logInUser.StartSave ());
-			Dictionary<string, object> paramDic = (Dictionary<string, object>)MiniJSON.Json.Deserialize (content);
-			url = _makeParamUrl (url + "?", paramDic);
-			//ログを確認（通信前）
-			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
-			//通信処理
-			NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
-			con.Connect (delegate(int statusCode , string responseData, NCMBException error) {
-				try {
-					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					if (error != null) {		
-						NCMBDebug.Log ("[DEBUG AFTER CONNECT] Error: " + error.ErrorMessage);
-					} else {
-						Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
-						logInUser._handleFetchResult (true, responseDic);
-						//save Current user
-						_saveCurrentUser (logInUser);
-                        logInUser._removeFirstOperationIfMoreThanOneExists();
-						
-					}
-				} catch (Exception e) {
-					error = new NCMBException (e);
-				}
-				if (callback != null) {
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
-				}
-				return;
-			});	
-		}
+            string content = Json.Serialize(paramDic);
+            url = _makeParamUrl(url + "?", paramDic);
+
+            //ログを確認（通信前）
+            NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
+            //通信処理
+            NCMBConnection con = new NCMBConnection(url, type, content, NCMBUser._getCurrentSessionToken());
+            con.Connect(delegate (int statusCode, string responseData, NCMBException error) {
+                try
+                {
+                    NCMBDebug.Log("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+                    if (error != null)
+                    {
+                        NCMBDebug.Log("[DEBUG AFTER CONNECT] Error: " + error.ErrorMessage);
+                    }
+                    else
+                    {
+                        Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize(responseData) as Dictionary<string, object>;
+                        //save Current user
+                        NCMBUser logInUser = new NCMBUser();
+                        logInUser._handleFetchResult(true, responseDic);
+                        _saveCurrentUser(logInUser);
+                    }
+                }
+                catch (Exception e)
+                {
+                    error = new NCMBException(e);
+                }
+                if (callback != null)
+                {
+                    Platform.RunOnMainThread(delegate {
+                        callback(error);
+                    });
+                }
+                return;
+            });
+        }
 		
 		private static string _makeParamUrl (string url, Dictionary<string, object> parameter)
 		{
