@@ -452,7 +452,6 @@ namespace  NCMB
 		{
 			string url = _getLogInUrl ();//URL作成
 			ConnectType type = ConnectType.GET;
-			
 			Dictionary<string, object> paramDic = new Dictionary<string, object>();
 			paramDic["password"] = password;
 
