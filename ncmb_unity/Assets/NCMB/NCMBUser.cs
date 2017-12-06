@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -214,7 +214,7 @@ namespace  NCMB
 		//save後処理 　オーバーライド用　新規登録時のみログインを行う
 		internal override void _afterSave (int statusCode, NCMBException error)
 		{
-			if (statusCode == 201 && error == null) {
+			if ((statusCode == 201 || statusCode == 200) && error == null) {
 				_saveCurrentUser ((NCMBUser)this);
 			}
 		}
@@ -452,22 +452,20 @@ namespace  NCMB
 		{
 			string url = _getLogInUrl ();//URL作成
 			ConnectType type = ConnectType.GET;
-			//set username, password
-			NCMBUser logInUser = new NCMBUser ();
 
-			logInUser.Password = password;
+			Dictionary<string, object> paramDic = new Dictionary<string, object>();
+			paramDic["password"] = password;
 
 			//nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
 			if (name != null) {
-				logInUser.UserName = name;
+				paramDic["userName"] = name;
 			} else if (email != null) {
-				logInUser.Email = email;
+				paramDic["mailAddress"] = email;
 			} else {
 				throw new NCMBException (new ArgumentException ("UserName or Email can not be null."));
 			}
 
-			string content = logInUser._toJSONObjectForSaving (logInUser.StartSave ());
-			Dictionary<string, object> paramDic = (Dictionary<string, object>)MiniJSON.Json.Deserialize (content);
+			string content = Json.Serialize(paramDic);
 			url = _makeParamUrl (url + "?", paramDic);
 			//ログを確認（通信前）
 			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);

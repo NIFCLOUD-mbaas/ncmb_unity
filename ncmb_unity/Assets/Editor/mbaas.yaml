@@ -380,7 +380,7 @@ request:
     password: pass
 response:
   status: 200
-  file: /json/post_success_response.json
+  file: /json/post_user_success_response.json
 ---
 request:
   url: 2013-09-01/files/delete.txt
