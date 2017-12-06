@@ -470,7 +470,7 @@ namespace  NCMB
 			}
 
 			string content = Json.Serialize(paramDic);
-			url = _makeParamUrl(url + "?", paramDic);
+			url = _makeParamUrl (url + "?", paramDic);
 			//ログを確認（通信前）
 			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			//通信処理
