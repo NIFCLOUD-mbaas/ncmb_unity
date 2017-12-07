@@ -45,29 +45,28 @@ namespace NCMB.Internal
 {
 	public class NCMBConnection
 	{
+		// レスポンスシグネチャ　キー
 		private static readonly string RESPONSE_SIGNATURE = "X-NCMB-Response-Signature";
-		//レスポンスシグネチャ　キー
+		// シグネチャメソッド　キー
 		private static readonly string SIGNATURE_METHOD_KEY = "SignatureMethod";
-		//シグネチャメソッド　キー
+		// シグネチャメソッド　値
 		private static readonly string SIGNATURE_METHOD_VALUE = "HmacSHA256";
-		//シグネチャメソッド　値
+		// シグネチャバージョン　キー
 		private static readonly string SIGNATURE_VERSION_KEY = "SignatureVersion";
-		//シグネチャバージョン　キー
+		// シグネチャバージョン　値
 		private static readonly string SIGNATURE_VERSION_VALUE = "2";
-		//シグネチャバージョン　値
+		// シグネチャヘッダー　キー
 		private static readonly string HEADER_SIGNATURE = "X-NCMB-Signature";
-		//シグネチャヘッダー　キー
+		// アプリケションキー　キー
 		private static readonly string HEADER_APPLICATION_KEY = "X-NCMB-Application-Key";
-		//アプリケションキー　キー
+		// タイムスタンプ　キー
 		private static readonly string HEADER_TIMESTAMP_KEY = "X-NCMB-Timestamp";
-		//タイムスタンプ　キー
+		// セッショントークン
 		private static readonly string HEADER_SESSION_TOKEN = "X-NCMB-Apps-Session-Token";
-		//セッショントークン
+		// UserAgent キー
 		private static readonly string HEADER_USER_AGENT_KEY = "X-NCMB-SDK-Version";
-		//UserAgent キー
+		// UserAgent 値
 		private static readonly string HEADER_USER_AGENT_VALUE = "unity-" + CommonConstant.SDK_VERSION;
-		//unity-x.x.x
-		//UserAgent 値
 
 		// time out 10 sec
 		private static readonly int REQUEST_TIME_OUT = 10;
