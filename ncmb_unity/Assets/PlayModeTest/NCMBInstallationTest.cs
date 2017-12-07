@@ -4,9 +4,10 @@ using NUnit.Framework;
 using NCMB;
 using System.Reflection;
 
-public class NCMBInstallationTest {
+public class NCMBInstallationTest
+{
 
-	[TestFixtureSetUp]
+	[SetUp]
 	public void Init ()
 	{
 		NCMBTestSettings.Initialize ();
@@ -20,11 +21,11 @@ public class NCMBInstallationTest {
 	public void GetBaseUrlTest ()
 	{
 		// テストデータ作成
-		NCMBInstallation installation = new NCMBInstallation();
+		NCMBInstallation installation = new NCMBInstallation ();
 
 		// internal methodの呼び出し
 		MethodInfo method = installation.GetType ().GetMethod ("_getBaseUrl", BindingFlags.NonPublic | BindingFlags.Instance);
 
-		Assert.AreEqual ("http://localhost:3000/2013-09-01/installations", method.Invoke(installation, null).ToString());
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/installations", method.Invoke (installation, null).ToString ());
 	}
 }

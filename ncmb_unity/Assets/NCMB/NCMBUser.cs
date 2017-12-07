@@ -30,14 +30,14 @@ namespace  NCMB
 	/// <summary>
 	/// 会員管理を操作するクラスです。
 	/// </summary>
-	[NCMBClassName("user")]
+	[NCMBClassName ("user")]
 	public class NCMBUser : NCMBObject
 	{
 
 
 		private static NCMBUser _currentUser = null;
 		internal bool _isCurrentUser;
-		
+
 		/// <summary>
 		/// ユーザ名の取得、または設定を行います。
 		/// </summary>
@@ -49,7 +49,7 @@ namespace  NCMB
 				this ["userName"] = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Eメールの取得、または設定を行います。
 		/// </summary>		
@@ -61,7 +61,7 @@ namespace  NCMB
 				this ["mailAddress"] = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// パスワードの設定を行います。
 		/// </summary>		
@@ -92,7 +92,7 @@ namespace  NCMB
 				this ["authData"] = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// ログイン中のユーザセッショントークンを取得を行います。
 		/// </summary>
@@ -104,7 +104,7 @@ namespace  NCMB
 				this ["sessionToken"] = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// ログイン中のユーザ情報の取得を行います。
 		/// </summary>		
@@ -126,11 +126,11 @@ namespace  NCMB
 				return null;	
 			}
 		}
-		
+
 		/// <summary>
 		/// コンストラクター。
 		/// </summary>	
-		public NCMBUser () : base()
+		public NCMBUser () : base ()
 		{
 			this._isCurrentUser = false;
 		}
@@ -140,7 +140,7 @@ namespace  NCMB
 		{
 			base._onSettingValue (key, value);		
 		}
-		
+
 		/// <summary>
 		/// ユーザを追加します。<br/>
 		/// すでにあるキーを指定した場合はExceptionを投げます。
@@ -161,7 +161,7 @@ namespace  NCMB
 			}
 			base.Add (key, value);
 		}
-		
+
 		/// <summary>
 		/// 指定したキーのフィールドが存在する場合、フィールドを削除します。
 		/// </summary>
@@ -176,7 +176,7 @@ namespace  NCMB
 			}
 			base.Remove (key);
 		}
-		
+
 		/// <summary>
 		/// ユーザ内のオブジェクトで使用出来るクエリを取得します。
 		/// </summary>
@@ -185,22 +185,22 @@ namespace  NCMB
 		{
 			return NCMBQuery<NCMBUser>.GetQuery ("user");
 		}
-		
+
 		internal override string _getBaseUrl ()
 		{
 			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/users";
 		}
-		
+
 		internal static string _getLogInUrl ()
 		{
 			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/login";
 		}
-		
+
 		internal static string _getLogOutUrl ()
 		{
 			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/logout";
 		}
-		
+
 		internal static string _getRequestPasswordResetUrl ()
 		{
 			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/requestPasswordReset";
@@ -226,7 +226,7 @@ namespace  NCMB
 				_logOutEvent ();
 			}
 		}
-		
+
 		/// <summary>
 		/// ユーザの削除を行います。<br/>
 		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
@@ -235,7 +235,7 @@ namespace  NCMB
 		{
 			this.DeleteAsync (null);
 		}
-		
+
 		/// <summary>
 		/// ユーザの削除を行います。<br/>
 		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
@@ -261,7 +261,7 @@ namespace  NCMB
 			base.SaveAsync (callback);
 			//Cleanup authdata for other Services if needed
 		}
-		
+
 		/// <summary>
 		/// 非同期処理でユーザを登録します。<br/>
 		/// ユーザ登録が成功の場合、自動的にログインの状態になります。<br/>
@@ -271,7 +271,7 @@ namespace  NCMB
 		{
 			this.SignUpAsync (null);
 		}
-		
+
 		/// <summary>
 		/// 非同期処理でユーザの保存を行います。<br/>
 		/// SaveAsync()を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br/>
@@ -284,7 +284,7 @@ namespace  NCMB
 		{
 			this.SaveAsync (null);
 		}
-		
+
 		/// <summary>
 		/// 非同期処理でユーザの保存を行います。<br/>
 		/// SaveAsync()を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br/>
@@ -298,7 +298,7 @@ namespace  NCMB
 		{	
 			base.SaveAsync (callback);
 		}
-		
+
 		internal static void _saveCurrentUser (NCMBUser user)
 		{
 			object obj;
@@ -324,7 +324,7 @@ namespace  NCMB
 				Monitor.Exit (obj_user);
 			}
 		}
-		
+
 		internal static void _logOutEvent ()
 		{
 			string filePath = NCMBSettings.filePath + "/" + "currentUser";
@@ -343,7 +343,7 @@ namespace  NCMB
 				throw new NCMBException (e);
 			}
 		}
-		
+
 		
 		internal static string _getCurrentSessionToken ()
 		{	
@@ -352,7 +352,7 @@ namespace  NCMB
 			}
 			return "";
 		}
-		
+
 		/// <summary>
 		/// 認証済みか判定を行います。
 		/// </summary>
@@ -361,7 +361,7 @@ namespace  NCMB
 		{
 			return ((this.SessionToken != null) && (CurrentUser != null) && (CurrentUser.ObjectId.Equals (this.ObjectId)));
 		}
-		
+
 		/// <summary>
 		/// 非同期処理でユーザのパスワード再発行依頼を行います。<br/>
 		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
@@ -371,7 +371,7 @@ namespace  NCMB
 		{
 			RequestPasswordResetAsync (email, null);
 		}
-		
+
 		
 		/// <summary>
 		/// 非同期処理でユーザのパスワード再発行依頼を行います。<br/>
@@ -382,12 +382,11 @@ namespace  NCMB
 		public static void RequestPasswordResetAsync (string email, NCMBCallback callback)
 		{
 			//request通信を実施
-			new AsyncDelegate (delegate {
-				_requestPasswordReset (email, callback);
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+
+			_requestPasswordReset (email, callback);
+
 		}
-		
+
 		internal static void _requestPasswordReset (string email, NCMBCallback callback)
 		{
 			string url = _getRequestPasswordResetUrl ();//URL
@@ -400,7 +399,7 @@ namespace  NCMB
 			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			//通信処理
 			NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
-			con.Connect (delegate(int statusCode , string responseData, NCMBException error) {
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
 				try {
 					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
 					if (error != null) {		
@@ -412,14 +411,12 @@ namespace  NCMB
 					error = new NCMBException (e);
 				}
 				if (callback != null) {
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
+					callback (error);
 				}
 				return;
 			});
 		}
-		
+
 		
 		/// <summary>
 		/// 非同期処理でユーザ名とパスワードを指定して、ユーザのログインを行います。<br/>
@@ -431,7 +428,7 @@ namespace  NCMB
 		{
 			LogInAsync (name, password, null);		
 		}
-		
+
 		/// <summary>
 		/// 非同期処理でユーザ名とパスワードを指定して、ユーザのログインを行います。<br/>
 		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
@@ -442,10 +439,7 @@ namespace  NCMB
 		public static void LogInAsync (string name, string password, NCMBCallback callback)
 		{
 			//logIn通信を実施
-			new AsyncDelegate (delegate {
-				_ncmbLogIn (name, password, null, callback);
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+			_ncmbLogIn (name, password, null, callback);
 		}
 
 		private  static void _ncmbLogIn (string name, string password, string email, NCMBCallback callback)
@@ -473,7 +467,7 @@ namespace  NCMB
 			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			//通信処理
 			NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
-			con.Connect (delegate(int statusCode , string responseData, NCMBException error) {
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
 				try {
 					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
 					if (error != null) {		
@@ -489,14 +483,12 @@ namespace  NCMB
 					error = new NCMBException (e);
 				}
 				if (callback != null) {
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
+					callback (error);	
 				}
 				return;
 			});	
 		}
-		
+
 		private static string _makeParamUrl (string url, Dictionary<string, object> parameter)
 		{
 			string result = url;
@@ -519,10 +511,7 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public static void LogInWithMailAddressAsync (string email, string password, NCMBCallback callback)
 		{
-			new AsyncDelegate (delegate {
-				_ncmbLogIn (null, password, email, callback);
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+			_ncmbLogIn (null, password, email, callback);
 		}
 
 		/// <summary>
@@ -533,10 +522,7 @@ namespace  NCMB
 		/// <param name="password">パスワード</param>
 		public static void LogInWithMailAddressAsync (string email, string password)
 		{
-			new AsyncDelegate (delegate {
-				_ncmbLogIn (null, password, email, null);
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+			_ncmbLogIn (null, password, email, null);
 		}
 
 		/// <summary>
@@ -559,31 +545,28 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public static void RequestAuthenticationMailAsync (string email, NCMBCallback callback)
 		{
-			new AsyncDelegate (delegate {
-				//URL
-				string url = _getmailAddressUserEntryUrl ();//URL
+			
+			//URL
+			string url = _getmailAddressUserEntryUrl ();//URL
 
-				//コンテント
-				NCMBUser user = new NCMBUser ();
-				user.Email = email;
-				string content = user._toJSONObjectForSaving (user.StartSave ());
+			//コンテント
+			NCMBUser user = new NCMBUser ();
+			user.Email = email;
+			string content = user._toJSONObjectForSaving (user.StartSave ());
 
-				//Type	
-				ConnectType type = ConnectType.POST;
+			//Type	
+			ConnectType type = ConnectType.POST;
 
-				NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
-				NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
-				con.Connect (delegate(int statusCode , string responseData, NCMBException error) {
-					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					if (callback != null) {
-						Platform.RunOnMainThread (delegate {
-							callback (error);
-						});
-					}
-					return;
-				});	
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+			NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
+			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+				if (callback != null) {
+					callback (error);
+				}
+				return;
+			});	
+
 		}
 
 
@@ -595,7 +578,7 @@ namespace  NCMB
 		{
 			LogOutAsync (null);
 		}
-		
+
 		
 		/// <summary>
 		/// 非同期処理でユーザのログアウトを行います。<br/>
@@ -606,30 +589,23 @@ namespace  NCMB
 		{
 			if (_currentUser != null) {
 				//logOut通信を実施
-				new AsyncDelegate (delegate {
-					_logOut (callback);
-				}).BeginInvoke ((IAsyncResult r) => {
-				}, null);
+				_logOut (callback);
 			} else {
 				try {
 					_logOutEvent ();
 				} catch (NCMBException e) {
 					if (callback != null) {
-						Platform.RunOnMainThread (delegate {
-							callback (e);
-						});
+						callback (e);
 					}
 					return;
 				}
 				if (callback != null) {
-					Platform.RunOnMainThread (delegate {
-						callback (null);
-					});
+					callback (null);
 				}
 				
 			}
 		}
-		
+
 		internal static void _logOut (NCMBCallback callback)
 		{
 			string url = _getLogOutUrl ();//URL作成
@@ -639,7 +615,7 @@ namespace  NCMB
 			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			//通信処理
 			NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
-			con.Connect (delegate(int statusCode , string responseData, NCMBException error) {
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
 				try {
 					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
 					if (error != null) {		
@@ -651,14 +627,12 @@ namespace  NCMB
 					error = new NCMBException (e);
 				}
 				if (callback != null) {
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
+					callback (error);
 				}
 				return;
 			});	
 		}
-		
+
 		internal override void _mergeFromServer (Dictionary<string, object> responseDic, bool completeData)
 		{
 			
@@ -673,21 +647,18 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public void LogInWithAuthDataAsync (NCMBCallback callback)
 		{
-			if (this.AuthData == null) 
-			{
+			if (this.AuthData == null) {
 				throw new NCMBException (new ArgumentException ("Post authData not exist"));
 			}
 			SignUpAsync ((NCMBException error) => {
 				if (error != null) {
 					// authDataの削除
-					this.AuthData.Clear();
+					this.AuthData.Clear ();
 				}
 
 				if (callback != null) {
 					// callbackを実施
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
+					callback (error);
 				}
 			});
 		}
@@ -712,8 +683,7 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public void LinkWithAuthDataAsync (Dictionary<string, object> linkParam, NCMBCallback callback)
 		{
-			if (this.AuthData == null)
-			{
+			if (this.AuthData == null) {
 				// authDataの登録
 				this.AuthData = linkParam;
 				LogInWithAuthDataAsync (callback);
@@ -728,18 +698,16 @@ namespace  NCMB
 			SignUpAsync ((NCMBException error) => {
 				if (error == null) {
 					// authDataのmerge
-					var mergeParam = linkParam.Concat(currentParam).ToDictionary(x => x.Key, x => x.Value);
+					var mergeParam = linkParam.Concat (currentParam).ToDictionary (x => x.Key, x => x.Value);
 					this.AuthData = mergeParam;
-				} else
-				{
+				} else {
 					this.AuthData = currentParam;
 				}
 
 				if (callback != null) {
 					// callbackを実施
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
+					callback (error);
+
 				}
 			});
 		}
@@ -764,15 +732,13 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public void UnLinkWithAuthDataAsync (string provider, NCMBCallback callback)
 		{
-			if (this.AuthData == null)
-			{
+			if (this.AuthData == null) {
 				throw new NCMBException (new ArgumentException ("Current User authData not exist"));
 			}
 
-			List<string> providerList = new List<string> () {"facebook", "twitter"};
+			List<string> providerList = new List<string> () { "facebook", "twitter" };
 
-			if (string.IsNullOrEmpty(provider) || !providerList.Contains(provider)) 
-			{
+			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
 				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
 			}
 				
@@ -781,25 +747,22 @@ namespace  NCMB
 			currentParam = this.AuthData;
 
 			Dictionary<string, object> providerParam = new Dictionary<string, object> () {
-				{provider, null}
+				{ provider, null }
 			};
 			this.AuthData = providerParam;
 
 			SignUpAsync ((NCMBException error) => {
 				if (error == null) {
 					// authDataの削除
-					currentParam.Remove(provider);
+					currentParam.Remove (provider);
 					this.AuthData = currentParam;
-				} else
-				{
+				} else {
 					this.AuthData = currentParam;
 				}
 
 				if (callback != null) {
 					// callbackを実施
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
+					callback (error);
 				}
 			});
 		}
@@ -821,18 +784,16 @@ namespace  NCMB
 		/// <returns> true:登録済　false:未登録 </returns>
 		public bool IsLinkWith (string provider)
 		{
-			List<string> providerList = new List<string> () {"facebook", "twitter"};
+			List<string> providerList = new List<string> () { "facebook", "twitter" };
 
-			if (string.IsNullOrEmpty(provider) || !providerList.Contains(provider)) 
-			{
+			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
 				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
 			}
 
 			if (this.AuthData == null) {
 				return false;
-			} else 
-			{
-				return (this.AuthData.ContainsKey( provider ));
+			} else {
+				return (this.AuthData.ContainsKey (provider));
 			}
 		}
 
@@ -841,34 +802,32 @@ namespace  NCMB
 		/// </summary>
 		/// <param name="provider">SNS名</param>
 		/// <returns>指定されたSNSのauthData</returns>
-		public Dictionary<string, object> GetAuthDataForProvider(string provider)
+		public Dictionary<string, object> GetAuthDataForProvider (string provider)
 		{
-			List<string> providerList = new List<string> () {"facebook", "twitter"};
-			if (string.IsNullOrEmpty(provider) || !providerList.Contains(provider)) 
-			{
+			List<string> providerList = new List<string> () { "facebook", "twitter" };
+			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
 				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
 			}
 
 			Dictionary<string, object> authData = new Dictionary<string, object> ();
 
-			switch(provider)
-			{
+			switch (provider) {
 			case "facebook":
-				var facebookAuthData = (Dictionary<string, object>)this["authData"];
+				var facebookAuthData = (Dictionary<string, object>)this ["authData"];
 				var facebookParam = (Dictionary<string, object>)facebookAuthData ["facebook"];
-				authData.Add ("id", facebookParam["id"]);
-				authData.Add ("access_token", facebookParam["access_token"]);
-				authData.Add ("expiration_date", NCMBUtility.encodeDate((DateTime)facebookParam["expiration_date"]));
+				authData.Add ("id", facebookParam ["id"]);
+				authData.Add ("access_token", facebookParam ["access_token"]);
+				authData.Add ("expiration_date", NCMBUtility.encodeDate ((DateTime)facebookParam ["expiration_date"]));
 				break;
 			case "twitter":
-				var twitterAuthData = (Dictionary<string, object>)this["authData"];
+				var twitterAuthData = (Dictionary<string, object>)this ["authData"];
 				var twitterParam = (Dictionary<string, object>)twitterAuthData ["twitter"];
-				authData.Add ("id", twitterParam["id"]);
-				authData.Add ("screen_name", twitterParam["screen_name"]);
-				authData.Add ("oauth_consumer_key", twitterParam["oauth_consumer_key"]);
-				authData.Add ("consumer_secret", twitterParam["consumer_secret"]);
-				authData.Add ("oauth_token", twitterParam["oauth_token"]);
-				authData.Add ("oauth_token_secret", twitterParam["oauth_token_secret"]);
+				authData.Add ("id", twitterParam ["id"]);
+				authData.Add ("screen_name", twitterParam ["screen_name"]);
+				authData.Add ("oauth_consumer_key", twitterParam ["oauth_consumer_key"]);
+				authData.Add ("consumer_secret", twitterParam ["consumer_secret"]);
+				authData.Add ("oauth_token", twitterParam ["oauth_token"]);
+				authData.Add ("oauth_token_secret", twitterParam ["oauth_token_secret"]);
 				break;
 			}
 

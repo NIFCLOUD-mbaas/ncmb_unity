@@ -1,24 +1,25 @@
 ﻿using UnityEngine;
+using UnityEngine.TestTools;
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 using NCMB;
 using System.Reflection;
 
 public class NCMBObjectTest
 {
-	[TestFixtureSetUp]
+	[SetUp]
 	public void Init ()
 	{
 		NCMBTestSettings.Initialize ();
 	}
 
 	/**
-     * - 内容：フィールドにダブルクウォーテーションを含む文字列の検索が成功することを確認する
-     * - 結果：フィールドの値「"test"」が正しく取得できる事
+     * - 内容：ダブルクォーテーションが含まれた文字列が正しく保存出来るか確認する
+     * - 結果：値が正しく設定されていること
      */
-	[Test]
-	public void DoubleQuotationUnescapeTest ()
+	[UnityTest]
+	public IEnumerator DoubleQuotationUnescapeTest ()
 	{
 		// テストデータ作成
 		NCMBObject obj = new NCMBObject ("TestClass");
@@ -27,8 +28,11 @@ public class NCMBObjectTest
 			if (e != null) {
 				Assert.Fail (e.ErrorMessage);
 			}
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+	
+		yield return NCMBTestSettings.AwaitAsync ();
+		NCMBTestSettings.CallbackFlag = false;
 
 		// テストデータ検索
 		NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject> ("TestClass");
@@ -41,12 +45,12 @@ public class NCMBObjectTest
 			}
 			NCMBTestSettings.CallbackFlag = true;
 		});
-
-		NCMBTestSettings.AwaitAsync ();
+	
+		yield return NCMBTestSettings.AwaitAsync ();
+	
 		Assert.True (NCMBTestSettings.CallbackFlag);
-
-		// テストデータ削除
-		obj.DeleteAsync ();
+	
+		yield return null;
 	}
 
 	/**
@@ -57,11 +61,12 @@ public class NCMBObjectTest
 	public void GetBaseUrlTest ()
 	{
 		// テストデータ作成
-		NCMBObject obj = new NCMBObject("TestClass");
-
+		NCMBObject obj = new NCMBObject ("TestClass");
 		// internal methodの呼び出し
 		MethodInfo method = obj.GetType ().GetMethod ("_getBaseUrl", BindingFlags.NonPublic | BindingFlags.Instance);
-
-		Assert.AreEqual ("http://localhost:3000/2013-09-01/classes/TestClass", method.Invoke(obj, null).ToString());
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/classes/TestClass", method.Invoke (obj, null).ToString ());
 	}
+
+
+
 }
