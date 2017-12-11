@@ -90,41 +90,37 @@ namespace NCMB
 			if ((this.FileName == null)) {
 				throw new NCMBException ("fileName must not be null.");
 			}
-
-			new AsyncDelegate (delegate {
-				ConnectType type;
-				if (this.CreateDate != null) {
-					type = ConnectType.PUT;
-				} else {
-					type = ConnectType.POST;
+				
+			ConnectType type;
+			if (this.CreateDate != null) {
+				type = ConnectType.PUT;
+			} else {
+				type = ConnectType.POST;
+			}
+			IDictionary<string, INCMBFieldOperation> currentOperations = null;
+			currentOperations = this.StartSave ();
+			string content = _toJSONObjectForSaving (currentOperations);
+			NCMBConnection con = new NCMBConnection (_getBaseUrl (), type, content, NCMBUser._getCurrentSessionToken (), this);
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+				try {
+					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+					if (error != null) {
+						// 失敗
+						this._handleSaveResult (false, null, currentOperations);
+					} else {
+						Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
+						this._handleSaveResult (true, responseDic, currentOperations);
+					}
+				} catch (Exception e) {
+					error = new NCMBException (e);
 				}
-				IDictionary<string, INCMBFieldOperation> currentOperations = null;
-				currentOperations = this.StartSave ();
-				string content = _toJSONObjectForSaving (currentOperations);
-				NCMBConnection con = new NCMBConnection (_getBaseUrl (), type, content, NCMBUser._getCurrentSessionToken (), this);
-				con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
-					try {
-						NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-						if (error != null) {
-							// 失敗
-							this._handleSaveResult (false, null, currentOperations);
-						} else {
-							Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
-							this._handleSaveResult (true, responseDic, currentOperations);
-						}
-					} catch (Exception e) {
-						error = new NCMBException (e);
-					}
 
-					if (callback != null) {
-						Platform.RunOnMainThread (delegate {
-							callback (error);
-						});
-					}
-					return;
-				});	
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+				if (callback != null) {
+					callback (error);
+				}
+				return;
+			});	
+	
 		}
 
 		/// <summary>
@@ -147,22 +143,17 @@ namespace NCMB
 			if ((this.FileName == null)) {
 				throw new NCMBException ("fileName must not be null.");
 			}
-
-			new AsyncDelegate (delegate {
-				// 通信処理
-				NCMBConnection con = new NCMBConnection (_getBaseUrl (), ConnectType.GET, null, NCMBUser._getCurrentSessionToken (), this);
-				con.Connect (delegate(int statusCode, byte[] responseData, NCMBException error) {
-					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					this.estimatedData ["fileData"] = responseData;
-					if (callback != null) {
-						Platform.RunOnMainThread (delegate {
-							callback (responseData, error);
-						});
-					}
-					return;
-				});	
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+				
+			// 通信処理
+			NCMBConnection con = new NCMBConnection (_getBaseUrl (), ConnectType.GET, null, NCMBUser._getCurrentSessionToken (), this);
+			con.Connect (delegate(int statusCode, byte[] responseData, NCMBException error) {
+				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+				this.estimatedData ["fileData"] = responseData;
+				if (callback != null) {
+					callback (responseData, error);
+				}
+				return;
+			});
 		}
 
 		/// <summary>
