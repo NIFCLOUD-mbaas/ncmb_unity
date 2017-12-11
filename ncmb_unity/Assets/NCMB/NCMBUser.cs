@@ -211,7 +211,7 @@ namespace  NCMB
 			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/requestMailAddressUserEntry";
 		}
 
-		//save後処理 　オーバーライド用　新規登録時のみログインを行う
+        //save後処理 　オーバーライド用　ローカルのcurrentUserを反映する
 		internal override void _afterSave (int statusCode, NCMBException error)
 		{
 			if ((statusCode == 201 || statusCode == 200) && error == null) {

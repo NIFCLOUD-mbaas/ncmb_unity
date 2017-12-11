@@ -18,6 +18,7 @@ public class MockServer
         listener = new HttpListener();
         //Add allowed prefixes for listener
         listener.Prefixes.Add(SERVER);
+        listener.Prefixes.Add(SERVER + "2013-09-01/login/");
         listener.Prefixes.Add(SERVER + "2013-09-01/users/");
         listener.Prefixes.Add(SERVER + "2013-09-01/file/");
         listener.Prefixes.Add(SERVER + "2015-09-01/script/");
