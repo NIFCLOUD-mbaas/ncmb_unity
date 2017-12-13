@@ -68,10 +68,12 @@ while [[ $test_count -lt $((max_retry+1)) && $test_error != 0 ]]
 do
 echo "${bold}${green}* Execute Test Runner${normal}"
 $unity_command \
+-batchmode \
+-nographics \
 -runTests \
 -projectPath "$project_path" \
 -testResults "$test_result_file" \
--testPlatform editmode
+-testPlatform playmode
 
 failed=$(echo 'cat //test-run/@failed' | xmllint --shell $test_result_file | awk -F\" 'NR % 2 == 0 { print $2 }')
 

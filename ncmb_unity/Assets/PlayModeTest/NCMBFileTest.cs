@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.TestTools;
 using System.Collections;
 using System.Collections.Generic;
 using NCMB;
@@ -9,8 +10,8 @@ using System.Reflection;
 
 public class NCMBFileTest
 {
-	
-	[TestFixtureSetUp]
+
+	[SetUp]
 	public void Init ()
 	{
 		NCMBTestSettings.Initialize ();
@@ -66,8 +67,8 @@ public class NCMBFileTest
      * - 内容：ファイルのアップロードが成功することを確認する(テキスト)
      * - 結果：CreateDateが設定されていること
      */
-	[Test]
-	public void FileUploadTextTest ()
+	[UnityTest]
+	public IEnumerator FileUploadTextTest ()
 	{
 		byte[] data = System.Text.Encoding.UTF8.GetBytes ("hello");
 		NCMBFile file = new NCMBFile ("test.txt", data);
@@ -76,7 +77,7 @@ public class NCMBFileTest
 			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
@@ -85,20 +86,20 @@ public class NCMBFileTest
      * - 内容：ファイルのアップロードが成功することを確認する(画像)
      * - 結果：CreateDateが設定されていること
      */
-	[Test]
-	public void FileUploadImageTest ()
+	[UnityTest]
+	public IEnumerator FileUploadImageTest ()
 	{
-		FileStream fileStream = new FileStream ("Assets/Editor/logo.png", FileMode.Open, FileAccess.Read);
+		FileStream fileStream = new FileStream ("Assets/PlayModeTest/Test.png", FileMode.Open, FileAccess.Read);
 		BinaryReader bin = new BinaryReader (fileStream);
 		byte[] data = bin.ReadBytes ((int)bin.BaseStream.Length);
 		bin.Close ();
-		NCMBFile file = new NCMBFile ("logo.png", data);
+		NCMBFile file = new NCMBFile ("Test.png", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
@@ -107,8 +108,8 @@ public class NCMBFileTest
      * - 内容：日本語ファイル名のアップロードが成功することを確認する
      * - 結果：CreateDateが設定されていること
      */
-	[Test]
-	public void FileUploadFileNameTest ()
+	[UnityTest]
+	public IEnumerator FileUploadFileNameTest ()
 	{		
 		byte[] data = System.Text.Encoding.UTF8.GetBytes ("hello");
 		NCMBFile file = new NCMBFile ("日本語.txt", data);
@@ -117,7 +118,7 @@ public class NCMBFileTest
 			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
@@ -126,15 +127,17 @@ public class NCMBFileTest
      * - 内容：ファイルのダウンロードが成功することを確認する
      * - 結果：FileDataが設定されていること
      */
-	[Test]
-	public void FileDownloadTest ()
+	[UnityTest]
+	public IEnumerator FileDownloadTest ()
 	{		
 		byte[] data = System.Text.Encoding.UTF8.GetBytes ("hello");
 		NCMBFile file = new NCMBFile ("test.txt", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
+		NCMBTestSettings.CallbackFlag = false;
 
 		NCMBFile getFile = new NCMBFile ("test.txt");
 		getFile.FetchAsync ((byte[] fileData, NCMBException error) => {
@@ -143,7 +146,7 @@ public class NCMBFileTest
 			NCMBTestSettings.CallbackFlag = true;
 		});
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (getFile.FileData);
 		Assert.AreEqual ("hello", Encoding.UTF8.GetString (getFile.FileData));
 		Assert.True (NCMBTestSettings.CallbackFlag);
@@ -153,15 +156,17 @@ public class NCMBFileTest
      * - 内容：ファイルの検索が成功することを確認する
      * - 結果：検索結果が1件以上であること
      */
-	[Test]
-	public void FileQueryTest ()
+	[UnityTest]
+	public IEnumerator FileQueryTest ()
 	{
 		byte[] data = System.Text.Encoding.UTF8.GetBytes ("hello");
 		NCMBFile file = new NCMBFile ("test.txt", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
+		NCMBTestSettings.CallbackFlag = false;
 		Assert.NotNull (file.CreateDate);
 
 		NCMBQuery<NCMBFile> query = NCMBFile.GetQuery ();
@@ -170,7 +175,7 @@ public class NCMBFileTest
 			Assert.Null (error);
 			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
@@ -178,21 +183,25 @@ public class NCMBFileTest
      * - 内容：ファイルの削除が成功することを確認する
      * - 結果：ファイルが削除されていること
      */
-	[Test]
-	public void FileDeleteTest ()
+	[UnityTest]
+	public IEnumerator FileDeleteTest ()
 	{		
 		byte[] data = System.Text.Encoding.UTF8.GetBytes ("delete test");
 		NCMBFile file = new NCMBFile ("delete.txt", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
+		NCMBTestSettings.CallbackFlag = false;
 		Assert.NotNull (file.CreateDate);
 
 		file.DeleteAsync ((NCMBException error) => {
 			Assert.Null (error);
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
+		NCMBTestSettings.CallbackFlag = false;
 
 		NCMBQuery<NCMBFile> query = NCMBFile.GetQuery ();
 		query.WhereEqualTo ("fileName", "delete.txt");
@@ -201,7 +210,7 @@ public class NCMBFileTest
 			Assert.AreEqual (0, objList.Count);
 			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
@@ -209,16 +218,19 @@ public class NCMBFileTest
 	 * - 内容：ファイルにACLが正しく設定されていることを確認する
      * - 結果：ACLが正しく設定されていること
 	 */
-	[Test]
-	public void FileACLTest ()
+	[UnityTest]
+	public IEnumerator FileACLTest ()
 	{
 		byte[] data = System.Text.Encoding.UTF8.GetBytes ("acl test");
 		NCMBACL acl = new NCMBACL ();
 		acl.PublicReadAccess = true;
 		NCMBFile file = new NCMBFile ("ACL.txt", data, acl);
 		file.SaveAsync ((NCMBException error) => {
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+
+		yield return NCMBTestSettings.AwaitAsync ();
+		NCMBTestSettings.CallbackFlag = false;
 
 		NCMBQuery<NCMBFile> query = NCMBFile.GetQuery ();
 		query.WhereEqualTo ("fileName", "ACL.txt");
@@ -229,7 +241,9 @@ public class NCMBFileTest
 			Assert.False (getFile.ACL.PublicWriteAccess);
 			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+
+		yield return NCMBTestSettings.AwaitAsync ();
+
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
@@ -237,8 +251,8 @@ public class NCMBFileTest
      * - 内容：レスポンスシグネチャの検証が成功することを確認する
      * - 結果：エラーが発生しないこと
      */
-	[Test]
-	public void FileResponseSignatureTest ()
+	[UnityTest]
+	public IEnumerator FileResponseSignatureTest ()
 	{
 		NCMBSettings.EnableResponseValidation (true);
 
@@ -246,8 +260,10 @@ public class NCMBFileTest
 		NCMBFile file = new NCMBFile ("test.txt", data);
 		file.SaveAsync ((NCMBException error) => {
 			Assert.Null (error);
+			NCMBTestSettings.CallbackFlag = true;
 		});
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
+		NCMBTestSettings.CallbackFlag = false;
 
 		NCMBFile getFile = new NCMBFile ("test.txt");
 		getFile.FetchAsync ((byte[] fileData, NCMBException error) => {
@@ -256,7 +272,7 @@ public class NCMBFileTest
 		});
 
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.NotNull (file.CreateDate);
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
@@ -275,6 +291,6 @@ public class NCMBFileTest
 		// internal methodの呼び出し
 		MethodInfo method = file.GetType ().GetMethod ("_getBaseUrl", BindingFlags.NonPublic | BindingFlags.Instance);
 
-		Assert.AreEqual ("http://localhost:3000/2013-09-01/files/test.txt", method.Invoke(file, null).ToString());
+		Assert.AreEqual ("http://localhost:3000/2013-09-01/files/test.txt", method.Invoke (file, null).ToString ());
 	}
 }

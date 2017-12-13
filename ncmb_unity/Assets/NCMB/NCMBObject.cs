@@ -22,6 +22,7 @@ using MiniJSON;
 using NCMB.Internal;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace NCMB
 {
@@ -38,8 +39,6 @@ namespace NCMB
 		internal readonly object mutex = new object ();
 		internal readonly static object fileMutex = new object ();
 		private readonly LinkedList<IDictionary<string, INCMBFieldOperation>> operationSetQueue = new LinkedList<IDictionary<string, INCMBFieldOperation>> ();
-
-		internal delegate void AsyncDelegate ();
 
 		private string _className;
 		private string _objectId;
@@ -841,37 +840,32 @@ namespace NCMB
 		/// <param name="callback">コールバック</param>
 		public virtual void DeleteAsync (NCMBCallback callback)
 		{
-			new AsyncDelegate (delegate {
-				string url = _getBaseUrl ();
-				url += "/" + this._objectId;
-				ConnectType type = ConnectType.DELETE;//メソッドタイプの設定
-				//NCMBObject.printLogConnectBefore ("DEBUG DELETE ASYNC", type.ToString (), url, null);
-				NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
-				NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
-				con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
-					//引数はリスト(中身NCMBObject)とエラーをユーザーに返す
-					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+			string url = _getBaseUrl ();
+			url += "/" + this._objectId;
+			ConnectType type = ConnectType.DELETE;//メソッドタイプの設定
+			//NCMBObject.printLogConnectBefore ("DEBUG DELETE ASYNC", type.ToString (), url, null);
+			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
+			NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+				//引数はリスト(中身NCMBObject)とエラーをユーザーに返す
+				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
 					
-					try {
-						if (error != null) {
-							this._handleDeleteResult (false);
-						} else {
-							this._handleDeleteResult (true);
-						}
-					} catch (Exception e) {
-						error = new NCMBException (e);
+				try {
+					if (error != null) {
+						this._handleDeleteResult (false);
+					} else {
+						this._handleDeleteResult (true);
 					}
+				} catch (Exception e) {
+					error = new NCMBException (e);
+				}
 
-					_afterDelete (error);
-					if (callback != null) {
-						Platform.RunOnMainThread (delegate {
-							callback (error);
-						});
-					}
-					return;
-				});
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+				_afterDelete (error);
+				if (callback != null) {
+					callback (error);
+				}
+				return;
+			});
 		}
 
 		/// <summary>
@@ -893,10 +887,7 @@ namespace NCMB
 		/// <param name="callback">コールバック</param>
 		public virtual void SaveAsync (NCMBCallback callback)
 		{	
-			new AsyncDelegate (delegate {
-				this.Save (callback);
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+			this.Save (callback);
 		}
 
 		/// <summary>
@@ -927,10 +918,7 @@ namespace NCMB
 			if (!this.IsDirty) {
 				// 保存する必要がないなら終了
 				if (callback != null) {
-
-					Platform.RunOnMainThread (delegate {
-						callback (null);
-					});
+					callback (null);
 				}
 				return;
 			}
@@ -944,9 +932,7 @@ namespace NCMB
 						child.Save ();
 					} catch (NCMBException error) {
 						if (callback != null) {
-							Platform.RunOnMainThread (delegate {
-								callback (error);
-							});
+							callback (error);
 						}
 						return;
 					}
@@ -969,7 +955,7 @@ namespace NCMB
 			IDictionary<string, INCMBFieldOperation> currentOperations = null;
 			currentOperations = this.StartSave ();
 			string content = _toJSONObjectForSaving (currentOperations);
-			NCMBDebug.Log ("content:" + content);
+
 			//ログを確認（通信前）
 			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			// 通信処理
@@ -989,9 +975,7 @@ namespace NCMB
 
 				_afterSave (statusCode, error);
 				if (callback != null) {
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
+					callback (error);
 				}
 				return;
 			});	
@@ -1058,42 +1042,37 @@ namespace NCMB
 				throw new NCMBException ("Object ID must be set to be fetched.");
 			}
 		
-			new AsyncDelegate (delegate {
-				String url = _getBaseUrl ();
-				url += "/" + this._objectId;
-				ConnectType type = ConnectType.GET;//メソッドタイプの設定
-				//NCMBObject.printLogConnectBefore ("DEBUG FETCH ASYNC CONNECT", type.ToString (), url, null);
-				NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
-				NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
-				con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
-					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					Dictionary<string, object> responseDic = null;
-					try {
-						if (responseData != null) {
-							responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;//***
-						}
 
-						if (error != null) {
-							this._handleFetchResult (false, null);
-							//this.printLog ("DEBUG FETCHASYNC AFTER (FAIL)", null, null);
-						} else {
-							this._handleFetchResult (true, responseDic);
-							//this.printLog ("DEBUG FETCHASYNC AFTER (SUCCESS)", null, null);
-						}
-					} catch (Exception e) {
-						throw new NCMBException (e);
+			String url = _getBaseUrl ();
+			url += "/" + this._objectId;
+			ConnectType type = ConnectType.GET;//メソッドタイプの設定
+			//NCMBObject.printLogConnectBefore ("DEBUG FETCH ASYNC CONNECT", type.ToString (), url, null);
+			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
+			NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+				Dictionary<string, object> responseDic = null;
+				try {
+					if (responseData != null) {
+						responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;//***
 					}
-					if (callback != null) {
 
-						Platform.RunOnMainThread (delegate {
-							callback (error);
-						});
+					if (error != null) {
+						this._handleFetchResult (false, null);
+						//this.printLog ("DEBUG FETCHASYNC AFTER (FAIL)", null, null);
+					} else {
+						this._handleFetchResult (true, responseDic);
+						//this.printLog ("DEBUG FETCHASYNC AFTER (SUCCESS)", null, null);
 					}
-					return;
-				});
-
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+				} catch (Exception e) {
+					throw new NCMBException (e);
+				}
+				if (callback != null) {
+					callback (error);
+				
+				}
+				return;
+			});
 		}
 
 		/// <summary>

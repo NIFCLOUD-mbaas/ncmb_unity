@@ -441,9 +441,8 @@ response:
   file: /json/post_success_response.json
 ---
 request:
-  url: 2013-09-01/files/logo.png
+  url: 2013-09-01/files/Test.png
   method: POST
-  body: hello
 response:
   status: 200
   file: /json/post_success_response.json

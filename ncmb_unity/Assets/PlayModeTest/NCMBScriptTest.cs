@@ -15,10 +15,12 @@
  **********/
 
 using UnityEngine;
+using UnityEngine.TestTools;
 using UnityEditor;
 using NUnit.Framework;
 using NCMB;
 using NCMB.Internal;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System;
@@ -33,12 +35,16 @@ public class NCMBScriptTest
 
 	delegate void AsyncDelegate ();
 
-	[TestFixtureSetUp]
+	[SetUp]
 	public void Init ()
 	{
 		NCMBTestSettings.Initialize ();
 	}
 
+	/**
+     * - 内容：アプリケーションキーおよびクライアントキーが正しく設定されているか確認する
+     * - 結果：値が正しく設定されていること
+     */
 	[Test]
 	public void ReturnAPIKeyTest ()
 	{
@@ -46,8 +52,12 @@ public class NCMBScriptTest
 		Assert.AreEqual (NCMBSettings.ClientKey, NCMBTestSettings.CLIENT_KEY);
 	}
 
-	[Test]
-	public void ExecuteCallbackWhenExecuteScriptTest_POST ()
+	/**
+     * - 内容：スクリプト実行APIメソッド(POST)で正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
+	[UnityTest]
+	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_POST ()
 	{
 		NCMBScript script = new NCMBScript ("testScript_POST.js", NCMBScript.MethodType.POST, _endPoint);
 		Dictionary<string, object> body = new Dictionary<string, object> (){ { "name", "tarou" } };
@@ -61,13 +71,16 @@ public class NCMBScriptTest
 			}
 			NCMBTestSettings.CallbackFlag = true;
 		}); 
-
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
-	[Test]
-	public void ExecuteCallbackWhenExecuteScriptTest_PUT ()
+	/**
+     * - 内容：スクリプト実行APIメソッド(PUT)で正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
+	[UnityTest]
+	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_PUT ()
 	{
 		NCMBScript script = new NCMBScript ("testScript_PUT.js", NCMBScript.MethodType.PUT, _endPoint);
 		Dictionary<string, object> body = new Dictionary<string, object> (){ { "name", "tarou" } };
@@ -82,12 +95,16 @@ public class NCMBScriptTest
 			NCMBTestSettings.CallbackFlag = true;
 		}); 
 			
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
-	[Test]
-	public void ExecuteCallbackWhenExecuteScriptTest_GET ()
+	/**
+     * - 内容：スクリプト実行APIメソッド(GET)でクエリを一つ指定して正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
+	[UnityTest]
+	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_GET ()
 	{
 		NCMBScript script = new NCMBScript ("testScript_GET.js", NCMBScript.MethodType.GET, _endPoint);
 		Dictionary<string, object> query = new Dictionary<string, object> (){ { "name", "tarou" } };
@@ -102,12 +119,16 @@ public class NCMBScriptTest
 			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
-	[Test]
-	public void ExecuteCallbackWhenExecuteScriptTest_GET_Count ()
+	/**
+     * - 内容：スクリプト実行APIメソッド(GET)でクエリを二つ指定して正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
+	[UnityTest]
+	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_GET_Count ()
 	{
 		NCMBScript script = new NCMBScript ("testScript_GET.js", NCMBScript.MethodType.GET, _endPoint);
 		Dictionary<string, object> query = new Dictionary<string, object> (){ { "name", "tarou" }, { "message","hello" } };
@@ -122,12 +143,16 @@ public class NCMBScriptTest
 			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
-	[Test]
-	public void ExecuteCallbackWhenExecuteScriptTest_DELETE ()
+	/**
+     * - 内容：スクリプト実行APIメソッド(DELETE)で正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
+	[UnityTest]
+	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_DELETE ()
 	{
 		NCMBScript script = new NCMBScript ("testScript_DELETE.js", NCMBScript.MethodType.DELETE, _endPoint);
 		script.ExecuteAsync (null, null, null, (byte[] result, NCMBException e) => {
@@ -141,12 +166,16 @@ public class NCMBScriptTest
 			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
-	[Test]
-	public void ExecuteCallbackWhenExecuteScriptTest_Error ()
+	/**
+     * - 内容：スクリプト実行APIメソッドでエラーが返却された際に正常に処理されるか確認する
+     * - 結果：エラーが発生すること
+     */
+	[UnityTest]
+	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_Error ()
 	{
 		NCMBScript script = new NCMBScript ("testScript_Error.js", NCMBScript.MethodType.GET, _endPoint);
 		script.ExecuteAsync (null, null, null, (byte[] result, NCMBException e) => {
@@ -159,12 +188,16 @@ public class NCMBScriptTest
 			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
-	[Test]
-	public void ExecuteCallbackWhenExecuteScriptTest_Header ()
+	/**
+     * - 内容：スクリプト実行APIメソッドでヘッダー指定された際に正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
+	[UnityTest]
+	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_Header ()
 	{
 		NCMBScript script = new NCMBScript ("testScript_Header.js", NCMBScript.MethodType.POST, _endPoint);
 		Dictionary<string, object> header = new Dictionary<string, object> (){ { "key", "value" } };
@@ -179,33 +212,34 @@ public class NCMBScriptTest
 			NCMBTestSettings.CallbackFlag = true;
 		}); 
 
-		NCMBTestSettings.AwaitAsync ();
+		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
 
-    [Test]
-    public void ExecuteCallbackWhenExecuteScriptObjectTest_GET()
-    {
-        string[] strArray = { "tarou1", "tarou2" };
-        NCMBScript script = new NCMBScript("testScriptObject_GET.js", NCMBScript.MethodType.GET, _endPoint);
-        Dictionary<string, object> query = new Dictionary<string, object>() { { "name", strArray } };
-        script.ExecuteAsync(null, null, query, (byte[] result, NCMBException e) => {
-            if (e == null)
-            {
-                string cmd = System.Text.Encoding.UTF8.GetString(result);
-                cmd = cmd.TrimEnd('\0');//終端文字の削除
-                Assert.AreEqual("{\"name\":\"[\\\"tarou1\\\",\\\"tarou2\\\"]\"}", cmd);
-            }
-            else
-            {
-                Assert.Fail(e.ErrorMessage);
-            }
-            NCMBTestSettings.CallbackFlag = true;
-        });
+	/**
+     * - 内容：スクリプト実行APIメソッド(GET)でクエリに辞書型を指定して正常に処理されるか確認する
+     * - 結果：エラーが発生しないこと
+     */
+	[UnityTest]
+	public IEnumerator ExecuteCallbackWhenExecuteScriptObjectTest_GET ()
+	{
+		string[] strArray = { "tarou1", "tarou2" };
+		NCMBScript script = new NCMBScript ("testScriptObject_GET.js", NCMBScript.MethodType.GET, _endPoint);
+		Dictionary<string, object> query = new Dictionary<string, object> () { { "name", strArray } };
+		script.ExecuteAsync (null, null, query, (byte[] result, NCMBException e) => {
+			if (e == null) {
+				string cmd = System.Text.Encoding.UTF8.GetString (result);
+				cmd = cmd.TrimEnd ('\0');//終端文字の削除
+				Assert.AreEqual ("{\"name\":\"[\\\"tarou1\\\",\\\"tarou2\\\"]\"}", cmd);
+			} else {
+				Assert.Fail (e.ErrorMessage);
+			}
+			NCMBTestSettings.CallbackFlag = true;
+		});
 
-        NCMBTestSettings.AwaitAsync();
-        Assert.True(NCMBTestSettings.CallbackFlag);
-    }
+		yield return NCMBTestSettings.AwaitAsync ();
+		Assert.True (NCMBTestSettings.CallbackFlag);
+	}
 }
 
 
