@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
 using System;
 using System.IO;
@@ -14,22 +14,22 @@ public class MockServer
 	//Dictionary to store all mock data
 	Dictionary<string, List<MockServerObject>> mockObjectDic = new Dictionary<string, List<MockServerObject>> ();
 
-    public MockServer()
-    {
-        listener = new HttpListener();
-        //Add allowed prefixes for listener
-        listener.Prefixes.Add(SERVER);
-        listener.Prefixes.Add(SERVER + "2013-09-01/login/");
-        listener.Prefixes.Add(SERVER + "2013-09-01/users/");
-        listener.Prefixes.Add(SERVER + "2013-09-01/file/");
-        listener.Prefixes.Add(SERVER + "2015-09-01/script/");
-        listener.Prefixes.Add(SERVER + "2013-09-01/classes/");
-        listener.Prefixes.Add(SERVER + "2013-09-01/installation/");
-        listener.Start();
-        instance = this;
-        //Call to listen request
-        WaitForNewRequest();
-    }
+	public MockServer()
+	{
+		listener = new HttpListener();
+		//Add allowed prefixes for listener
+		listener.Prefixes.Add(SERVER);
+		listener.Prefixes.Add(SERVER + "2013-09-01/login/");
+		listener.Prefixes.Add(SERVER + "2013-09-01/users/");
+		listener.Prefixes.Add(SERVER + "2013-09-01/file/");
+		listener.Prefixes.Add(SERVER + "2015-09-01/script/");
+		listener.Prefixes.Add(SERVER + "2013-09-01/classes/");
+		listener.Prefixes.Add(SERVER + "2013-09-01/installation/");
+		listener.Start();
+		instance = this;
+		//Call to listen request
+		WaitForNewRequest();
+	}
 
 	public static void startMock ()
 	{

@@ -471,35 +471,34 @@ namespace  NCMB
 			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			//通信処理
 			NCMBConnection con = new NCMBConnection(url, type, content, NCMBUser._getCurrentSessionToken());
-            HttpClientCallback connectionCallback = delegate (int statusCode, string responseData, NCMBException error)
-            {
-                try
-                {
-                    NCMBDebug.Log("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-                    if (error != null)
-                    {
-                        NCMBDebug.Log("[DEBUG AFTER CONNECT] Error: " + error.ErrorMessage);
-                    }
-                    else
-                    {
-                        Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize(responseData) as Dictionary<string, object>;
-                        //save Current user
-                        NCMBUser logInUser = new NCMBUser();
-                        logInUser._handleFetchResult(true, responseDic);
-                        _saveCurrentUser(logInUser);
-                    }
-                }
-                catch (Exception e)
-                {
-                    error = new NCMBException(e);
-                }
-                if (callback != null)
-                {
-                    callback(error);
-                }
-                return;
-            };
-            con.Connect(connectionCallback);
+			con.Connect(delegate (int statusCode, string responseData, NCMBException error)
+			{
+				try
+				{
+					NCMBDebug.Log("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+					if (error != null)
+					{
+						NCMBDebug.Log("[DEBUG AFTER CONNECT] Error: " + error.ErrorMessage);
+					}
+					else
+					{
+						Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize(responseData) as Dictionary<string, object>;
+						//save Current user
+						NCMBUser logInUser = new NCMBUser();
+						logInUser._handleFetchResult(true, responseDic);
+						_saveCurrentUser(logInUser);
+					}
+				}
+				catch (Exception e)
+				{
+					error = new NCMBException(e);
+				}
+				if (callback != null)
+				{
+					callback(error);
+				}
+				return;
+			});
 		}
 
 		private static string _makeParamUrl (string url, Dictionary<string, object> parameter)
