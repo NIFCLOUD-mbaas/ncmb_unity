@@ -529,7 +529,6 @@ public class NCMBUserTest
         Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
         Assert.AreEqual("sample@example.com", NCMBUser.CurrentUser.Email);
         Assert.True(NCMBTestSettings.CallbackFlag);
-        NCMBUser.LogOutAsync();
     }
 
     /**
@@ -550,6 +549,5 @@ public class NCMBUserTest
         Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
         Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
         Assert.True(NCMBTestSettings.CallbackFlag);
-        NCMBUser.LogOutAsync();
     }
 }
