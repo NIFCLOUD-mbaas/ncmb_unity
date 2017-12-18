@@ -511,4 +511,43 @@ public class NCMBUserTest
 		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken ());
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
+    /**
+     * - 内容：LogInWithMailAddressAsync 
+     * - 結果：各パラメータが正しく取得できること
+     */
+    [UnityTest]
+    public IEnumerator LogInWithMailAddressAsync()
+    {
+        // テストデータ作成
+        NCMBUser.LogInWithMailAddressAsync("sample@example.com", "password", (e) => {
+            Assert.Null(e);
+            NCMBTestSettings.CallbackFlag = true;
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("sample@example.com", NCMBUser.CurrentUser.Email);
+        Assert.True(NCMBTestSettings.CallbackFlag);
+    }
+
+    /**
+    * - 内容：LogInAsync
+    * - 結果：各パラメータが正しく取得できること
+    */
+    [UnityTest]
+    public IEnumerator LogInAsync()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) => {
+            Assert.Null(e);
+            NCMBTestSettings.CallbackFlag = true;
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+        Assert.True(NCMBTestSettings.CallbackFlag);
+    }
 }
