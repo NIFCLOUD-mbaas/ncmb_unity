@@ -205,16 +205,6 @@ extern "C"
             }
         }
         
-        if([userInfo objectForKey:@"aps"]){
-            if ([[(NSDictionary *)[userInfo objectForKey:@"aps"] objectForKey:@"sound"] isEqual:[NSNull null]]) {
-                NSMutableDictionary *beforeUserInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
-                NSMutableDictionary *aps = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"aps"]];
-                [aps removeObjectForKey:@"sound"];
-                [beforeUserInfo setObject:aps forKey:@"aps"];
-                userInfo = (NSMutableDictionary *)beforeUserInfo;
-            }
-        }
-        
         AppController_SendNotificationWithArg(kUnityDidReceiveRemoteNotification, userInfo);
         UnitySendRemoteNotification(userInfo);//userInfoの値にNullは許容しない
     }
@@ -314,7 +304,9 @@ NSInteger pushDelayCount = 0;
     //Limit to avoid infinite loop
     if(pushDelayCount < MAX_PUSH_DELAY_COUNT){
         if(_unityAppReady){
-            NCMBPushHandle(userInfo);
+            //Remove null values (<null>) to avoid crash
+            NSDictionary *notificationInfo = [self removeNullObjects:userInfo];
+            NCMBPushHandle(notificationInfo);
             pushDelayCount = 0;
         } else {
             pushDelayCount++;
@@ -324,5 +316,21 @@ NSInteger pushDelayCount = 0;
     }
 }
 
+-(NSDictionary*) removeNullObjects:(NSDictionary*) dictionary {
+    NSMutableDictionary *dict = [dictionary mutableCopy];
+    NSArray *keysForNullValues = [dict allKeysForObject:[NSNull null]];
+    [dict removeObjectsForKeys:keysForNullValues];
+    for(NSString *key in dict.allKeys){
+        if ([[dict valueForKey:key] isKindOfClass:[NSDictionary class]]){
+            NSDictionary *childDict = [self removeNullObjects:[dict valueForKey:key]];
+            if([childDict allKeys].count > 0){
+                [dict setObject:childDict forKey:key];
+            } else {
+                [dict removeObjectForKey:key];
+            }
+        }
+    }
+    return dict;
+}
 
 @end
