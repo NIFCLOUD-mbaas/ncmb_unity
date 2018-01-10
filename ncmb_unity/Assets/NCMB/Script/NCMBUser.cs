@@ -470,7 +470,7 @@ namespace  NCMB
 			//ログを確認（通信前）
 			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			//通信処理
-			NCMBConnection con = new NCMBConnection(url, type, content, NCMBUser._getCurrentSessionToken());
+			NCMBConnection con = new NCMBConnection(url, type, null, NCMBUser._getCurrentSessionToken());
 			con.Connect(delegate (int statusCode, string responseData, NCMBException error)
 			{
 				try
