@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.TestTools;
-using UnityEditor;
 using NUnit.Framework;
 using NCMB;
 using System.Reflection;

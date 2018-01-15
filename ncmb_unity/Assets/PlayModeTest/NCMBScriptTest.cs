@@ -16,7 +16,6 @@
 
 using UnityEngine;
 using UnityEngine.TestTools;
-using UnityEditor;
 using NUnit.Framework;
 using NCMB;
 using NCMB.Internal;
