@@ -205,6 +205,19 @@ extern "C"
             }
         }
         
+        if([userInfo objectForKey:@"aps"]){
+            NSMutableDictionary *beforeUserInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+            NSMutableDictionary *aps = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"aps"]];
+            [beforeUserInfo setObject:aps forKey:@"aps"];
+            if([[aps objectForKey:@"alert"] objectForKey:@"title"]){
+                [beforeUserInfo setObject:[[aps objectForKey:@"alert"] objectForKey:@"title"] forKey:@"com.nifty.Title"]; //Titleを追加
+            }
+            if([[aps objectForKey:@"alert"] objectForKey:@"body"]){
+                [beforeUserInfo setObject:[[aps objectForKey:@"alert"] objectForKey:@"body"] forKey:@"com.nifty.Message"]; //Messageを追加
+            }
+            userInfo = (NSMutableDictionary *)beforeUserInfo;
+        }
+        
         AppController_SendNotificationWithArg(kUnityDidReceiveRemoteNotification, userInfo);
         UnitySendRemoteNotification(userInfo);//userInfoの値にNullは許容しない
     }
