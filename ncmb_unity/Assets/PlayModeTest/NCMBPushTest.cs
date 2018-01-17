@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NCMB;
-using UnityEditor;
 using System.Reflection;
 
 public class NCMBPushTest
