@@ -464,11 +464,10 @@ namespace  NCMB
 				throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
 			}
 
-			string content = Json.Serialize(paramDic);
 			url = _makeParamUrl(url + "?", paramDic);
 
 			//ログを確認（通信前）
-			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
+			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type);
 			//通信処理
 			NCMBConnection con = new NCMBConnection(url, type, null, NCMBUser._getCurrentSessionToken());
 			con.Connect(delegate (int statusCode, string responseData, NCMBException error)
