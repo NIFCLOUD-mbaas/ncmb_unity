@@ -259,9 +259,9 @@ namespace NCMB.Internal
 				NCMBDebug.Log ("Session token :" + _sessionToken);
 			}
 			//req.SetRequestHeader (HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-			if (_content != null && req.GetRequestHeader ("Content-Type").Equals ("multipart/form-data; boundary=_NCMBBoundary")) {
+			if (req.GetRequestHeader ("Content-Type").Equals ("multipart/form-data; boundary=_NCMBBoundary")) {
 				_setUploadHandlerForFile (req);
-			} else if (_content != null) {
+			} else if ((req.method.Equals ("POST") || req.method.Equals ("PUT")) && _content != null) {
 				byte[] bodyRaw = Encoding.UTF8.GetBytes (_content);
 				req.uploadHandler = (UploadHandler)new UploadHandlerRaw (bodyRaw);
 			}

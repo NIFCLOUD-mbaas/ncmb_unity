@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -211,10 +211,10 @@ namespace  NCMB
 			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/requestMailAddressUserEntry";
 		}
 
-		//save後処理 　オーバーライド用　新規登録時のみログインを行う
+        	//save後処理 　オーバーライド用　ローカルのcurrentUserを反映する
 		internal override void _afterSave (int statusCode, NCMBException error)
 		{
-			if (statusCode == 201 && error == null) {
+			if ((statusCode == 201 || statusCode == 200) && error == null) {
 				_saveCurrentUser ((NCMBUser)this);
 			}
 		}
@@ -442,51 +442,62 @@ namespace  NCMB
 			_ncmbLogIn (name, password, null, callback);
 		}
 
-		private  static void _ncmbLogIn (string name, string password, string email, NCMBCallback callback)
+		private static void _ncmbLogIn(string name, string password, string email, NCMBCallback callback)
 		{
-			string url = _getLogInUrl ();//URL作成
+ 			string url = _getLogInUrl();
 			ConnectType type = ConnectType.GET;
-			//set username, password
-			NCMBUser logInUser = new NCMBUser ();
 
-			logInUser.Password = password;
+			Dictionary<string, object> paramDic = new Dictionary<string, object>();
+			paramDic["password"] = password;
 
 			//nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
-			if (name != null) {
-				logInUser.UserName = name;
-			} else if (email != null) {
-				logInUser.Email = email;
-			} else {
-				throw new NCMBException (new ArgumentException ("UserName or Email can not be null."));
+			if (name != null)
+			{
+				paramDic["userName"] = name;
+			}
+			else if (email != null)
+			{
+				paramDic["mailAddress"] = email;
+			}
+			else
+			{
+				throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
 			}
 
-			string content = logInUser._toJSONObjectForSaving (logInUser.StartSave ());
-			Dictionary<string, object> paramDic = (Dictionary<string, object>)MiniJSON.Json.Deserialize (content);
-			url = _makeParamUrl (url + "?", paramDic);
+			url = _makeParamUrl(url + "?", paramDic);
+
 			//ログを確認（通信前）
-			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
+			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type);
 			//通信処理
-			NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
-			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
-				try {
-					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					if (error != null) {		
-						NCMBDebug.Log ("[DEBUG AFTER CONNECT] Error: " + error.ErrorMessage);
-					} else {
-						Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;
-						logInUser._handleFetchResult (true, responseDic);
-						//save Current user
-						_saveCurrentUser (logInUser);
-						
+			NCMBConnection con = new NCMBConnection(url, type, null, NCMBUser._getCurrentSessionToken());
+			con.Connect(delegate (int statusCode, string responseData, NCMBException error)
+			{
+				try
+				{
+					NCMBDebug.Log("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+					if (error != null)
+					{
+						NCMBDebug.Log("[DEBUG AFTER CONNECT] Error: " + error.ErrorMessage);
 					}
-				} catch (Exception e) {
-					error = new NCMBException (e);
+					else
+					{
+						Dictionary<string, object> responseDic = MiniJSON.Json.Deserialize(responseData) as Dictionary<string, object>;
+						//save Current user
+						NCMBUser logInUser = new NCMBUser();
+						logInUser._handleFetchResult(true, responseDic);
+						_saveCurrentUser(logInUser);
+					}
 				}
-				if (callback != null) {
-					callback (error);	
+				catch (Exception e)
+				{
+					error = new NCMBException(e);
+				}
+				if (callback != null)
+				{
+					callback(error);
 				}
 				return;
-			});	
+			});
 		}
 
 		private static string _makeParamUrl (string url, Dictionary<string, object> parameter)
