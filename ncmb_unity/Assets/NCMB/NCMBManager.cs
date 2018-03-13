@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  **********/
 
 using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using NCMB;
 using NCMB.Internal;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 //System.IO.FileInfo, System.IO.StreamReader, System.IO.StreamWriter
 using System;
@@ -38,6 +40,14 @@ namespace NCMB
 	/// </summary>
 	public class NCMBManager : MonoBehaviour
 	{
+		
+		public virtual void Awake ()
+		{			
+			if (!NCMBSettings._isInitialized) {
+				DontDestroyOnLoad (base.gameObject);
+			}
+		}
+
 		#if UNITY_IOS
 		[DllImport ("__Internal")]
 		private static extern string getInstallationProperty ();
@@ -55,12 +65,14 @@ namespace NCMB
 
 		internal static string _token;
 		internal static IDictionary<string, object> installationDefaultProperty = new Dictionary<string, object> ();
+
 		#endregion
 
 		#region Delegate
 
 		/// <summary> 端末登録後のイベントリスナーです。</summary>
 		public delegate void OnRegistrationDelegate (string errorMessage);
+
 		/// <summary> メッセージ受信後のイベントリスナーです。</summary>
 		public delegate void OnNotificationReceivedDelegate (NCMBPushPayload payload);
 		// <summary> 位置情報成功。</summary>
@@ -101,7 +113,7 @@ namespace NCMB
 				onNotificationReceived (payload);
 			}
 		}
-			
+
 
 		#endregion
 
@@ -115,11 +127,7 @@ namespace NCMB
 
 		void Update ()
 		{
-			#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-			if (NotificationServices.remoteNotificationCount > 0) {
-			#else
 			if (UnityEngine.iOS.NotificationServices.remoteNotificationCount > 0) {
-			#endif
 				ProcessNotification ();
 				NCMBPush push = new NCMBPush ();
 				push.ClearAll ();
@@ -129,22 +137,18 @@ namespace NCMB
 		void ProcessNotification ()
 		{
 			// Payload data dictionary
-			#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-			IDictionary dd = NotificationServices.remoteNotifications [0].userInfo;
-			#else
 			IDictionary dd = UnityEngine.iOS.NotificationServices.remoteNotifications [0].userInfo;
-			#endif
 			
 			// Payload key list
 			string[] kl = new string[] { 
-                "com.nifty.PushId",
-                "com.nifty.Data",
-                "com.nifty.Title",
-                "com.nifty.Message",
-                "com.nifty.Channel",
-                "com.nifty.Dialog",
-                "com.nifty.RichUrl",
-            };
+				"com.nifty.PushId",
+				"com.nifty.Data",
+				"com.nifty.Title",
+				"com.nifty.Message",
+				"com.nifty.Channel",
+				"com.nifty.Dialog",
+				"com.nifty.RichUrl",
+			};
 
 			// Payload value list
 			string[] vl = new string[kl.Length];
@@ -163,20 +167,12 @@ namespace NCMB
 
 			// Set message as alertBody
 			if (string.IsNullOrEmpty (vl [im])) {
-				#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-				vl [im] = NotificationServices.remoteNotifications [0].alertBody;
-				#else
 				vl [im] = UnityEngine.iOS.NotificationServices.remoteNotifications [0].alertBody;
-				#endif
 			}
 
 			// Create payload
-			#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-			NCMBPushPayload pl = new NCMBPushPayload (vl [0], vl [1], vl [2], vl [3], vl [4], vl [5], vl [6], NotificationServices.remoteNotifications [0].userInfo);
-			#else
 			NCMBPushPayload pl = new NCMBPushPayload (vl [0], vl [1], vl [2], vl [3], vl [4], vl [5], vl [6], UnityEngine.iOS.NotificationServices.remoteNotifications [0].userInfo);
-			#endif
-
+		
 			// Notify
 			if (onNotificationReceived != null) {
 				onNotificationReceived (pl);
@@ -201,7 +197,7 @@ namespace NCMB
 			NCMBPush push = new NCMBPush ();
 			push.ClearAll ();
 		}
-        #endif
+		#endif
 		#endregion
 
 		internal static string SearchPath ()
@@ -212,12 +208,12 @@ namespace NCMB
 				//v1の場合
 				#if UNITY_IOS && !UNITY_EDITOR
 				//既存のcurrentInstallationパス
-				path = Application.persistentDataPath;	//var/mobile/Applications/{GUID}/Documents
+				path = NCMBSettings.filePath;	//var/mobile/Applications/{GUID}/Documents
 				path = path.Replace ("Documents", "");
 				path += "Library/Private Documents/NCMB/currentInstallation";
 				#elif UNITY_ANDROID && !UNITY_EDITOR
 				//既存のcurrentInstallationパス
-				path = Application.persistentDataPath;	//data/data/(PackageName)/files
+				path = NCMBSettings.filePath;	//data/data/(PackageName)/files
 				path = path.Replace ("files", "");
 				path += "app_NCMB/currentInstallation";
 				#endif
@@ -267,7 +263,7 @@ namespace NCMB
 				}
 			});
 		}
-        
+
 		private void updateExistedInstallation (NCMBInstallation installation, string path)
 		{
 			//デバイストークンを更新
@@ -354,6 +350,7 @@ namespace NCMB
 				throw new IOException ("Delete currentInstallation failed.", e);
 			}
 		}
+
 		internal string GetCurrentInstallation ()
 		{
 			string path = SearchPath ();
@@ -362,7 +359,8 @@ namespace NCMB
 
 		//各ネイティブコードからInstallation情報を取得
 		//applicationName,appVersion,deviceType,timeZone(Asia/Tokyo)を取得
-		internal static void CreateInstallationProperty(){
+		internal static void CreateInstallationProperty ()
+		{
 			String jsonString = null;
 			#if UNITY_ANDROID && !UNITY_EDITOR
 			AndroidJavaClass cls = new AndroidJavaClass("com.nifty.cloud.mb.ncmbgcmplugin.GCMInit");
@@ -370,7 +368,7 @@ namespace NCMB
 			#elif UNITY_IOS && !UNITY_EDITOR
 			jsonString = getInstallationProperty();
 			#endif
-			if(jsonString != null){
+			if (jsonString != null) {
 				installationDefaultProperty = Json.Deserialize (jsonString) as Dictionary<string, object>;
 			}
 		}

@@ -1,0 +1,15 @@
+{
+  "results": [
+    {
+      "objectId": "dummyObjectId",
+      "key": "\"test\"",
+      "createDate": "2017-08-11T03:39:23.383Z",
+      "updateDate": "2017-08-11T03:42:06.352Z",
+      "acl": {
+        "*": {
+          "read": true,
+        }
+      }
+    }
+  ]
+}
