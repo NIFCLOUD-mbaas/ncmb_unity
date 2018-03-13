@@ -1,3 +1,4 @@
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
                                  Apache License
                            Version 2.0, January 2004
@@ -200,3 +201,10 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+
+   Unity3D: MiniJSON Decodes and encodes simple JSON strings.
+                Copyright (c) 2013 Calvin Rien
+           Based on the JSON parser by Patrick van Bergen
+   http://techblog.procurios.nl/k/618/news/view/14605/14863/How-do-I-write-my-own-parser-for-JSON.html
+

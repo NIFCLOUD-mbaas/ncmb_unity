@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -367,15 +367,15 @@ namespace NCMB.Internal
 			if (unescapeResponseData != null && unescapeResponseData != Regex.Unescape (unescapeResponseData)) {
 				unescapeResponseData = Regex.Unescape (unescapeResponseData);
 			}
-            String headerSring = req.GetResponseHeader(RESPONSE_SIGNATURE);
-            bool validation = NCMBSettings._responseValidationFlag;
+			String headerSring = req.GetResponseHeader(RESPONSE_SIGNATURE);
+			bool validation = NCMBSettings._responseValidationFlag;
 				
 			//レスポンスシグネチャのチェック
 			if (NCMBSettings._responseValidationFlag && req.error == null && error == null && req.GetResponseHeader (RESPONSE_SIGNATURE) != null) {
 				string responseSignature = req.GetResponseHeader (RESPONSE_SIGNATURE).ToString ();
-                //データに絵文字があればUnicodeアンエスケープし、レスポンスシグネチャ計算用に対応する
-                //一般のエスケープ表記データ(ダブルクォーテーション..)はこの処理をしないのが正しいです
-                unescapeResponseData = NCMBUtility.unicodeUnescape(responseData);
+				//データに絵文字があればUnicodeアンエスケープし、レスポンスシグネチャ計算用に対応する
+				//一般のエスケープ表記データ(ダブルクォーテーション..)はこの処理をしないのが正しいです
+				unescapeResponseData = NCMBUtility.unicodeUnescape(responseData);
 				_signatureCheck (responseSignature, code, unescapeResponseData, req.downloadHandler.data, ref error);
 			}
 		}

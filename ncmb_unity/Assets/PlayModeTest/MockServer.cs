@@ -224,90 +224,90 @@ public class MockServer
 		return defaultString;
 	}
 
-    private string _makeResponseSignature(HttpListenerRequest request, string responseData)
-    {
-        string _url = request.Url.AbsoluteUri;
-        ConnectType _method = ConnectType.GET;
-        string _applicationKey = NCMBSettings.ApplicationKey;
-        string _headerTimestamp = request.Headers["X-NCMB-Timestamp"];
-        byte[] responseByte = System.Text.Encoding.UTF8.GetBytes(responseData);
-        
-        StringBuilder data = new StringBuilder(); //シグネチャ（ハッシュ化）するデータの生成
-        String path = _url.Substring(this._domainUri.OriginalString.Length); // パス以降の設定,取得
-        String[] temp = path.Split('?');
-        path = temp[0];
-        String parameter = null;
-        if (temp.Length > 1)
+        private string _makeResponseSignature(HttpListenerRequest request, string responseData)
         {
-            parameter = temp[1];
-        }
-        Hashtable hashValue = new Hashtable(); //昇順に必要なデータを格納するリスト
-        hashValue[SIGNATURE_METHOD_KEY] = SIGNATURE_METHOD_VALUE;//シグネチャキー
-        hashValue[SIGNATURE_VERSION_KEY] = SIGNATURE_VERSION_VALUE; // シグネチャバージョン
-        hashValue[HEADER_APPLICATION_KEY] = _applicationKey;
-        hashValue[HEADER_TIMESTAMP_KEY] = _headerTimestamp;
-        String[] tempParameter;
-        if (parameter != null)
-        {
-            if (_method == ConnectType.GET)
+            string _url = request.Url.AbsoluteUri;
+            ConnectType _method = ConnectType.GET;
+            string _applicationKey = NCMBSettings.ApplicationKey;
+            string _headerTimestamp = request.Headers["X-NCMB-Timestamp"];
+            byte[] responseByte = System.Text.Encoding.UTF8.GetBytes(responseData);
+            
+            StringBuilder data = new StringBuilder(); //シグネチャ（ハッシュ化）するデータの生成
+            String path = _url.Substring(this._domainUri.OriginalString.Length); // パス以降の設定,取得
+            String[] temp = path.Split('?');
+            path = temp[0];
+            String parameter = null;
+            if (temp.Length > 1)
             {
-                foreach (string param in parameter.Split('&'))
+                parameter = temp[1];
+            }
+            Hashtable hashValue = new Hashtable(); //昇順に必要なデータを格納するリスト
+            hashValue[SIGNATURE_METHOD_KEY] = SIGNATURE_METHOD_VALUE;//シグネチャキー
+            hashValue[SIGNATURE_VERSION_KEY] = SIGNATURE_VERSION_VALUE; // シグネチャバージョン
+            hashValue[HEADER_APPLICATION_KEY] = _applicationKey;
+            hashValue[HEADER_TIMESTAMP_KEY] = _headerTimestamp;
+            String[] tempParameter;
+            if (parameter != null)
+            {
+                if (_method == ConnectType.GET)
                 {
-                    tempParameter = param.Split('=');
-                    hashValue[tempParameter[0]] = tempParameter[1];
+                    foreach (string param in parameter.Split('&'))
+                    {
+                        tempParameter = param.Split('=');
+                        hashValue[tempParameter[0]] = tempParameter[1];
+                    }
                 }
             }
-        }
-        //sort hashTable base on key
-        List<string> tmpAscendingList = new List<string>(); //昇順に必要なデータを格納するリスト
-        foreach (DictionaryEntry s in hashValue)
-        {
-            tmpAscendingList.Add(s.Key.ToString());
-        }
-        StringComparer cmp = StringComparer.Ordinal;
-        tmpAscendingList.Sort(cmp);
-        //Create data
-        data.Append(_method); //メソッド追加
-        data.Append("\n");
-        data.Append(this._domainUri.Host); //ドメインの追加
-        data.Append("\n");
-        data.Append(path); //パスの追加
-        data.Append("\n");
-        foreach (string tmp in tmpAscendingList)
-        {
-            data.Append(tmp + "=" + hashValue[tmp] + "&");
-        }
-        data.Remove(data.Length - 1, 1); //最後の&を削除
+            //sort hashTable base on key
+            List<string> tmpAscendingList = new List<string>(); //昇順に必要なデータを格納するリスト
+            foreach (DictionaryEntry s in hashValue)
+            {
+                tmpAscendingList.Add(s.Key.ToString());
+            }
+            StringComparer cmp = StringComparer.Ordinal;
+            tmpAscendingList.Sort(cmp);
+            //Create data
+            data.Append(_method); //メソッド追加
+            data.Append("\n");
+            data.Append(this._domainUri.Host); //ドメインの追加
+            data.Append("\n");
+            data.Append(path); //パスの追加
+            data.Append("\n");
+            foreach (string tmp in tmpAscendingList)
+            {
+                data.Append(tmp + "=" + hashValue[tmp] + "&");
+            }
+            data.Remove(data.Length - 1, 1); //最後の&を削除
 
 
-        StringBuilder stringHashData = data;
+            StringBuilder stringHashData = data;
 
-        //レスポンスデータ追加 Delete時はレスポンスデータが無いため追加しない
-        if (responseByte != null && responseData != "")
-        {
-            // 通常時
-            stringHashData.Append("\n" + responseData);
+            //レスポンスデータ追加 Delete時はレスポンスデータが無いため追加しない
+            if (responseByte != null && responseData != "")
+            {
+                // 通常時
+                stringHashData.Append("\n" + responseData);
+            }
+            else if (responseByte != null)
+            {
+                // ファイル取得時など
+                stringHashData.Append("\n" + NCMBConnection.AsHex(responseByte));
+            }
+
+            //シグネチャ再生成
+            String _clientKey = NCMBSettings.ClientKey;
+            String stringData = stringHashData.ToString();
+            //署名(シグネチャ)生成
+            string result = null; //シグネチャ結果の収納
+            byte[] secretKeyBArr = Encoding.UTF8.GetBytes(_clientKey); //秘密鍵(クライアントキー)
+            byte[] contentBArr = Encoding.UTF8.GetBytes(stringData); //認証データ
+                                                                     //秘密鍵と認証データより署名作成
+            HMACSHA256 HMACSHA256 = new HMACSHA256();
+            HMACSHA256.Key = secretKeyBArr;
+            byte[] final = HMACSHA256.ComputeHash(contentBArr);
+            //Base64実行。シグネチャ完成。
+            result = System.Convert.ToBase64String(final);
+
+            return result;
         }
-        else if (responseByte != null)
-        {
-            // ファイル取得時など
-            stringHashData.Append("\n" + NCMBConnection.AsHex(responseByte));
-        }
-
-        //シグネチャ再生成
-        String _clientKey = NCMBSettings.ClientKey;
-        String stringData = stringHashData.ToString();
-        //署名(シグネチャ)生成
-        string result = null; //シグネチャ結果の収納
-        byte[] secretKeyBArr = Encoding.UTF8.GetBytes(_clientKey); //秘密鍵(クライアントキー)
-        byte[] contentBArr = Encoding.UTF8.GetBytes(stringData); //認証データ
-                                                                 //秘密鍵と認証データより署名作成
-        HMACSHA256 HMACSHA256 = new HMACSHA256();
-        HMACSHA256.Key = secretKeyBArr;
-        byte[] final = HMACSHA256.ComputeHash(contentBArr);
-        //Base64実行。シグネチャ完成。
-        result = System.Convert.ToBase64String(final);
-
-        return result;
-    }
 }
