@@ -1,5 +1,5 @@
 /*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.nifty.cloud.mb.ncmbgcmplugin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import com.unity3d.player.UnityPlayer;
 
 public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity {
 	private ActivityProxyObjectHelper _proxyHelper;
@@ -48,10 +49,16 @@ public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity 
 
 	public void onResume() {
 		super.onResume();
+		//リッチプッシュ処理
+		NCMBPush.richPushHandler(this, getIntent());
+		getIntent().removeExtra("com.nifty.RichUrl");        //再表示させたくない場合はintentからURLを削除します
+
+		//開封通知処理
+		String pushId = getIntent().getStringExtra("com.nifty.PushId");        //プッシュIDがあればUnityへ送る
+		if (pushId != null) {
+			UnityPlayer.UnitySendMessage("NCMBManager", "onAnalyticsReceived", pushId);    //Unityの開封通知メソッド呼び出し
+			getIntent().removeExtra("com.nifty.PushId");
+		}
 		this._proxyHelper.invokeZeroParameterMethod("onResume");
-	}
-	
-	public void onCreate(){
-		this._proxyHelper.invokeZeroParameterMethod("onCreate");
 	}
 }

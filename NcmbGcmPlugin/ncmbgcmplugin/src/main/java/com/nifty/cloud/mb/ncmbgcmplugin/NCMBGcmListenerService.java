@@ -1,5 +1,5 @@
 /*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.unity3d.player.UnityPlayer;
+import java.util.Random;
 
 /**
  * GCM push notification receive class
@@ -37,6 +38,7 @@ public class NCMBGcmListenerService extends GcmListenerService {
 
     //<meta-data>
     static final String SMALL_ICON_KEY = "smallIcon";   //AndroidManifestから情報を取得
+    static final String SMALL_ICON_COLOR_KEY = "smallIconColor"; //AndroidManifestから情報を取得
     private final String TAG = "NCMBGcmListenerService";
     public static final String NS = "NCMB_SPLITTER";
 
@@ -56,7 +58,7 @@ public class NCMBGcmListenerService extends GcmListenerService {
         NotificationCompat.Builder notificationBuilder = notificationSettings(pushData);
 
         //デフォルト複数表示
-        int notificationId = (int) System.currentTimeMillis();
+        int notificationId = new Random().nextInt();
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -82,10 +84,10 @@ public class NCMBGcmListenerService extends GcmListenerService {
         }
 
         //通知エリアに表示されるプッシュ通知をタップした際に起動するアクティビティ画面を設定する
-        Intent intent = new Intent(this, UnityPlayerNativeActivity.class);
+        Intent intent = new Intent(this, com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtras(pushData);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, new Random().nextInt(), intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         //pushDataから情報を取得
@@ -111,11 +113,14 @@ public class NCMBGcmListenerService extends GcmListenerService {
             //それ以外はアプリのアイコンを設定する
             icon = appInfo.icon;
         }
+        //SmallIconカラーを設定
+        int smallIconColor = appInfo.metaData.getInt(SMALL_ICON_COLOR_KEY);
 
         //Notification作成
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,NCMBNotificationUtils.getDefaultChannel())
                 .setSmallIcon(icon)//通知エリアのアイコン
+                .setColor(smallIconColor)//通知エリアのアイコンカラー
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)//通知をタップしたら自動で削除する
