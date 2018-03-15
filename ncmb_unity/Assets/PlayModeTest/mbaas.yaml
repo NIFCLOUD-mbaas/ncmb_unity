@@ -278,6 +278,15 @@ response:
   file: /json/valid_script_object_test_response.json
 ---
 request:
+  url: 2015-09-01/script/testScriptObject_GET2.js
+  method: GET
+  query:
+    name: "[\"tarou1\",\"tarou2\"]"
+response:
+  status: 200
+  file: /json/valid_script_object_test_response.json
+---
+request:
   url: 2015-09-01/script/testScript_PUT.js
   method: PUT
   body:
@@ -347,6 +356,41 @@ request:
 response:
   status: 201
   file: /json/get_object_test_response.json
+# Response Signature Test
+# Add X-NCMB-Response-Signature field in response note to check response signature
+---
+request:
+  url: 2013-09-01/classes/ABC
+  method: GET
+  query:
+    where:
+        objectId: eFyOet7e3rOVLD1Z
+response:
+  status: 201
+  file: /json/get_response_signature_with_double_quote.json
+  X-NCMB-Response-Signature: Signature_will_be_caculated_on_runtime
+---
+request:
+  url: 2013-09-01/classes/ABC
+  method: GET
+  query:
+    where:
+        objectId: cuvYjyyLzRzXoqm5
+response:
+  status: 201
+  file: /json/get_response_signature_with_emoji.json
+  X-NCMB-Response-Signature: Signature_will_be_caculated_on_runtime
+---
+request:
+  url: 2013-09-01/classes/ABC
+  method: GET
+  query:
+    where:
+        objectId: WvFit1DQ68qDC6E4
+response:
+  status: 201
+  file: /json/get_response_signature_with_double_quote_and_emoji.json
+  X-NCMB-Response-Signature: Signature_will_be_caculated_on_runtime
 # Use NCMBFileTest
 ---
 request:
