@@ -361,16 +361,17 @@ namespace NCMB.Internal
 		/// セッショントークン有効稼働かの処理を行う
 		/// </summary>
 		internal void _checkResponseSignature (string code, string responseData, UnityWebRequest req, ref NCMBException error)
-		{
-			//レスポンスデータにエスケープシーケンスがあればアンエスケープし、mobile backend上と同一にします
-			var unescapeResponseData = responseData;
-			if (unescapeResponseData != null && unescapeResponseData != Regex.Unescape (unescapeResponseData)) {
-				unescapeResponseData = Regex.Unescape (unescapeResponseData);
-			}
-				
+		{		
 			//レスポンスシグネチャのチェック
 			if (NCMBSettings._responseValidationFlag && req.error == null && error == null && req.GetResponseHeader (RESPONSE_SIGNATURE) != null) {
 				string responseSignature = req.GetResponseHeader (RESPONSE_SIGNATURE).ToString ();
+				//データに絵文字があればUnicodeアンエスケープし、レスポンスシグネチャ計算用に対応する
+				//一般のエスケープ表記データ(ダブルクォーテーション..)はこの処理をしないのが正しいです
+                var unescapeResponseData = responseData;
+
+                if(unescapeResponseData != null ){
+                    unescapeResponseData = NCMBUtility.unicodeUnescape(unescapeResponseData);
+                }
 				_signatureCheck (responseSignature, code, unescapeResponseData, req.downloadHandler.data, ref error);
 			}
 		}
