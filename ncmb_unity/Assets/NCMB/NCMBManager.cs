@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -363,7 +363,7 @@ namespace NCMB
 		{
 			String jsonString = null;
 			#if UNITY_ANDROID && !UNITY_EDITOR
-			AndroidJavaClass cls = new AndroidJavaClass("com.nifty.cloud.mb.ncmbgcmplugin.GCMInit");
+			AndroidJavaClass cls = new AndroidJavaClass("com.nifty.cloud.mb.ncmbfcmplugin.FCMInit");
 			jsonString = cls.CallStatic<string>("getInstallationProperty");
 			#elif UNITY_IOS && !UNITY_EDITOR
 			jsonString = getInstallationProperty();

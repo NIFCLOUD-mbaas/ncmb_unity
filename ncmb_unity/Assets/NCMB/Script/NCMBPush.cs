@@ -1,5 +1,5 @@
 /*******
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ namespace NCMB
 		static NCMBPush ()
 		{
 			#if UNITY_ANDROID && !UNITY_EDITOR
-			m_AJClass = new AndroidJavaClass("com.nifty.cloud.mb.ncmbgcmplugin.GCMInit");
 			#endif
+			m_AJClass = new AndroidJavaClass("com.nifty.cloud.mb.ncmbfcmplugin.FCMInit");
 		}
 
 		/// <summary>
@@ -58,15 +58,12 @@ namespace NCMB
 		{
 		}
 		#if UNITY_ANDROID
-		public static void Register (string senderId) 	
+		public static void Register () 	
 		{ 	
-			if (!string.IsNullOrEmpty (senderId)) { 	
 				
-
 #if !UNITY_EDITOR
-				m_AJClass.CallStatic("InitSenderId", senderId); 	
-		#endif
-			} 	
+				m_AJClass.CallStatic("Init"); 	
+		#endif	
 		} 	
 
 #elif UNITY_IOS
@@ -78,14 +75,12 @@ namespace NCMB
 		} 	
 		#endif
 		#if UNITY_ANDROID
-	public static void RegisterWithLocation (string senderId) 	
-	{ 	
-		if (!string.IsNullOrEmpty (senderId)) { 	
+	public static void RegisterWithLocation () 	
+	{ 		
 
 #if !UNITY_EDITOR
-			m_AJClass.CallStatic("InitSenderIdWithLocation", senderId); 	
+			m_AJClass.CallStatic("Init"); 	
 		#endif
-		} 	
 	} 	
 
 #elif UNITY_IOS
