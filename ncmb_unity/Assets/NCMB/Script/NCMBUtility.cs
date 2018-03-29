@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace NCMB.Internal
 {
@@ -324,6 +326,24 @@ namespace NCMB.Internal
 			}
 			return builder.ToString ();
 		}
+
+        //文字列中、4桁の16進数で表記されたUnicode文字(\uXXXX)のみをデコード
+        static internal string unicodeUnescape(string targetText)
+        {
+            string retval = Regex.Replace
+            (
+                targetText,
+                @"\\[Uu]([0-9A-Fa-f]{4})",
+                x =>
+                {
+                    ushort code = ushort.Parse(x.Groups[1].Value, NumberStyles.AllowHexSpecifier);
+                    return ((char)code).ToString();
+                }
+            );
+
+            return retval.ToString();
+        }
+
 	}
 	
 }

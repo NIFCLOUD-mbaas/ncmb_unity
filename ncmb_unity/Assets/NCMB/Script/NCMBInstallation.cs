@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -167,10 +167,8 @@ namespace  NCMB
 		{
 			NCMBInstallation currentInstallation = null;
 			try {
-				//null check
-				NCMBManager manager = new NCMBManager ();
 				//ローカルファイルに配信端末情報があれば取得、なければ新規作成
-				string currentInstallationData = manager.GetCurrentInstallation ();
+				string currentInstallationData = NCMBManager.GetCurrentInstallation ();
 				if (currentInstallationData != "") {
 					//ローカルファイルから端末情報を取得
 					currentInstallation = new NCMBInstallation (currentInstallationData);

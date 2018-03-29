@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -311,7 +311,7 @@ namespace NCMB
 			}
 		}
 		// 読み込み
-		private string ReadFile (string path)
+		private static string ReadFile (string path)
 		{
 			string text = "";
 			if (System.IO.File.Exists (@path)) {	//ファイル存在確認
@@ -351,7 +351,7 @@ namespace NCMB
 			}
 		}
 
-		internal string GetCurrentInstallation ()
+		internal static string GetCurrentInstallation ()
 		{
 			string path = SearchPath ();
 			return ReadFile (path);
