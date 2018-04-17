@@ -391,6 +391,26 @@ response:
   status: 201
   file: /json/get_response_signature_with_double_quote_and_emoji.json
   X-NCMB-Response-Signature: Signature_will_be_caculated_on_runtime
+---
+request:
+  url: 2013-09-01/classes/TestClass
+  method: GET
+  query:
+    where:
+        key: {"$regex":"(?i)test"}
+response:
+  status: 200
+  file: /json/get_object_test_response.json
+---
+request:
+  url: 2013-09-01/classes/TestClass
+  method: GET
+  query:
+    where:
+        key: test?
+response:
+  status: 200
+  file: /json/get_object_question_mark_test_response.json
 # Use NCMBFileTest
 ---
 request:

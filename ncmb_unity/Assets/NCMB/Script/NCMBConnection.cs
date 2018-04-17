@@ -274,11 +274,13 @@ namespace NCMB.Internal
 			StringBuilder data = new StringBuilder (); //シグネチャ（ハッシュ化）するデータの生成
 			String path = _url.Substring (this._domainUri.OriginalString.Length); // パス以降の設定,取得
 			String[] temp = path.Split ('?');
-			path = temp [0];
 			String parameter = null;
 			if (temp.Length > 1) {
-				parameter = temp [1];
+                //Start Index is plused 1 for skip question mark 
+                parameter = path.Substring(temp[0].Length + 1);
 			}
+            path = temp[0];
+
 			Hashtable hashValue = new Hashtable (); //昇順に必要なデータを格納するリスト
 			hashValue [SIGNATURE_METHOD_KEY] = SIGNATURE_METHOD_VALUE;//シグネチャキー
 			hashValue [SIGNATURE_VERSION_KEY] = SIGNATURE_VERSION_VALUE; // シグネチャバージョン
