@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NCMB.Task
+namespace NCMB.Tasks
 {
     public static class NCMBScriptTaskExtension
     {

@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.Collections;
 using NCMB;
 using System.Threading.Tasks;
-using NCMB.Task;
+using NCMB.Tasks;
 
 public class NCMBObjectWithTaskTest
 {
