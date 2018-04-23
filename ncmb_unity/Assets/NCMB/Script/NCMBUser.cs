@@ -23,8 +23,11 @@ using MiniJSON;
 using NCMB.Internal;
 using System.Linq;
 using UnityEngine;
+#if NET_4_6
+using System.Threading.Tasks;
+#endif
 
-namespace  NCMB
+namespace NCMB
 {
 
 	/// <summary>
@@ -272,15 +275,38 @@ namespace  NCMB
 			this.SignUpAsync (null);
 		}
 
-		/// <summary>
-		/// 非同期処理でユーザの保存を行います。<br/>
-		/// SaveAsync()を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br/>
-		/// オブジェクトIDが登録されていない新規会員ならログインし、登録を行います。<br/>
-		/// オブジェクトIDが登録されている既存会員ならログインせず、更新を行います。<br/>
-		/// 既存会員のログインはLogInAsyncメソッドをご利用下さい。<br/>
-		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
-		/// </summary>
-		public override void SaveAsync ()
+#if (NET_4_6)
+	    /// <summary>
+	    /// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
+	    /// 既存会員のauthData登録はLinkWithAuthDataAsyncメソッドをご利用下さい。<br/>
+	    /// </summary>
+	    public Task<NCMBUser> SignUpTaskAsync()
+	    {
+	        var tcs = new TaskCompletionSource<NCMBUser>();
+	        SignUpAsync(error =>
+	        {
+	            if (error != null)
+	            {
+	                tcs.SetException(error);
+	            }
+	            else
+	            {
+	                tcs.SetResult(this);
+	            }
+	        });
+	        return tcs.Task;
+	    }
+#endif
+
+        /// <summary>
+        /// 非同期処理でユーザの保存を行います。<br/>
+        /// SaveAsync()を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br/>
+        /// オブジェクトIDが登録されていない新規会員ならログインし、登録を行います。<br/>
+        /// オブジェクトIDが登録されている既存会員ならログインせず、更新を行います。<br/>
+        /// 既存会員のログインはLogInAsyncメソッドをご利用下さい。<br/>
+        /// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+        /// </summary>
+        public override void SaveAsync ()
 		{
 			this.SaveAsync (null);
 		}
@@ -442,7 +468,31 @@ namespace  NCMB
 			_ncmbLogIn (name, password, null, callback);
 		}
 
-		private static void _ncmbLogIn(string name, string password, string email, NCMBCallback callback)
+#if (NET_4_6)
+	    /// <summary>
+	    /// 非同期処理でユーザ名とパスワードを指定して、ユーザのログインを行います。<br/>
+	    /// </summary>
+	    /// <param name="name">ユーザ名</param>
+	    /// <param name="password">パスワード</param>
+        public static Task<NCMBUser> LogInTaskAsync(string name, string password)
+        {
+	        var tcs = new TaskCompletionSource<NCMBUser>();
+	        LogInAsync(name, password, error =>
+	        {
+	            if (error != null)
+	            {
+	                tcs.SetException(error);
+	            }
+	            else
+	            {
+	                tcs.SetResult(CurrentUser);
+	            }
+	        });
+	        return tcs.Task;
+	    }
+#endif
+
+        private static void _ncmbLogIn(string name, string password, string email, NCMBCallback callback)
 		{
  			string url = _getLogInUrl();
 			ConnectType type = ConnectType.GET;
@@ -536,17 +586,42 @@ namespace  NCMB
 			_ncmbLogIn (null, password, email, null);
 		}
 
-		/// <summary>
-		/// 非同期処理で指定したメールアドレスに対して、<br/>
-		/// 会員登録を行うためのメールを送信するよう要求します。<br/>
-		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
-		/// </summary>
-		/// <param name="email">メールアドレス</param>
-		public static void RequestAuthenticationMailAsync (string email)
+#if (NET_4_6)
+        /// <summary>
+        /// 非同期処理でメールアドレスとパスワードを指定して、ユーザのログインを行います。<br/>
+        /// </summary>
+        /// <param name="email">メールアドレス</param>
+        /// <param name="password">パスワード</param>
+        /// <param name="callback">コールバック</param>
+        public static Task<NCMBUser> LogInWithMailAddressTaskAsync(string email, string password)
+	    {
+            var tcs = new TaskCompletionSource<NCMBUser>();
+	        _ncmbLogIn(null, password, email, error =>
+	        {
+	            if (error != null)
+	            {
+	                tcs.SetException(error);
+	            }
+	            else
+	            {
+	                tcs.SetResult(CurrentUser);
+	            }
+	        });
+	        return tcs.Task;
+	    }
+#endif
+
+        /// <summary>
+        /// 非同期処理で指定したメールアドレスに対して、<br/>
+        /// 会員登録を行うためのメールを送信するよう要求します。<br/>
+        /// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+        /// </summary>
+        /// <param name="email">メールアドレス</param>
+        public static void RequestAuthenticationMailAsync (string email)
 		{
 			RequestAuthenticationMailAsync (email, null);
 		}
-
+        
 		/// <summary>
 		/// 非同期処理で指定したメールアドレスに対して、<br/>
 		/// 会員登録を行うためのメールを送信するよう要求します。<br/>
@@ -577,15 +652,38 @@ namespace  NCMB
 				}
 				return;
 			});	
-
 		}
 
+#if (NET_4_6)
+	    /// <summary>
+	    /// 非同期処理で指定したメールアドレスに対して、<br/>
+	    /// 会員登録を行うためのメールを送信するよう要求します。<br/>
+	    /// </summary>
+	    /// <param name="email">メールアドレス</param>
+	    /// <param name="callback">コールバック</param>
+	    public static Task<bool> RequestAuthenticationMailTaskAsync(string email)
+	    {
+	        var tcs = new TaskCompletionSource<bool>();
+	        RequestAuthenticationMailAsync(email, error =>
+	        {
+	            if (error != null)
+	            {
+	                tcs.SetException(error);
+	            }
+	            else
+	            {
+	                tcs.SetResult(true);
+	            }
+	        });
+	        return tcs.Task;
+	    }
+#endif
 
-		/// <summary>
-		/// 非同期処理でユーザのログアウトを行います。<br/>
-		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
-		/// </summary>
-		public static void LogOutAsync ()
+        /// <summary>
+        /// 非同期処理でユーザのログアウトを行います。<br/>
+        /// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+        /// </summary>
+        public static void LogOutAsync ()
 		{
 			LogOutAsync (null);
 		}
@@ -617,7 +715,29 @@ namespace  NCMB
 			}
 		}
 
-		internal static void _logOut (NCMBCallback callback)
+#if (NET_4_6)
+	    /// <summary>
+	    /// 非同期処理でユーザのログアウトを行います。<br/>
+	    /// </summary>
+	    public static Task<bool> LogOutTaskAsync()
+	    {
+	        var tcs = new TaskCompletionSource<bool>();
+	        LogOutAsync(error =>
+	        {
+	            if (error != null)
+	            {
+	                tcs.SetException(error);
+	            }
+	            else
+	            {
+	                tcs.SetResult(true);
+	            }
+	        });
+	        return tcs.Task;
+	    }
+#endif
+
+        internal static void _logOut (NCMBCallback callback)
 		{
 			string url = _getLogOutUrl ();//URL作成
 			ConnectType type = ConnectType.GET;
@@ -674,25 +794,48 @@ namespace  NCMB
 			});
 		}
 
-		/// <summary>
-		/// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
-		/// ユーザ登録が成功の場合、自動的にログインの状態になります。<br/>
-		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
-		/// </summary>
-		public void LogInWithAuthDataAsync ()
+        /// <summary>
+        /// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
+        /// ユーザ登録が成功の場合、自動的にログインの状態になります。<br/>
+        /// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+        /// </summary>
+        public void LogInWithAuthDataAsync ()
 		{
 			this.LogInWithAuthDataAsync (null);
 		}
 
-		/// <summary>
-		/// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
-		/// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
-		/// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
-		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
-		/// </summary>
-		/// <param name="linkParam">authData</param>
-		/// <param name="callback">コールバック</param>
-		public void LinkWithAuthDataAsync (Dictionary<string, object> linkParam, NCMBCallback callback)
+#if (NET_4_6)
+	    /// <summary>
+	    /// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
+	    /// 既存会員のauthData登録はLinkWithAuthDataAsyncメソッドをご利用下さい。<br/>
+	    /// </summary>
+	    public Task<NCMBUser> LogInWithAuthDataTaskAsync()
+	    {
+	        var tcs = new TaskCompletionSource<NCMBUser>();
+	        LogInWithAuthDataAsync(error =>
+	        {
+	            if (error != null)
+	            {
+	                tcs.SetException(error);
+	            }
+	            else
+	            {
+	                tcs.SetResult(this);
+	            }
+	        });
+	        return tcs.Task;
+	    }
+#endif
+
+        /// <summary>
+        /// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
+        /// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
+        /// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
+        /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
+        /// </summary>
+        /// <param name="linkParam">authData</param>
+        /// <param name="callback">コールバック</param>
+        public void LinkWithAuthDataAsync (Dictionary<string, object> linkParam, NCMBCallback callback)
 		{
 			if (this.AuthData == null) {
 				// authDataの登録
@@ -735,13 +878,38 @@ namespace  NCMB
 			this.LinkWithAuthDataAsync (linkParam, null);
 		}
 
-		/// <summary>
-		/// 非同期処理で現在ログインしているユーザのauthDataの削除を行います。<br/>
-		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
-		/// </summary>
-		/// <param name="provider">SNS名</param>
-		/// <param name="callback">コールバック</param>
-		public void UnLinkWithAuthDataAsync (string provider, NCMBCallback callback)
+#if (NET_4_6)
+	    /// <summary>
+	    /// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
+	    /// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
+	    /// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
+        /// </summary>
+        public Task<NCMBUser> LinkWithAuthDataTaskAsync(Dictionary<string, object> linkParam)
+	    {
+	        var tcs = new TaskCompletionSource<NCMBUser>();
+	        LinkWithAuthDataAsync(linkParam, error =>
+	        {
+	            if (error != null)
+	            {
+	                tcs.SetException(error);
+	            }
+	            else
+	            {
+	                tcs.SetResult(this);
+	            }
+	        });
+	        return tcs.Task;
+	    }
+#endif
+
+
+        /// <summary>
+        /// 非同期処理で現在ログインしているユーザのauthDataの削除を行います。<br/>
+        /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
+        /// </summary>
+        /// <param name="provider">SNS名</param>
+        /// <param name="callback">コールバック</param>
+        public void UnLinkWithAuthDataAsync (string provider, NCMBCallback callback)
 		{
 			if (this.AuthData == null) {
 				throw new NCMBException (new ArgumentException ("Current User authData not exist"));
@@ -788,12 +956,35 @@ namespace  NCMB
 			this.UnLinkWithAuthDataAsync (provider, null);
 		}
 
-		/// <summary>
-		/// SNSのauthDataが登録されているか判定を行います。
-		/// </summary>
-		/// <param name="provider">SNS名</param>
-		/// <returns> true:登録済　false:未登録 </returns>
-		public bool IsLinkWith (string provider)
+#if (NET_4_6)
+        /// <summary>
+        /// 非同期処理で現在ログインしているユーザのauthDataの削除を行います。<br/>
+        /// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+        /// </summary>
+        public Task<NCMBUser> UnLinkWithAuthDataTaskAsync(string provider)
+        {
+	        var tcs = new TaskCompletionSource<NCMBUser>();
+            UnLinkWithAuthDataAsync(provider, error =>
+	        {
+	            if (error != null)
+	            {
+	                tcs.SetException(error);
+	            }
+	            else
+	            {
+	                tcs.SetResult(this);
+	            }
+	        });
+	        return tcs.Task;
+	    }
+#endif
+
+        /// <summary>
+        /// SNSのauthDataが登録されているか判定を行います。
+        /// </summary>
+        /// <param name="provider">SNS名</param>
+        /// <returns> true:登録済　false:未登録 </returns>
+        public bool IsLinkWith (string provider)
 		{
 			List<string> providerList = new List<string> () { "facebook", "twitter" };
 
