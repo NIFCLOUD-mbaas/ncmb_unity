@@ -71,7 +71,6 @@ namespace NCMB.Tasks
 
         /// <summary>
         /// 非同期処理で現在ログインしているユーザのauthDataの削除を行います。<br/>
-        /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
         /// <param name="provider">SNS名</param>
         public static Task<NCMBUser> UnLinkWithAuthDataTaskAsync(this NCMBUser user, string provider)
@@ -96,7 +95,6 @@ namespace NCMB.Tasks
         /// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
         /// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
         /// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
-        /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
         /// <param name="linkParam">authData</param>
         public static Task<NCMBUser> LinkWithAuthDataTaskAsync(this NCMBUser user, Dictionary<string, object> linkParam)
@@ -119,7 +117,6 @@ namespace NCMB.Tasks
         /// <summary>
         /// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
         /// 既存会員のauthData登録はLinkWithAuthDataAsyncメソッドをご利用下さい。<br/>
-        /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
         public static Task<NCMBUser> LogInWithAuthDataTaskAsync(this NCMBUser user)
         {
@@ -143,7 +140,6 @@ namespace NCMB.Tasks
         /// オブジェクトIDが登録されていない新規会員ならログインし、登録を行います。<br/>
         /// オブジェクトIDが登録されている既存会員ならログインせず、更新を行います。<br/>
         /// 既存会員のログインはLogInAsyncメソッドをご利用下さい。<br/>
-        /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
         public static Task<NCMBUser> SignUpTaskAsync(this NCMBUser user)
         {

@@ -29,7 +29,7 @@ namespace NCMB.Tasks
         /// 非同期処理でオブジェクトの保存を行います。<br/>
         /// SaveAsync()を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br/>
         /// オブジェクトIDが登録されていない新規オブジェクトなら登録を行います。<br/>
-        ///オブジェクトIDが登録されている既存オブジェクトなら更新を行います。<br/>
+        /// オブジェクトIDが登録されている既存オブジェクトなら更新を行います。<br/>
         /// </summary>
         public static Task<T> SaveTaskAsync<T>(this T origin) where T : NCMBObject
         {
