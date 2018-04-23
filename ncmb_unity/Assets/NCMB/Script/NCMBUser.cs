@@ -275,29 +275,6 @@ namespace NCMB
 			this.SignUpAsync (null);
 		}
 
-#if (NET_4_6)
-	    /// <summary>
-	    /// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
-	    /// 既存会員のauthData登録はLinkWithAuthDataAsyncメソッドをご利用下さい。<br/>
-	    /// </summary>
-	    public Task<NCMBUser> SignUpTaskAsync()
-	    {
-	        var tcs = new TaskCompletionSource<NCMBUser>();
-	        SignUpAsync(error =>
-	        {
-	            if (error != null)
-	            {
-	                tcs.SetException(error);
-	            }
-	            else
-	            {
-	                tcs.SetResult(this);
-	            }
-	        });
-	        return tcs.Task;
-	    }
-#endif
-
         /// <summary>
         /// 非同期処理でユーザの保存を行います。<br/>
         /// SaveAsync()を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br/>
@@ -804,29 +781,6 @@ namespace NCMB
 			this.LogInWithAuthDataAsync (null);
 		}
 
-#if (NET_4_6)
-	    /// <summary>
-	    /// 非同期処理でauthDataを用いて、ユーザを登録します。<br/>
-	    /// 既存会員のauthData登録はLinkWithAuthDataAsyncメソッドをご利用下さい。<br/>
-	    /// </summary>
-	    public Task<NCMBUser> LogInWithAuthDataTaskAsync()
-	    {
-	        var tcs = new TaskCompletionSource<NCMBUser>();
-	        LogInWithAuthDataAsync(error =>
-	        {
-	            if (error != null)
-	            {
-	                tcs.SetException(error);
-	            }
-	            else
-	            {
-	                tcs.SetResult(this);
-	            }
-	        });
-	        return tcs.Task;
-	    }
-#endif
-
         /// <summary>
         /// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
         /// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
@@ -877,31 +831,6 @@ namespace NCMB
 		{
 			this.LinkWithAuthDataAsync (linkParam, null);
 		}
-
-#if (NET_4_6)
-	    /// <summary>
-	    /// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
-	    /// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
-	    /// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
-        /// </summary>
-        public Task<NCMBUser> LinkWithAuthDataTaskAsync(Dictionary<string, object> linkParam)
-	    {
-	        var tcs = new TaskCompletionSource<NCMBUser>();
-	        LinkWithAuthDataAsync(linkParam, error =>
-	        {
-	            if (error != null)
-	            {
-	                tcs.SetException(error);
-	            }
-	            else
-	            {
-	                tcs.SetResult(this);
-	            }
-	        });
-	        return tcs.Task;
-	    }
-#endif
-
 
         /// <summary>
         /// 非同期処理で現在ログインしているユーザのauthDataの削除を行います。<br/>
@@ -955,29 +884,6 @@ namespace NCMB
 		{
 			this.UnLinkWithAuthDataAsync (provider, null);
 		}
-
-#if (NET_4_6)
-        /// <summary>
-        /// 非同期処理で現在ログインしているユーザのauthDataの削除を行います。<br/>
-        /// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
-        /// </summary>
-        public Task<NCMBUser> UnLinkWithAuthDataTaskAsync(string provider)
-        {
-	        var tcs = new TaskCompletionSource<NCMBUser>();
-            UnLinkWithAuthDataAsync(provider, error =>
-	        {
-	            if (error != null)
-	            {
-	                tcs.SetException(error);
-	            }
-	            else
-	            {
-	                tcs.SetResult(this);
-	            }
-	        });
-	        return tcs.Task;
-	    }
-#endif
 
         /// <summary>
         /// SNSのauthDataが登録されているか判定を行います。

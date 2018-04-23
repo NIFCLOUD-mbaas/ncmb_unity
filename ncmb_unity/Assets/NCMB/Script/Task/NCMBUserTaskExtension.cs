@@ -124,7 +124,7 @@ namespace NCMB.Tasks
         /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
         /// <returns>登録したユーザ</returns>
-        public static Task<NCMBUser> LogInWithAuthTaskDataAsync(this NCMBUser user)
+        public static Task<NCMBUser> LogInWithAuthDataTaskAsync(this NCMBUser user)
         {
             var tcs = new TaskCompletionSource<NCMBUser>();
             user.LogInWithAuthDataAsync(error =>
@@ -149,7 +149,7 @@ namespace NCMB.Tasks
         /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
         /// <returns>登録したユーザ</returns>
-        public static Task<NCMBUser> SingUpTaskAsync(this NCMBUser user)
+        public static Task<NCMBUser> SignUpTaskAsync(this NCMBUser user)
         {
             var tcs = new TaskCompletionSource<NCMBUser>();
             user.SignUpAsync(error =>
