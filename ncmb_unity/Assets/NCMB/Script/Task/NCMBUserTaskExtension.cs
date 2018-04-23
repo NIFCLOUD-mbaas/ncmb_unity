@@ -74,7 +74,6 @@ namespace NCMB.Tasks
         /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
         /// <param name="provider">SNS名</param>
-        /// <returns>削除後のユーザ</returns>
         public static Task<NCMBUser> UnLinkWithAuthDataTaskAsync(this NCMBUser user, string provider)
         {
             var tcs = new TaskCompletionSource<NCMBUser>();
@@ -100,7 +99,6 @@ namespace NCMB.Tasks
         /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
         /// <param name="linkParam">authData</param>
-        /// <returns>登録したユーザ</returns>
         public static Task<NCMBUser> LinkWithAuthDataTaskAsync(this NCMBUser user, Dictionary<string, object> linkParam)
         {
             var tcs = new TaskCompletionSource<NCMBUser>();
@@ -123,7 +121,6 @@ namespace NCMB.Tasks
         /// 既存会員のauthData登録はLinkWithAuthDataAsyncメソッドをご利用下さい。<br/>
         /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
-        /// <returns>登録したユーザ</returns>
         public static Task<NCMBUser> LogInWithAuthDataTaskAsync(this NCMBUser user)
         {
             var tcs = new TaskCompletionSource<NCMBUser>();
@@ -148,7 +145,6 @@ namespace NCMB.Tasks
         /// 既存会員のログインはLogInAsyncメソッドをご利用下さい。<br/>
         /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
         /// </summary>
-        /// <returns>登録したユーザ</returns>
         public static Task<NCMBUser> SignUpTaskAsync(this NCMBUser user)
         {
             var tcs = new TaskCompletionSource<NCMBUser>();

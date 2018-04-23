@@ -5,6 +5,9 @@ namespace NCMB.Tasks
 {
     public static class NCMBPushTaskExtension
     {
+        /// <summary>
+        /// プッシュの送信を行います。
+        /// </summary>
         public static Task<NCMBPush> SendPushTaskAsync(this NCMBPush origin)
         {
             var tcs = new TaskCompletionSource<NCMBPush>();

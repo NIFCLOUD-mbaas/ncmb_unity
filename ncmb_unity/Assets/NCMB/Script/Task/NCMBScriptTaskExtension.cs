@@ -6,6 +6,12 @@ namespace NCMB.Tasks
 {
     public static class NCMBScriptTaskExtension
     {
+        /// <summary>
+        /// 非同期処理でスクリプトの実行を行います。
+        /// </summary>
+        /// <param name="header">リクエストヘッダー.</param>
+        /// <param name="body">リクエストボディ</param>
+        /// <param name="query">クエリパラメーター</param>
         public static Task<byte[]> ExecuteTaskAsync(this NCMBScript script,
             IDictionary<string, object> header, IDictionary<string, object> body, IDictionary<string, object> query)
         {

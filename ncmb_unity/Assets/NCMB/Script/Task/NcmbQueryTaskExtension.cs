@@ -29,7 +29,6 @@ namespace NCMB.Tasks
         /// <summary>
         /// 指定IDのオブジェクトを取得を行います。
         /// </summary>
-        /// <returns>結果</returns>
         public static Task<T> GetTaskAsync<T>(this NCMBQuery<T> query, string objectId) where T : NCMBObject
         {
             var tcs = new TaskCompletionSource<T>();
@@ -50,9 +49,8 @@ namespace NCMB.Tasks
         }
 
         /// <summary>
-        ///クエリにマッチするオブジェクト数の取得を行います。
+        /// クエリにマッチするオブジェクト数の取得を行います。
         /// </summary>
-        /// <returns>カウント数</returns>
         public static Task<int> CountTaskAsync<T>(this NCMBQuery<T> query) where T : NCMBObject
         {
             var tcs = new TaskCompletionSource<int>();
