@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if NET_4_6
+using System.Collections;
 using System.Threading.Tasks;
 
 public static class NCMBTaskTestHelper
@@ -19,4 +20,4 @@ public static class NCMBTaskTestHelper
         }
     }
 }
-
+#endif

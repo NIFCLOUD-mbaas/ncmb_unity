@@ -1,4 +1,5 @@
-﻿using UnityEngine.TestTools;
+﻿#if NET_4_6
+using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 using NCMB;
@@ -39,5 +40,5 @@ public class NCMBObjectWithTaskTest
 
         Assert.AreEqual("\"test\"", list[0]["key"]);
     }
-
 }
+#endif
