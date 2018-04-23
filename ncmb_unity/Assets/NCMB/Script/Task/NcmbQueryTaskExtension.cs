@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace NCMB.Task
 {
-    public static class NcmbQueryTaskExtension
+    public static class NCMBQueryTaskExtension
     {
         /// <summary>
         /// クエリにマッチするオブジェクトを取得を行います。
