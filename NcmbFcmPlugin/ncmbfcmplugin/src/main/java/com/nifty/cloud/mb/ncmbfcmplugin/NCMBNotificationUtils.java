@@ -15,6 +15,7 @@
  */
 package com.nifty.cloud.mb.ncmbfcmplugin;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -22,8 +23,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.os.Build;
-
-import com.unity3d.player.UnityPlayer;
 
 /**
  * The NCMBNotificationUtils Class contains register channel and get channel method
@@ -41,18 +40,19 @@ public class NCMBNotificationUtils extends ContextWrapper{
         super(base);
     }
 
-    public static void settingDefaultChannels() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // チャンネルを作成
-            NotificationChannel androidChannel = new NotificationChannel(DEFAULT_CHANNEL_ID,
-                    DEFAULT_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            androidChannel.setDescription(DEFAULT_CHANNEL_DES);
-            androidChannel.enableLights(true);
-            androidChannel.enableVibration(true);
-            androidChannel.setLightColor(Color.GREEN);
-            androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            new NCMBNotificationUtils(UnityPlayer.currentActivity).getManager().createNotificationChannel(androidChannel);
-        }
+    @TargetApi(Build.VERSION_CODES.O)
+    public void settingDefaultChannels() {
+
+        // チャンネルを作成
+        NotificationChannel androidChannel = new NotificationChannel(DEFAULT_CHANNEL_ID,
+                DEFAULT_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+        androidChannel.setDescription(DEFAULT_CHANNEL_DES);
+        androidChannel.enableLights(true);
+        androidChannel.enableVibration(true);
+        androidChannel.setLightColor(Color.GREEN);
+        androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
+        getManager().createNotificationChannel(androidChannel);
     }
 
     public NotificationManager getManager() {
@@ -66,4 +66,3 @@ public class NCMBNotificationUtils extends ContextWrapper{
         return DEFAULT_CHANNEL_ID;
     }
 }
-

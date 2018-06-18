@@ -11,25 +11,25 @@ class PreBuildAndroid : IPreprocessBuild
     public int callbackOrder { get { return 0; } }
     public void OnPreprocessBuild(BuildTarget target, string path)
     {
-         string androidPath = Application.dataPath + "/Plugins/Android";
-         string gsJsonPath = androidPath + "/google-services.json";
+        string androidPath = Application.dataPath + "/Plugins/Android";
+        string gsJsonPath = androidPath + "/google-services.json";
 
-         if (!File.Exists(gsJsonPath))
-         {
-             Debug.LogError("Please copy your google-services.json to " + androidPath);
-             return;
-         }
-         string gsJson = File.ReadAllText(gsJsonPath);
-         //Covert google json to xml 
-         string gsXml = parseGoogleJsonToXml(gsJson);
+        if (!File.Exists(gsJsonPath))
+        {
+            Debug.LogWarning("Can not found google-services.json, please copy your google-services.json to " + androidPath);
+            return;
+        }
+        string gsJson = File.ReadAllText(gsJsonPath);
+        //Covert google json to xml 
+        string gsXml = parseGoogleJsonToXml(gsJson);
 
-         string valuesFolder = androidPath + "/res/values";
-         if (!Directory.Exists(valuesFolder))
-         {
-             Directory.CreateDirectory(valuesFolder);
-         }
+        string valuesFolder = androidPath + "/res/values";
+        if (!Directory.Exists(valuesFolder))
+        {
+            Directory.CreateDirectory(valuesFolder);
+        }
 
-         File.WriteAllText(valuesFolder + "/google-services.xml", gsXml);
+        File.WriteAllText(valuesFolder + "/google-services.xml", gsXml);
 
     }
 

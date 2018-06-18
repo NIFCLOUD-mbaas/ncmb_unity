@@ -18,14 +18,13 @@ package com.nifty.cloud.mb.ncmbfcmplugin;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.unity3d.player.UnityPlayer;
 
@@ -45,11 +44,15 @@ public class FCMInit extends Activity {
             Log.d("Unity", "Device Token: " + token);
 
             if(token != null && !token.isEmpty()){
+                //Setting chanel for Android O
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    NCMBNotificationUtils utils = new NCMBNotificationUtils(UnityPlayer.currentActivity);
+                    utils.settingDefaultChannels();
+                }
+
                 UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
                     public void run() {
-                        if (token != null) {
-                            UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", token);
-                        }
+                        UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", token);
                     }
                 });
             } else {

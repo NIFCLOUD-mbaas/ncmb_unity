@@ -1,18 +1,18 @@
-/*
- * Copyright 2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/*******
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 package com.nifty.cloud.mb.ncmbfcmplugin;
 
 import android.app.NotificationChannel;
@@ -39,6 +39,9 @@ import com.unity3d.player.UnityPlayer;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * FCM push notification receive class
+ */
 public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 	//<meta-data>
 	static final String SMALL_ICON_KEY = "smallIcon";   //AndroidManifestから情報を取得
@@ -48,13 +51,12 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
-		Log.d("Unity", "NCMBFirebaseMessagingService onMessageReceived: " + remoteMessage.getData().toString());
-		SharedPreferences recentPushIdPref = this.getSharedPreferences("ncmbPushId", Context.MODE_PRIVATE);
-		String recentPushId = recentPushIdPref.getString("recentPushId", "");
-
+		
 		if (remoteMessage != null && remoteMessage.getData() != null){
-			Log.d("Unity", "onMessageReceived BUILD NOTI");
-					String currentPushId = remoteMessage.getData().get("com.nifty.PushId");
+			SharedPreferences recentPushIdPref = this.getSharedPreferences("ncmbPushId", Context.MODE_PRIVATE);
+			String recentPushId = recentPushIdPref.getString("recentPushId", "");
+			String currentPushId = remoteMessage.getData().get("com.nifty.PushId");
+			Log.d("Unity", "NCMBFirebaseMessagingService onMessageReceived: " + remoteMessage.getData().toString());
 
 			if(!recentPushId.equals(currentPushId)) {
 				SharedPreferences.Editor editor = recentPushIdPref.edit();
@@ -63,6 +65,8 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 
 				super.onMessageReceived(remoteMessage);
 				Bundle bundle = getBundleFromRemoteMessage(remoteMessage);
+				sendNotification(bundle); //プッシュ通知表示
+				sendPayloadToUnity(bundle); //Unity上でペイロードデータを扱えるよう、メッセージを送る
 
 				//NCMBDialogPushConfigurationクラスのインスタンスを作成
 				NCMBDialogPushConfiguration dialogPushConfiguration = new NCMBDialogPushConfiguration();
@@ -70,8 +74,6 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 				dialogPushConfiguration.setDisplayType(NCMBDialogPushConfiguration.DIALOG_DISPLAY_DIALOG);
 				NCMBPush.dialogPushHandler(getApplicationContext(), bundle, dialogPushConfiguration);
 
-				sendNotification(bundle); //プッシュ通知表示
-				sendPayloadToUnity(bundle); //Unity上でペイロードデータを扱えるよう、メッセージを送る
 			}
 
 		}
