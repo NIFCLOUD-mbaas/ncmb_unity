@@ -15,7 +15,6 @@
  **********/
 package com.nifty.cloud.mb.ncmbfcmplugin;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -25,15 +24,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.nifty.cloud.mb.ncmbfcmplugin.NCMBDialogPushConfiguration;
-import com.nifty.cloud.mb.ncmbfcmplugin.NCMBPush;
 import com.unity3d.player.UnityPlayer;
 
 import java.util.Map;
