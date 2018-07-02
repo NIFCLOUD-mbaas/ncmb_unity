@@ -21,12 +21,31 @@ response:
   file: /json/login_response.json
 ---
 request:
+  url: 2013-09-01/login
+  method: GET
+  query:
+    password: expireToken
+    userName: expireToken
+response:
+  status: 200
+  file: /json/login_invalid_token_response.json
+---
+request:
   url: 2013-09-01/logout
   method: GET
   body:
     Content-Type: application/json
 response:
   status: 200
+  file: /json/logout_script_response.json
+---
+request:
+  url: 2013-09-01/logout
+  method: GET
+  body:
+    Content-Type: application/json
+response:
+  status: 401
   file: /json/logout_script_response.json
 ---
 request:
