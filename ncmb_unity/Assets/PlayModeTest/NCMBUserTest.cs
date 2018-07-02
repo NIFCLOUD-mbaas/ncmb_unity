@@ -549,4 +549,46 @@ public class NCMBUserTest
         Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
         Assert.True(NCMBTestSettings.CallbackFlag);
     }
+
+    /**
+    * - 内容：LogInAsyncExpiredToken
+    * - 結果：各パラメータが正しく取得できること
+    */
+    [UnityTest]
+    public IEnumerator LogInAsyncExpiredToken()
+    {
+        NCMBTestSettings.CallbackFlag = false;
+        // テストデータ作成
+        NCMBUser.LogInAsync("expireToken", "expireToken", (e) => {
+            NCMBTestSettings.CallbackFlag = true;
+        });
+        yield return NCMBTestSettings.AwaitAsync();
+
+        NCMBUser.CurrentUser.SessionToken = "dummySessionTokenInvalid";
+
+        NCMBTestSettings.CallbackFlag = false;
+        NCMBUser.LogInAsync("expireToken", "expireToken", (e) => {
+            Assert.Null(e);
+            NCMBTestSettings.CallbackFlag = true;
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("expireToken", NCMBUser.CurrentUser.UserName);
+        Assert.True(NCMBTestSettings.CallbackFlag);
+    }
+
+    [UnityTest]
+    public IEnumerator LogOutAsyncExpiredToken()
+    { 
+        NCMBTestSettings.CallbackFlag = false;
+        NCMBUser.LogOutAsync((e) =>
+        {
+            Assert.Null(e);
+            NCMBTestSettings.CallbackFlag = true;
+        });
+        yield return NCMBTestSettings.AwaitAsync();
+        Assert.True(NCMBTestSettings.CallbackFlag);
+    }
 }
