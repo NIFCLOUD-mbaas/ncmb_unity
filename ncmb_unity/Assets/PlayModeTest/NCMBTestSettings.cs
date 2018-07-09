@@ -54,11 +54,7 @@ public class NCMBTestSettings
 		}
 
 		NCMBUser.LogOutAsync ();
-		if (filePath == null) {
-			MockServer.startMock();
-		} else {
-			MockServer.startMock(filePath);
-		}
+		MockServer.startMock(filePath);
 	}
 
 	public static IEnumerator AwaitAsync ()
