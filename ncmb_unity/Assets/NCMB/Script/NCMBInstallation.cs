@@ -1,4 +1,4 @@
-﻿/*******
+/*******
  Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,6 +50,11 @@ namespace  NCMB
 			if (dic.TryGetValue ("timeZone", out value)) {
 				TimeZone = (string)value;
 			}
+			
+			#if UNITY_ANDROID && !UNITY_EDITOR
+			this["pushType"] = "fcm";
+			#endif
+
 			SdkVersion = CommonConstant.SDK_VERSION;
 		}
 
