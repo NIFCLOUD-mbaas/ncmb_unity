@@ -28,6 +28,8 @@ public class MockServer
 	public static String SERVER = NCMBTestSettings.DOMAIN_URL + "/";
 	private HttpListener listener = null;
 	private static MockServer instance = null;
+	private static string pathFileLoad = "";
+	private static string DATA_PATH_DEFAULT = "PlayModeTest/mbaas.yaml";
 	//Dictionary to store all mock data
 	Dictionary<string, List<MockServerObject>> mockObjectDic = new Dictionary<string, List<MockServerObject>> ();
     Uri _domainUri = new Uri(NCMBTestSettings.DOMAIN_URL);
@@ -53,12 +55,29 @@ public class MockServer
         NCMBSettings.ClientKey = "CLIENT_KEY";
 	}
 
-	public static void startMock ()
+	public static void startMock (string filePath = null)
 	{
+		bool isNeedReadMockData = false;
+		if (filePath == null) {
+			filePath = DATA_PATH_DEFAULT;
+		}
+		if(!String.IsNullOrEmpty(pathFileLoad)) {
+			if (!pathFileLoad.Equals(filePath)) {
+				isNeedReadMockData = true;
+			} else {
+				isNeedReadMockData = false;
+			}
+		} else {
+			isNeedReadMockData = true;
+		}
 		if (instance == null) {
 			instance = new MockServer ();
-			instance.ReadMockData ();
 		}
+		//If the file path is changed, We will load data from the file.
+		if(isNeedReadMockData){
+			pathFileLoad = filePath;
+			instance.ReadMockData();
+        }
 	}
 
 	private void WaitForNewRequest ()
@@ -144,7 +163,7 @@ public class MockServer
 		mockObjectDic.Add ("PUT", new List<MockServerObject> ());
 		mockObjectDic.Add ("DELETE", new List<MockServerObject> ());
 		//Get yaml string 
-		string yamlString = LoadFileData ("PlayModeTest/mbaas.yaml", false, null);
+		string yamlString = LoadFileData(pathFileLoad, false, null);
 		// Setup the input
 		var input = new StringReader (yamlString);
 		// Load the stream
