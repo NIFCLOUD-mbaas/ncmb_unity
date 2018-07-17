@@ -17,7 +17,7 @@
 namespace NCMB
 {
 	/// <summary>
-	/// ニフティクラウドへアクセスするためのクラスが含まれています
+	/// ニフクラ mobile backend へアクセスするためのクラスが含まれています
 	/// </summary>
 	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	class NamespaceDoc
