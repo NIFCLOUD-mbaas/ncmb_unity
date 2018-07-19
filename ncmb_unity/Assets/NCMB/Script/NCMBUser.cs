@@ -31,7 +31,7 @@ namespace  NCMB
 	/// 会員管理を操作するクラスです。
 	/// </summary>
 	[NCMBClassName ("user")]
-	public class NCMBUser : NCMBObject
+	public partial class NCMBUser : NCMBObject
 	{
 
 
@@ -469,7 +469,7 @@ namespace  NCMB
 			//ログを確認（通信前）
 			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type);
 			//通信処理
-			NCMBConnection con = new NCMBConnection(url, type, null, NCMBUser._getCurrentSessionToken());
+			NCMBConnection con = new NCMBConnection(url, type, null, null);
 			con.Connect(delegate (int statusCode, string responseData, NCMBException error)
 			{
 				try
@@ -638,7 +638,12 @@ namespace  NCMB
 					error = new NCMBException (e);
 				}
 				if (callback != null) {
-					callback (error);
+					//If the system get ErrorCode is E401001 when LogOutAsync, We will return null.
+					if (error != null && NCMBException.INCORRECT_HEADER.Equals(error.ErrorCode)) {
+						callback(null);
+					} else {
+						callback(error);
+					}
 				}
 				return;
 			});	

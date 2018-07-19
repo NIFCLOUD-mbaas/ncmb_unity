@@ -23,7 +23,7 @@ public class NCMBTestSettings
 	}
 
 	// 初期化
-	public static void Initialize ()
+	public static void Initialize (string filePath = null)
 	{
 		
 		if (GameObject.Find ("NCMBManager") == null) {
@@ -54,8 +54,7 @@ public class NCMBTestSettings
 		}
 
 		NCMBUser.LogOutAsync ();
-
-		MockServer.startMock ();
+		MockServer.startMock(filePath);
 	}
 
 	public static IEnumerator AwaitAsync ()

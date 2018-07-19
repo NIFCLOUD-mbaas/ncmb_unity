@@ -1,0 +1,20 @@
+# Use NCMBUserTestLogoutError
+---
+request:
+  url: 2013-09-01/login
+  method: GET
+  query:
+    password: tarou
+    userName: tarou
+response:
+  status: 200
+  file: /json/login_response.json
+---
+request:
+  url: 2013-09-01/logout
+  method: GET
+response:
+  status: 500
+  file: /json/logout_script_expired_session_respone.json
+...
+
