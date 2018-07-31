@@ -250,17 +250,26 @@ namespace NCMB
 			installation.SaveAsync ((NCMBException saveError) => {	//更新実行
 				if (saveError != null) {
 					//対処可能なエラー
-					if (saveError.ErrorMessage.Equals ("Duplication Error")) {
-						//過去に登録したデバイストークンと衝突。アプリの再インストール後などに発生
-						updateExistedInstallation (installation, path);
-					} else {	
-                        
-						//想定外のエラー
-						OnRegistration (saveError.ErrorMessage);
-					}
-				} else {
-					OnRegistration ("");
+				if (saveError.ErrorCode.Equals(NCMBException.DUPPLICATION_ERROR)){	
+					//過去に登録したデバイストークンと衝突。アプリの再インストール後などに発生
+					updateExistedInstallation (installation, path);
+				} else if (saveError.ErrorCode.Equals(NCMBException.DATA_NOT_FOUND)) {
+					//保存失敗 : 端末情報の該当データがない
+					installation.ObjectId = null;
+					installation.SaveAsync((NCMBException updateError) => {
+						if (updateError != null){
+							OnRegistration(updateError.ErrorMessage);
+						} else {
+							OnRegistration("");
+						}
+					});
+				} else {	
+					//想定外のエラー
+					OnRegistration (saveError.ErrorMessage);
 				}
+			} else {
+				OnRegistration ("");
+			}
 			});
 		}
 
@@ -268,20 +277,22 @@ namespace NCMB
 		{
 			//デバイストークンを更新
 			NCMBQuery<NCMBInstallation> query = NCMBInstallation.GetQuery ();	//ObjectId検索
-			query.WhereEqualTo ("deviceToken", installation.DeviceToken);
-			query.FindAsync ((List<NCMBInstallation> objList, NCMBException findError) => {
-				if (findError != null) {
-					OnRegistration (findError.ErrorMessage);
-				} else if (objList.Count != 0) {
-					installation.ObjectId = objList [0].ObjectId;
-					installation.SaveAsync ((NCMBException installationUpdateError) => {
-						if (installationUpdateError != null) {
-							OnRegistration (installationUpdateError.ErrorMessage);
-						} else {
-							OnRegistration ("");
-						}
-					});
-				}
+			installation.GetDeviceToken((token, error) => { 
+				query.WhereEqualTo("deviceToken", token);
+				query.FindAsync ((List<NCMBInstallation> objList, NCMBException findError) => {
+					if (findError != null) {
+						OnRegistration (findError.ErrorMessage);
+					} else if (objList.Count != 0) {
+						installation.ObjectId = objList [0].ObjectId;
+						installation.SaveAsync ((NCMBException installationUpdateError) => {
+							if (installationUpdateError != null) {
+								OnRegistration (installationUpdateError.ErrorMessage);
+							} else {
+								OnRegistration ("");
+							}
+						});
+					}
+				});
 			});
 		}
 

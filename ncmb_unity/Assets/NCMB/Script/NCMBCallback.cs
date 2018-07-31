@@ -67,5 +67,11 @@ namespace NCMB
 	/// <param name="error"> 通信エラー</param>
 	public delegate void NCMBGetFileCallback (byte[] data, NCMBException error);
 
+	/// <summary>
+	/// オブジェクトとデバイストークンを返すコールバックです。
+	/// </summary>
+	/// <param name="token"> デバイストークン</param>
+	/// <param name="error"> 通信エラー</param>
+	public delegate void NCMBGetTokenCallback(String token, NCMBException error);
 
 }
