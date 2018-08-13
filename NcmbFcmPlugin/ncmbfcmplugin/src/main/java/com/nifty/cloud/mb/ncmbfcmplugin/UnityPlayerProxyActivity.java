@@ -14,7 +14,7 @@
  * limitations under the License.
  **********/
 
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,7 +26,7 @@ public class UnityPlayerProxyActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         try {
-            Intent intent = new Intent(this, com.nifty.cloud.mb.ncmbfcmplugin.UnityPlayerActivity.class);
+            Intent intent = new Intent(this, com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerActivity.class);
             intent.addFlags(65536);
 
             Bundle extras = getIntent().getExtras();

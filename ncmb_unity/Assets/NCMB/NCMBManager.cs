@@ -141,19 +141,19 @@ namespace NCMB
 			
 			// Payload key list
 			string[] kl = new string[] { 
-				"com.nifty.PushId",
-				"com.nifty.Data",
-				"com.nifty.Title",
-				"com.nifty.Message",
-				"com.nifty.Channel",
-				"com.nifty.Dialog",
-				"com.nifty.RichUrl",
+				"com.nifcloud.mbaas.PushId",
+				"com.nifcloud.mbaas.Data",
+				"com.nifcloud.mbaas.Title",
+				"com.nifcloud.mbaas.Message",
+				"com.nifcloud.mbaas.Channel",
+				"com.nifcloud.mbaas.Dialog",
+				"com.nifcloud.mbaas.RichUrl",
 			};
 
 			// Payload value list
 			string[] vl = new string[kl.Length];
 
-			// Index of com.nifty.Message
+			// Index of com.nifcloud.mbaas.Message
 			int im = 0;
 
 			// Loop list
@@ -161,8 +161,8 @@ namespace NCMB
 				// Get value by key, return empty string if not exist
 				vl [i] = (dd.Contains (kl [i])) ? dd [kl [i]].ToString () : string.Empty;
 
-				// Find index of com.nifty.message
-				im = (kl [i] == "com.nifty.Message") ? i : im;
+				// Find index of com.nifcloud.mbaas.Message
+				im = (kl [i] == "com.nifcloud.mbaas.Message") ? i : im;
 			}
 
 			// Set message as alertBody
@@ -363,7 +363,7 @@ namespace NCMB
 		{
 			String jsonString = null;
 			#if UNITY_ANDROID && !UNITY_EDITOR
-			AndroidJavaClass cls = new AndroidJavaClass("com.nifty.cloud.mb.ncmbfcmplugin.FCMInit");
+			AndroidJavaClass cls = new AndroidJavaClass("com.nifcloud.mbaas.ncmbfcmplugin.FCMInit");
 			jsonString = cls.CallStatic<string>("getInstallationProperty");
 			#elif UNITY_IOS && !UNITY_EDITOR
 			jsonString = getInstallationProperty();

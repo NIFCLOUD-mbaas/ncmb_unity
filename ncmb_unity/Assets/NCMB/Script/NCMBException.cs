@@ -106,7 +106,7 @@ namespace NCMB
 		/// <summary>E500001　内部エラーです。</summary>
 		public static readonly string SYSTEM_ERROR = "E500001"; 
 
-		/// <summary>E502001　ストレージエラーです。NIFTY Cloud ストレージでエラーが発生した場合のエラーです。</summary>
+		/// <summary>E502001　ストレージエラーです。NIFCLOUD ストレージでエラーが発生した場合のエラーです。</summary>
 		public static readonly string STORAGE_ERROR = "E502001"; 
 
 		/// <summary>E502002　メール送信エラーです。</summary>

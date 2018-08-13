@@ -1,4 +1,4 @@
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.os.Bundle;
 //@NCMBClassName("push")
 public class NCMBPush {
 
-	private static final String TAG = "com.nifty.cloud.mb.ncmbfcmplugin.NCMBPush";
+	private static final String TAG = "com.nifcloud.mbaas.ncmbfcmplugin.NCMBPush";
 	private static final String MATCH_URL_REGEX =
 			"^(https?)(:\\/\\/[-_.!~*\\'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#]+)$";
 
@@ -36,7 +36,7 @@ public class NCMBPush {
 			return;
 		}
 		// URLチェック
-		String url = intent.getStringExtra("com.nifty.RichUrl");
+		String url = intent.getStringExtra("com.nifcloud.mbaas.RichUrl");
 		if (url == null) {
 			return;
 		}
@@ -58,7 +58,7 @@ public class NCMBPush {
 	 */
 	public static void dialogPushHandler(Context context,Bundle bundle, NCMBDialogPushConfiguration dialogPushConfiguration)
 	{
-		if(!bundle.containsKey("com.nifty.Dialog")){
+		if(!bundle.containsKey("com.nifcloud.mbaas.Dialog")){
 			//dialogが有効になっていない場合
 			return;
 		}
@@ -80,7 +80,7 @@ public class NCMBPush {
 		//NCMBDialogActivityクラスを呼び出す
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setClass(context.getApplicationContext(), NCMBDialogActivity.class);
-		intent.putExtra("com.nifty.OriginalData", bundle);
+		intent.putExtra("com.nifcloud.mbaas.OriginalData", bundle);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		int themeWallpaperNoTitleBar = context.getResources().getIdentifier("Theme.Wallpaper.NoTitleBar", "style", "android");
 		intent.putExtra(NCMBDialogActivity.INTENT_EXTRA_THEME, themeWallpaperNoTitleBar);

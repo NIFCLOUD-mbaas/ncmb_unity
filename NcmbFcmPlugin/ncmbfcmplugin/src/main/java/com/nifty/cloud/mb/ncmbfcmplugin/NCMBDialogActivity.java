@@ -1,4 +1,4 @@
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -562,8 +562,8 @@ public class NCMBDialogActivity extends Activity {
         // Start specified activity
         String str = getIntent().getExtras().getString(INTENT_EXTRA_LAUNCH_CLASS);
         Intent launch = new Intent();
-        launch.putExtras(getIntent().getBundleExtra("com.nifty.OriginalData"));
-        launch.setClassName(getApplicationContext(), "com.nifty.cloud.mb.ncmbfcmplugin.UnityPlayerActivity");
+        launch.putExtras(getIntent().getBundleExtra("com.nifcloud.mbaas.OriginalData"));
+        launch.setClassName(getApplicationContext(), "com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerActivity");
         launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getApplicationContext().startActivity(launch);
 

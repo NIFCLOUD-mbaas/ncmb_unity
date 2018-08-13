@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  **********/
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -51,7 +51,7 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 		if (remoteMessage != null && remoteMessage.getData() != null){
 			SharedPreferences recentPushIdPref = this.getSharedPreferences("ncmbPushId", Context.MODE_PRIVATE);
 			String recentPushId = recentPushIdPref.getString("recentPushId", "");
-			String currentPushId = remoteMessage.getData().get("com.nifty.PushId");
+			String currentPushId = remoteMessage.getData().get("com.nifcloud.mbaas.PushId");
 			Log.d("Unity", "NCMBFirebaseMessagingService onMessageReceived: " + remoteMessage.getData().toString());
 
 			if(!recentPushId.equals(currentPushId)) {
@@ -123,7 +123,7 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 
 		//Note FCM
 		//通知エリアに表示されるプッシュ通知をタップした際に起動するアクティビティ画面を設定する
-		Intent intent = new Intent(this, com.nifty.cloud.mb.ncmbfcmplugin.UnityPlayerActivity.class);
+		Intent intent = new Intent(this, com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtras(pushData);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, new Random().nextInt(), intent,
@@ -157,7 +157,7 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 
 		//Notification作成
 		Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, com.nifty.cloud.mb.ncmbfcmplugin.NCMBNotificationUtils.getDefaultChannel())
+		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, com.nifcloud.mbaas.ncmbfcmplugin.NCMBNotificationUtils.getDefaultChannel())
 				.setSmallIcon(icon)//通知エリアのアイコン
 				.setColor(smallIconColor)//通知エリアのアイコンカラー
 				.setContentTitle(title)
@@ -170,13 +170,13 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 
 	private void sendPayloadToUnity(Bundle payloadData){
 		// Get data
-		String pushId = payloadData.getString("com.nifty.PushId");
-		String data = payloadData.getString("com.nifty.Data");
+		String pushId = payloadData.getString("com.nifcloud.mbaas.PushId");
+		String data = payloadData.getString("com.nifcloud.mbaas.Data");
 		String title = payloadData.getString("title");
 		String message = payloadData.getString("message");
-		String channel = payloadData.getString("com.nifty.Channel");
-		boolean dialog = payloadData.containsKey("com.nifty.Dialog");
-		String richUrl = payloadData.getString("com.nifty.RichUrl");
+		String channel = payloadData.getString("com.nifcloud.mbaas.Channel");
+		boolean dialog = payloadData.containsKey("com.nifcloud.mbaas.Dialog");
+		String richUrl = payloadData.getString("com.nifcloud.mbaas.RichUrl");
 
 		String dataString = pushId + NS +
 				data + NS +
