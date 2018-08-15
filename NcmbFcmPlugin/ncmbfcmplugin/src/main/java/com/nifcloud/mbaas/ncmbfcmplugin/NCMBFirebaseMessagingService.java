@@ -45,6 +45,22 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 	private final String TAG = "NCMBFirebaseMessagingService";
 	public static final String NS = "NCMB_SPLITTER";
 
+	/**
+	 * Called if InstanceID token is updated. This may occur if the security of
+	 * the previous token had been compromised. Note that this is called when the InstanceID token
+	 * is initially generated so this is where you would retrieve the token.
+	 */
+	@Override
+	public void onNewToken(String token) {
+		// Send refesh token to update installation
+		final String saveToken = token;
+		UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", saveToken);
+			}
+		});
+	}
+
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		
