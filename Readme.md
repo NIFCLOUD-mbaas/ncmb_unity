@@ -36,6 +36,15 @@
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
+## テクニカルサポート窓口対応バージョン
+
+テクニカルサポート窓口では、1年半以内にリリースされたSDKに対してのみサポート対応させていただきます。<br>
+定期的なバージョンのアップデートにご協力ください。<br>
+※なお、mobile backend にて大規模な改修が行われた際は、1年半以内のSDKであっても対応出来ない場合がございます。<br>
+その際は[informationブログ](http://info.biz.nifty.com/mb/)にてお知らせいたします。予めご了承ください。
+
+- v3.0.0 ～ (※2018年8月時点)
+
 ## ライセンス
 
 このSDKのライセンスはApache License Version 2.0、YamlDotNet（ https://github.com/aaubry/YamlDotNet ）に従います。
