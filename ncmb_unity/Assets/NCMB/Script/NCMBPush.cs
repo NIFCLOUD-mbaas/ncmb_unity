@@ -46,7 +46,7 @@ namespace NCMB
 		static NCMBPush ()
 		{
 			#if UNITY_ANDROID && !UNITY_EDITOR
-                        m_AJClass = new AndroidJavaClass("com.nifty.cloud.mb.ncmbfcmplugin.FCMInit");
+                        m_AJClass = new AndroidJavaClass("com.nifcloud.mbaas.ncmbfcmplugin.FCMInit");
 			#endif
 			
 		}

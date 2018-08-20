@@ -1,4 +1,4 @@
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

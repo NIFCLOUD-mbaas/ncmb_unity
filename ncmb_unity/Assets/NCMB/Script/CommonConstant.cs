@@ -37,8 +37,8 @@ namespace NCMB.Internal
 	internal static class CommonConstant
 	{
 		//service
-		public static readonly string DOMAIN = "mb.api.cloud.nifty.com";//ドメイン
-		public static readonly string DOMAIN_URL = "https://mb.api.cloud.nifty.com";//ドメインのURL
+		public static readonly string DOMAIN = "mbaas.api.nifcloud.com";//ドメイン
+		public static readonly string DOMAIN_URL = "https://mbaas.api.nifcloud.com";//ドメインのURL
 
 		public static readonly string API_VERSION = "2013-09-01";//APIバージョン
 		public static readonly string SDK_VERSION = "3.2.2"; //SDKバージョン

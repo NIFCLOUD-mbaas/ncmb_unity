@@ -14,7 +14,7 @@
  * limitations under the License.
  **********/
 
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 import android.app.Activity;
 import android.content.Context;

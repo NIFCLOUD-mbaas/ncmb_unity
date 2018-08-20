@@ -57,7 +57,7 @@ namespace NCMB.Internal
 		//estimatedDataのvalueの値がオブジェクト型の場合はここで適切に変換
 		private static IDictionary<string, object> _encodeJSONObject (object value, bool allowNCMBObjects)
 		{
-			//日付型をNifty仕様に変更してクラウドに保存
+			//日付型をNcmb仕様に変更してクラウドに保存
 			if (value is DateTime) {
 				DateTime dt = (DateTime)value;
 				Dictionary<string, object> Datedic = new Dictionary<string, object> ();

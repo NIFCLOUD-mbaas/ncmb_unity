@@ -18,7 +18,7 @@ namespace NCMB
 	public class NCMBScript
 	{
 		private static readonly string SERVICE_PATH = "script";
-		private static readonly string DEFAULT_SCRIPT_ENDPOINT = "https://script.mb.api.cloud.nifty.com";
+		private static readonly string DEFAULT_SCRIPT_ENDPOINT = "https://script.mbaas.api.nifcloud.com";
 		private static readonly string DEFAULT_SCRIPT_API_VERSION = "2015-09-01";
 		private string _scriptName;
 		private MethodType _method;

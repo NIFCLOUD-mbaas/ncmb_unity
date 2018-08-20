@@ -1,4 +1,4 @@
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 /**
  * NCMBDialogPushConfiguration is used to setting of dialog push notification

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -30,11 +30,11 @@ import android.os.Build;
 public class NCMBNotificationUtils extends ContextWrapper{
     private NotificationManager mManager;
     // デフォルトチャンネルID
-    private static final String DEFAULT_CHANNEL_ID = "com.nifty.cloud.mb.push.channel";
+    private static final String DEFAULT_CHANNEL_ID = "com.nifcloud.mbaas.push.channel";
     // デフォルトチャンネル名
     private static final String DEFAULT_CHANNEL_NAME = "NCMB Push Channel";
     // デフォルトチャンネル説明
-    private static final String DEFAULT_CHANNEL_DES = "Nifty Cloud mobile backend push notification channel";
+    private static final String DEFAULT_CHANNEL_DES = "NIFCLOUD mobile backend push notification channel";
 
     public NCMBNotificationUtils(Context base) {
         super(base);

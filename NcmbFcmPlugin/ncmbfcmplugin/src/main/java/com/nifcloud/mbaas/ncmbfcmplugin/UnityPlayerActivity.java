@@ -14,7 +14,7 @@
  limitations under the License.
  **********/
 
-package com.nifty.cloud.mb.ncmbfcmplugin;
+package com.nifcloud.mbaas.ncmbfcmplugin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,13 +51,13 @@ public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity 
 		super.onResume();
 		//リッチプッシュ処理
 		NCMBPush.richPushHandler(this, getIntent());
-		getIntent().removeExtra("com.nifty.RichUrl");        //再表示させたくない場合はintentからURLを削除します
+		getIntent().removeExtra("com.nifcloud.mbaas.RichUrl");        //再表示させたくない場合はintentからURLを削除します
 
 		//開封通知処理
-		String pushId = getIntent().getStringExtra("com.nifty.PushId");        //プッシュIDがあればUnityへ送る
+		String pushId = getIntent().getStringExtra("com.nifcloud.mbaas.PushId");        //プッシュIDがあればUnityへ送る
 		if (pushId != null) {
 			UnityPlayer.UnitySendMessage("NCMBManager", "onAnalyticsReceived", pushId);    //Unityの開封通知メソッド呼び出し
-			getIntent().removeExtra("com.nifty.PushId");
+			getIntent().removeExtra("com.nifcloud.mbaas.PushId");
 		}
 		this._proxyHelper.invokeZeroParameterMethod("onResume");
 	}
