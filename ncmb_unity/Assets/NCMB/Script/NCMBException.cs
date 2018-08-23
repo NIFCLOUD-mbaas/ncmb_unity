@@ -115,6 +115,9 @@ namespace NCMB
 		/// <summary>E502003　DBエラーです。</summary>
 		public static readonly string DATABASE_ERROR = "E502003"; 
 
+		/// <summary>E404001　該当データなし</summary>
+		public static readonly string DATA_NOT_FOUND = "E404001";
+
 		/// <summary>コンストラクター。</summary>
 		public NCMBException ()
 		{

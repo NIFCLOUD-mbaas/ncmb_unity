@@ -20,12 +20,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;
@@ -39,26 +44,43 @@ public class FCMInit extends Activity {
     public static void Init(){
 
         if (checkPlayServices()) {
+            // Init firebase app
             FirebaseApp.initializeApp(UnityPlayer.currentActivity.getApplicationContext());
-            final String token = FirebaseInstanceId.getInstance().getToken();
-            Log.d("Unity", "Device Token: " + token);
-
-            if(token != null && !token.isEmpty()){
-                //Setting chanel for Android O
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    NCMBNotificationUtils utils = new NCMBNotificationUtils(UnityPlayer.currentActivity);
-                    utils.settingDefaultChannels();
-                }
-
-                UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", token);
+            if (!FirebaseApp.getApps(UnityPlayer.currentActivity.getApplicationContext()).isEmpty()) {
+                // Add listener for token
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if(task.isSuccessful()) {
+                        final String token = task.getResult().getToken();
+                        //Setting chanel for Android O
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                            NCMBNotificationUtils utils = new NCMBNotificationUtils(UnityPlayer.currentActivity);
+                            utils.settingDefaultChannels();
+                        }
+                        UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", token);
+                            }
+                        });
+                    } else{
+                        UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                UnityPlayer.UnitySendMessage("NCMBManager", "OnRegistration", "Can not get token");
+                            }
+                        });
+                    }
                     }
                 });
-            } else {
-                UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        UnityPlayer.UnitySendMessage("NCMBManager", "OnRegistration", "Can not get token");
+
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                    UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            UnityPlayer.UnitySendMessage("NCMBManager", "OnRegistration", "Can not get token");
+                        }
+                    });
                     }
                 });
             }

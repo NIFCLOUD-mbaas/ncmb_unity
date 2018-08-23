@@ -117,14 +117,39 @@ namespace  NCMB
 		}
 
 		/// <summary>
-		/// デバイストークンの取得、または設定を行います。
+		/// デバイストークンの設定を行います。
 		/// </summary>
 		public string DeviceToken {
-			get {
-				return (string)this ["deviceToken"];
-			}
 			set {
 				this ["deviceToken"] = value;
+			}
+		}
+
+		/// <summary>
+		/// デバイストークンの取得を行います。 <br/>
+		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
+		/// </summary>
+		/// <param name="callback">コールバック</param>
+		public void GetDeviceToken(NCMBGetCallback<String> callback){
+			if(this.ContainsKey("deviceToken") && this["deviceToken"] != null ){
+				callback((string)this["deviceToken"], null);
+			} else {
+				new Thread(() => {
+					for (int i = 0; i < 10; i++){
+						if (NCMBManager._token != null){
+							this["deviceToken"] = NCMBManager._token;
+							break;
+						}
+						Thread.Sleep(500);
+					}
+					if (callback != null){
+						if (this.ContainsKey("deviceToken") && this["deviceToken"] != null){
+							callback((string)this["deviceToken"], null);
+						} else {
+							callback(null, new NCMBException("Can not get device token"));
+						}
+					}
+				}).Start();
 			}
 		}
 
