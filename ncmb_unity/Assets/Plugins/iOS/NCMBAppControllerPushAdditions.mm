@@ -189,17 +189,17 @@ extern "C"
     void NCMBPushHandle(NSDictionary *userInfo)
     {
         // NCMB Handle Rich Push
-        if ([userInfo.allKeys containsObject:@"com.nifty.RichUrl"])
+        if ([userInfo.allKeys containsObject:@"com.nifcloud.mbaas.RichUrl"])
         {
             [NCMBRichPushView handleRichPush:userInfo];
         }
         
         // NCMB Handle Analytics
-        if ([userInfo.allKeys containsObject:@"com.nifty.PushId"])
+        if ([userInfo.allKeys containsObject:@"com.nifcloud.mbaas.PushId"])
         {
             if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
             {
-                NSString * pushId = [userInfo objectForKey:@"com.nifty.PushId"];
+                NSString * pushId = [userInfo objectForKey:@"com.nifcloud.mbaas.PushId"];
                 const char *pushIdConstChar = [pushId UTF8String];
                 notifyUnityWithClassName("NCMBManager","onAnalyticsReceived",pushIdConstChar);
             }
@@ -210,10 +210,10 @@ extern "C"
             NSMutableDictionary *aps = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"aps"]];
             [beforeUserInfo setObject:aps forKey:@"aps"];
             if([[aps objectForKey:@"alert"] objectForKey:@"title"]){
-                [beforeUserInfo setObject:[[aps objectForKey:@"alert"] objectForKey:@"title"] forKey:@"com.nifty.Title"]; //Titleを追加
+                [beforeUserInfo setObject:[[aps objectForKey:@"alert"] objectForKey:@"title"] forKey:@"com.nifcloud.mbaas.Title"]; //Titleを追加
             }
             if([[aps objectForKey:@"alert"] objectForKey:@"body"]){
-                [beforeUserInfo setObject:[[aps objectForKey:@"alert"] objectForKey:@"body"] forKey:@"com.nifty.Message"]; //Messageを追加
+                [beforeUserInfo setObject:[[aps objectForKey:@"alert"] objectForKey:@"body"] forKey:@"com.nifcloud.mbaas.Message"]; //Messageを追加
             }
             userInfo = (NSMutableDictionary *)beforeUserInfo;
         }

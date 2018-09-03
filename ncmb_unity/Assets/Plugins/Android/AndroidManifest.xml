@@ -5,24 +5,16 @@
 	<!-- Put your package name here. -->
 
 	 <uses-sdk android:minSdkVersion="14"/>
-
-    <!-- [START gcm_permission] -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- Put your package name here. -->
-    <permission android:name="YOUR_PACKAGE_NAME.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-    <!-- Put your package name here. -->
-    <uses-permission android:name="YOUR_PACKAGE_NAME.permission.C2D_MESSAGE" />
-    <!-- [END gcm_permission] -->
+
 
     <application
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:debuggable="true">
         <!-- <meta-data android:name="smallIcon" android:resource="@drawable/comment_icon"/> -->
-        <!-- UNITY PLAYER ACTIVITIES ( [WARNING] if use Prime31, edit 'com.nifty.cloud.mb.ncmbgcmplugin' to 'com.prime31' at android:name of 3 these activities) -->
-        <activity android:name="com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerProxyActivity"
+        <!-- UNITY PLAYER ACTIVITIES ( [WARNING] if use Prime31, edit 'com.nifcloud.mbaas.ncmbfcmplugin' to 'com.prime31' at android:name of 3 these activities) -->
+        <activity android:name="com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerProxyActivity"
             android:label="@string/app_name"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
             <intent-filter>
@@ -31,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerActivity"
+        <activity android:name="com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerActivity"
             android:launchMode="singleTop"
             android:label="@string/app_name"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
@@ -41,48 +33,17 @@
             
 		<!---ダイアログ -->
 		<activity
-  			android:name="com.nifty.cloud.mb.ncmbgcmplugin.NCMBDialogActivity"
+  			android:name="com.nifcloud.mbaas.ncmbfcmplugin.NCMBDialogActivity"
     		android:excludeFromRecents="true"
     		android:launchMode="singleInstance"
     		android:noHistory="true"
     		android:theme="@android:style/Theme.Wallpaper.NoTitleBar">
 		</activity>
                
-        <!-- [START gcm_receiver] -->
-        <receiver
-            android:name="com.nifty.cloud.mb.ncmbgcmplugin.NCMBGcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+        <service android:name="com.nifcloud.mbaas.ncmbfcmplugin.NCMBFirebaseMessagingService" android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <!-- Put your package name here. -->
-                <category android:name="YOUR_PACKAGE_NAME" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </receiver>
-        <!-- [END gcm_receiver] -->
-
-        <!-- [START gcm_listener] -->
-        <service
-            android:name="com.nifty.cloud.mb.ncmbgcmplugin.NCMBDialogListenerService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
-        <!-- [END gcm_listener] -->
-        <!-- [START instanceId_listener] -->
-        <service
-            android:name="com.nifty.cloud.mb.ncmbgcmplugin.NCMBInstanceIDListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
-            </intent-filter>
-        </service>
-        <!-- [END instanceId_listener] -->
-        <service
-            android:name="com.nifty.cloud.mb.ncmbgcmplugin.RegistrationIntentService"
-            android:exported="false">
         </service>
 
         <meta-data

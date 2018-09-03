@@ -46,8 +46,9 @@ namespace NCMB
 		static NCMBPush ()
 		{
 			#if UNITY_ANDROID && !UNITY_EDITOR
-			m_AJClass = new AndroidJavaClass("com.nifty.cloud.mb.ncmbgcmplugin.GCMInit");
+                        m_AJClass = new AndroidJavaClass("com.nifcloud.mbaas.ncmbfcmplugin.FCMInit");
 			#endif
+			
 		}
 
 		/// <summary>
@@ -58,15 +59,12 @@ namespace NCMB
 		{
 		}
 		#if UNITY_ANDROID
-		public static void Register (string senderId) 	
+		public static void Register () 	
 		{ 	
-			if (!string.IsNullOrEmpty (senderId)) { 	
 				
-
 #if !UNITY_EDITOR
-				m_AJClass.CallStatic("InitSenderId", senderId); 	
-		#endif
-			} 	
+				m_AJClass.CallStatic("Init"); 	
+		#endif	
 		} 	
 
 #elif UNITY_IOS
@@ -78,14 +76,12 @@ namespace NCMB
 		} 	
 		#endif
 		#if UNITY_ANDROID
-	public static void RegisterWithLocation (string senderId) 	
-	{ 	
-		if (!string.IsNullOrEmpty (senderId)) { 	
+	public static void RegisterWithLocation () 	
+	{ 		
 
 #if !UNITY_EDITOR
-			m_AJClass.CallStatic("InitSenderIdWithLocation", senderId); 	
+			m_AJClass.CallStatic("Init"); 	
 		#endif
-		} 	
 	} 	
 
 #elif UNITY_IOS
