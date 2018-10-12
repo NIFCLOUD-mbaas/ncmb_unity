@@ -14,6 +14,9 @@ namespace NCMB
 	public class NCMBFile : NCMBObject
 	{
 		
+		// Time out 120 sec
+		private static readonly int FILE_REQUEST_TIME_OUT = 120;
+
 		/// <summary>
 		/// ファイル名の取得、または設定を行います。
 		/// </summary>
@@ -100,7 +103,7 @@ namespace NCMB
 			IDictionary<string, INCMBFieldOperation> currentOperations = null;
 			currentOperations = this.StartSave ();
 			string content = _toJSONObjectForSaving (currentOperations);
-			NCMBConnection con = new NCMBConnection (_getBaseUrl (), type, content, NCMBUser._getCurrentSessionToken (), this);
+			NCMBConnection con = new NCMBConnection (_getBaseUrl (), type, content, NCMBUser._getCurrentSessionToken (), this, NCMBSettings.DomainURL, FILE_REQUEST_TIME_OUT);
 			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
 				try {
 					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
@@ -145,7 +148,7 @@ namespace NCMB
 			}
 				
 			// 通信処理
-			NCMBConnection con = new NCMBConnection (_getBaseUrl (), ConnectType.GET, null, NCMBUser._getCurrentSessionToken (), this);
+			NCMBConnection con = new NCMBConnection (_getBaseUrl (), ConnectType.GET, null, NCMBUser._getCurrentSessionToken (), this, NCMBSettings.DomainURL, FILE_REQUEST_TIME_OUT);
 			con.Connect (delegate(int statusCode, byte[] responseData, NCMBException error) {
 				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
 				this.estimatedData ["fileData"] = responseData;

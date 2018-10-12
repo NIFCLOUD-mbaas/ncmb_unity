@@ -9,6 +9,7 @@ using System.Collections;
 using System.Text;
 using NCMB.Internal;
 using System.Security.Cryptography;
+using System.Threading;
 
 public class MockServer
 {
@@ -32,7 +33,7 @@ public class MockServer
 	private static string DATA_PATH_DEFAULT = "PlayModeTest/mbaas.yaml";
 	//Dictionary to store all mock data
 	Dictionary<string, List<MockServerObject>> mockObjectDic = new Dictionary<string, List<MockServerObject>> ();
-    Uri _domainUri = new Uri(NCMBTestSettings.DOMAIN_URL);
+	Uri _domainUri = new Uri(NCMBTestSettings.DOMAIN_URL);
 
 	public MockServer()
 	{
@@ -142,6 +143,11 @@ public class MockServer
             string signature = _makeResponseSignature(request, mockObj.responseJson);
             response.AddHeader("X-NCMB-Response-Signature", signature);
         }
+
+        if(mockObj.delay > 0){
+            Thread.Sleep(mockObj.delay);
+        }
+
         //Set status code
 		response.StatusCode = mockObj.status;
 		byte[] buffer = System.Text.Encoding.UTF8.GetBytes (mockObj.responseJson);
@@ -217,6 +223,12 @@ public class MockServer
             if (response.Children.Keys.Contains(new YamlScalarNode("X-NCMB-Response-Signature")))
             {
                 mock.responseSignature = true;
+            }
+
+            if (response.Children.Keys.Contains(new YamlScalarNode("delay")))
+            {
+                YamlScalarNode delay = (YamlScalarNode)response.Children [new YamlScalarNode ("delay")];
+                mock.delay = Convert.ToInt32 (delay.Value);;
             }
 
 			YamlScalarNode status = (YamlScalarNode)response.Children [new YamlScalarNode ("status")];

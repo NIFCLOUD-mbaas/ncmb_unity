@@ -349,6 +349,16 @@ response:
 ---
 request:
   url: 2013-09-01/classes/TestClass
+  method: POST
+  body:
+    key: \"timeout-test\"
+response:
+  status: 201
+  file: /json/post_success_response.json
+  delay: 12000
+---
+request:
+  url: 2013-09-01/classes/TestClass
   method: GET
   query:
     where:
@@ -428,6 +438,7 @@ request:
 response:
   status: 200
   file: /json/create_date_response.json
+  delay: 12000
 ---
 request:
   url: 2013-09-01/files/test.txt
@@ -435,6 +446,7 @@ request:
 response:
   status: 200
   file: /json/file_hello_response.json
+  delay: 12000
 ---
 request:
   url: 2013-09-01/users
