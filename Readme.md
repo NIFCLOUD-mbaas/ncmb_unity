@@ -32,7 +32,7 @@
 
 - Unity 5.3~/Unity 2017.x~2018.x
 - Android 4.2~8.x
-- iOS 9.x〜11.x
+- iOS 9.x〜12.x
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
