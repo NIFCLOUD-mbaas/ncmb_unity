@@ -31,7 +31,7 @@
 ## 動作環境
 
 - Unity 5.3~/Unity 2017.x~2018.x
-- Android 4.2~8.x
+- Android 4.2~9.x
 - iOS 10.x〜12.x
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
