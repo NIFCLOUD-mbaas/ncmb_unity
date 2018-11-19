@@ -27,6 +27,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -40,6 +41,12 @@ import java.util.TimeZone;
 
 //FCMの初期化処理を扱います
 public class FCMInit extends Activity {
+    private static final String CANNOT_GET_DEVICE_TOKEN_MESSAGE =
+            "Can not get device token, please check your google-service.json";
+    private static final String NOT_SUPPORT_PLAY_SERVICE_MESSAGE =
+             "This device is not supported google-play-services-APK.";
+    private static final String CAN_NOT_GET_TOKEN_MESSAGE =
+            "Can not get device token";
 
     public static void Init(){
 
@@ -47,46 +54,50 @@ public class FCMInit extends Activity {
             // Init firebase app
             FirebaseApp.initializeApp(UnityPlayer.currentActivity.getApplicationContext());
             if (!FirebaseApp.getApps(UnityPlayer.currentActivity.getApplicationContext()).isEmpty()) {
-                // Add listener for token
+
+                //On Complete Listener
                 FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                    if(task.isSuccessful()) {
-                        final String token = task.getResult().getToken();
-                        //Setting chanel for Android O
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                            NCMBNotificationUtils utils = new NCMBNotificationUtils(UnityPlayer.currentActivity);
-                            utils.settingDefaultChannels();
+                        if(task.isSuccessful()) {
+                            final String token = task.getResult().getToken();
+                            //Setting chanel for Android O
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                                NCMBNotificationUtils utils = new NCMBNotificationUtils(UnityPlayer.currentActivity);
+                                utils.settingDefaultChannels();
+                            }
+                            //Save recent token
+                            NCMBNotificationUtils.saveRecentToken(token);
+                            //Send token to NCMBManager
+                            sendMessageToManager("onTokenReceived", token);
+                        } else{
+                            sendMessageToManager("OnRegistration", CANNOT_GET_DEVICE_TOKEN_MESSAGE);
                         }
-                        UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
-                            public void run() {
-                                UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", token);
-                            }
-                        });
-                    } else{
-                        UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
-                            public void run() {
-                                UnityPlayer.UnitySendMessage("NCMBManager", "OnRegistration", "Can not get token");
-                            }
-                        });
-                    }
                     }
                 });
 
+                //On Canceled Listener
                 FirebaseInstanceId.getInstance().getInstanceId().addOnCanceledListener(new OnCanceledListener() {
                     @Override
                     public void onCanceled() {
-                    UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            UnityPlayer.UnitySendMessage("NCMBManager", "OnRegistration", "Can not get token");
-                        }
-                    });
+                        sendMessageToManager("OnRegistration", CANNOT_GET_DEVICE_TOKEN_MESSAGE);
                     }
                 });
+
+                //On Failure Listener
+                FirebaseInstanceId.getInstance().getInstanceId().addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Error", e.toString());
+                        sendMessageToManager("OnRegistration", CANNOT_GET_DEVICE_TOKEN_MESSAGE);
+                    }
+                });
+            } else {
+                sendMessageToManager("OnRegistration", CANNOT_GET_DEVICE_TOKEN_MESSAGE);
             }
 
         } else {
-            UnityPlayer.UnitySendMessage("NCMBManager", "OnRegistration", "This device is not supported google-play-services-APK.");
+            sendMessageToManager("OnRegistration", NOT_SUPPORT_PLAY_SERVICE_MESSAGE);
         }
     }
 
@@ -134,5 +145,16 @@ public class FCMInit extends Activity {
         }
 
         return json.toString();
+    }
+
+    /**
+     * Send message to NCMBManager
+     */
+    protected static void sendMessageToManager(final String method, final String message){
+        UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                UnityPlayer.UnitySendMessage("NCMBManager", method, message);
+            }
+        });
     }
 }

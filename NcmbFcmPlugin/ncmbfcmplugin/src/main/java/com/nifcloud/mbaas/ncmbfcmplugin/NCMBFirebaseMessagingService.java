@@ -52,13 +52,17 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 	 */
 	@Override
 	public void onNewToken(String token) {
-		// Send refesh token to update installation
+
 		final String saveToken = token;
-		UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
-			public void run() {
-				UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", saveToken);
-			}
-		});
+		String recentToken = NCMBNotificationUtils.getRecentToken();
+
+		// Send refesh token to update installation
+		if ( !recentToken.isEmpty() && token.compareTo(recentToken) != 0 ) {
+			// Save recent token
+			NCMBNotificationUtils.saveRecentToken(token);
+			// Send token to NCMBManager
+			FCMInit.sendMessageToManager("onTokenReceived", saveToken);
+		}
 	}
 
 	@Override

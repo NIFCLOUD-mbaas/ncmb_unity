@@ -131,25 +131,23 @@ namespace  NCMB
 		/// </summary>
 		/// <param name="callback">コールバック</param>
 		public void GetDeviceToken(NCMBGetCallback<String> callback){
-			if(this.ContainsKey("deviceToken") && this["deviceToken"] != null ){
+			if (NCMBDeviceTokenCallbackQueue.GetInstance().isDuringSaveInstallation())
+			{
+				NCMBDeviceTokenCallbackQueue.GetInstance().addQueue(callback);
+				return;
+			}
+
+			if (this.ContainsKey("deviceToken") && this["deviceToken"] != null)
+			{
 				callback((string)this["deviceToken"], null);
-			} else {
-				new Thread(() => {
-					for (int i = 0; i < 10; i++){
-						if (NCMBManager._token != null){
-							this["deviceToken"] = NCMBManager._token;
-							break;
-						}
-						Thread.Sleep(500);
-					}
-					if (callback != null){
-						if (this.ContainsKey("deviceToken") && this["deviceToken"] != null){
-							callback((string)this["deviceToken"], null);
-						} else {
-							callback(null, new NCMBException("Can not get device token"));
-						}
-					}
-				}).Start();
+				return;
+			} 
+			else
+			{
+				NCMBDeviceTokenCallbackQueue.GetInstance().addQueue(callback);
+				#if UNITY_ANDROID
+				NCMBPush.Register();
+				#endif
 			}
 		}
 

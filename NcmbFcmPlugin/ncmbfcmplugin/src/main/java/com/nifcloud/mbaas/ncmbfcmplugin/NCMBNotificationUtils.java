@@ -21,8 +21,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+
+import com.unity3d.player.UnityPlayer;
 
 /**
  * The NCMBNotificationUtils Class contains register channel and get channel method
@@ -64,5 +67,18 @@ public class NCMBNotificationUtils extends ContextWrapper{
 
     public static String getDefaultChannel(){
         return DEFAULT_CHANNEL_ID;
+    }
+
+    protected static void saveRecentToken(String token){
+        SharedPreferences.Editor editor = UnityPlayer.currentActivity
+                .getSharedPreferences("ncmbToken", Context.MODE_PRIVATE).edit();
+        editor.putString("recentToken", token);
+        editor.commit();
+    }
+
+    protected static String getRecentToken(){
+        SharedPreferences recentTokenPref = UnityPlayer.currentActivity
+                .getSharedPreferences("ncmbToken", Context.MODE_PRIVATE);
+        return recentTokenPref.getString("recentToken", "");
     }
 }
