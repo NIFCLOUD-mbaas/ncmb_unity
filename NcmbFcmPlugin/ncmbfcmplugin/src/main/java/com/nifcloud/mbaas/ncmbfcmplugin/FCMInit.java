@@ -41,8 +41,6 @@ import java.util.TimeZone;
 
 //FCMの初期化処理を扱います
 public class FCMInit extends Activity {
-    private static final String CANNOT_GET_DEVICE_TOKEN_MESSAGE =
-            "Can not get device token, please check your google-service.json";
     private static final String NOT_SUPPORT_PLAY_SERVICE_MESSAGE =
              "This device is not supported google-play-services-APK.";
     private static final String CAN_NOT_GET_TOKEN_MESSAGE =
@@ -71,7 +69,7 @@ public class FCMInit extends Activity {
                             //Send token to NCMBManager
                             sendMessageToManager("onTokenReceived", token);
                         } else{
-                            sendMessageToManager("OnRegistration", CANNOT_GET_DEVICE_TOKEN_MESSAGE);
+                            sendMessageToManager("OnRegistration", CAN_NOT_GET_TOKEN_MESSAGE);
                         }
                     }
                 });
@@ -80,7 +78,7 @@ public class FCMInit extends Activity {
                 FirebaseInstanceId.getInstance().getInstanceId().addOnCanceledListener(new OnCanceledListener() {
                     @Override
                     public void onCanceled() {
-                        sendMessageToManager("OnRegistration", CANNOT_GET_DEVICE_TOKEN_MESSAGE);
+                        sendMessageToManager("OnRegistration", CAN_NOT_GET_TOKEN_MESSAGE);
                     }
                 });
 
@@ -89,11 +87,11 @@ public class FCMInit extends Activity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("Error", e.toString());
-                        sendMessageToManager("OnRegistration", CANNOT_GET_DEVICE_TOKEN_MESSAGE);
+                        sendMessageToManager("OnRegistration", CAN_NOT_GET_TOKEN_MESSAGE);
                     }
                 });
             } else {
-                sendMessageToManager("OnRegistration", CANNOT_GET_DEVICE_TOKEN_MESSAGE);
+                sendMessageToManager("OnRegistration", CAN_NOT_GET_TOKEN_MESSAGE);
             }
 
         } else {
