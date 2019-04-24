@@ -689,9 +689,13 @@ namespace  NCMB
 			this.LogInWithAuthDataAsync (null);
 		}
 
+		/// <summary>
+		/// 非同期処理で匿名認証を用いて、ユーザを登録します。<br/>
+		/// </summary>
+		/// <param name="callback">コールバック</param>
 		public void LoginWithAnonymousAsync(NCMBCallback callback)
-        {
-			string randomUUID = System.Guid.NewGuid().ToString();
+		{
+			string randomUUID = createUUID();
 			Dictionary<string, object> param = new Dictionary<string, object>();
 			Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
 				{ "id",  randomUUID}
@@ -699,24 +703,29 @@ namespace  NCMB
 			param.Add("anonymous", anonymousParam);
 
 			this.AuthData = param;
-            SignUpAsync((NCMBException error) => {
-                if (error != null)
-                {
-                    // authDataの削除
-                    this.AuthData.Clear();
-                }
+			SignUpAsync((NCMBException error) => {
+				if (error != null)
+				{
+					// authDataの削除
+					this.AuthData.Clear();
+				}
 
-                if (callback != null)
-                {
-                    // callbackを実施
-                    callback(error);
-                }
-            });
-        }
-        public void LoginWithAnonymousAsync()
-        {
-            this.LoginWithAnonymousAsync(null);
-        }
+				if (callback != null)
+				{
+					// callbackを実施
+					callback(error);
+				}
+			});
+		}
+
+		/// <summary>
+		/// 非同期処理で匿名認証を用いて、ユーザを登録します。<br/>
+		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+		/// </summary>
+		public void LoginWithAnonymousAsync()
+		{
+			this.LoginWithAnonymousAsync(null);
+		}
 
 		/// <summary>
 		/// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
@@ -882,6 +891,10 @@ namespace  NCMB
 			}
 
 			return authData;
+		}
+
+		static String createUUID() {
+			return System.Guid.NewGuid().ToString();
 		}
 	}
 }
