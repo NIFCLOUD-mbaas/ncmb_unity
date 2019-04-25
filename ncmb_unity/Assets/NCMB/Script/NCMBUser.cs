@@ -690,6 +690,44 @@ namespace  NCMB
 		}
 
 		/// <summary>
+		/// 非同期処理で匿名認証を用いて、ユーザを登録します。<br/>
+		/// </summary>
+		/// <param name="callback">コールバック</param>
+		public void LoginWithAnonymousAsync(NCMBCallback callback)
+		{
+			string randomUUID = createUUID();
+			Dictionary<string, object> param = new Dictionary<string, object>();
+			Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
+				{ "id",  randomUUID}
+			};
+			param.Add("anonymous", anonymousParam);
+
+			this.AuthData = param;
+			SignUpAsync((NCMBException error) => {
+				if (error != null)
+				{
+					// authDataの削除
+					this.AuthData.Clear();
+				}
+
+				if (callback != null)
+				{
+					// callbackを実施
+					callback(error);
+				}
+			});
+		}
+
+		/// <summary>
+		/// 非同期処理で匿名認証を用いて、ユーザを登録します。<br/>
+		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+		/// </summary>
+		public void LoginWithAnonymousAsync()
+		{
+			this.LoginWithAnonymousAsync(null);
+		}
+
+		/// <summary>
 		/// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
 		/// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
 		/// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
@@ -752,10 +790,10 @@ namespace  NCMB
 				throw new NCMBException (new ArgumentException ("Current User authData not exist"));
 			}
 
-			List<string> providerList = new List<string> () { "facebook", "twitter" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
 
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
 			}
 				
 			// authDataの退避
@@ -800,10 +838,10 @@ namespace  NCMB
 		/// <returns> true:登録済　false:未登録 </returns>
 		public bool IsLinkWith (string provider)
 		{
-			List<string> providerList = new List<string> () { "facebook", "twitter" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
 
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
 			}
 
 			if (this.AuthData == null) {
@@ -820,9 +858,9 @@ namespace  NCMB
 		/// <returns>指定されたSNSのauthData</returns>
 		public Dictionary<string, object> GetAuthDataForProvider (string provider)
 		{
-			List<string> providerList = new List<string> () { "facebook", "twitter" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
 			}
 
 			Dictionary<string, object> authData = new Dictionary<string, object> ();
@@ -845,9 +883,18 @@ namespace  NCMB
 				authData.Add ("oauth_token", twitterParam ["oauth_token"]);
 				authData.Add ("oauth_token_secret", twitterParam ["oauth_token_secret"]);
 				break;
+			case "anonymous":
+				var anonymousAuthData = (Dictionary<string, object>)this ["authData"];
+				var anonymousParam = (Dictionary<string, object>)anonymousAuthData ["anonymous"];
+				authData.Add ("id", anonymousParam ["id"]);
+				break;
 			}
 
 			return authData;
+		}
+
+		static String createUUID() {
+			return System.Guid.NewGuid().ToString();
 		}
 	}
 }
