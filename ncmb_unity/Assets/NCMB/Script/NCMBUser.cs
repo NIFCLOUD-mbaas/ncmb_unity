@@ -23,6 +23,9 @@ using MiniJSON;
 using NCMB.Internal;
 using System.Linq;
 using UnityEngine;
+#if UNITY_2017_3_OR_NEWER
+using UnityEngine.Networking;
+#endif
 
 namespace  NCMB
 {
@@ -505,7 +508,11 @@ namespace  NCMB
 			string result = url;
 			foreach (KeyValuePair<string, object> pair in parameter) {
 				//result += pair.Key + "=" + NCMBUtility._encodeString ((string)pair.Value) + "&"; //**Encoding が必要
-				result += pair.Key + "=" + WWW.EscapeURL ((string)pair.Value) + "&"; //**Encoding が必要
+				#if UNITY_2017_3_OR_NEWER
+					result += pair.Key + "=" + UnityWebRequest.EscapeURL ((string)pair.Value) + "&"; //**Encoding が必要
+				#else
+					result += pair.Key + "=" + WWW.EscapeURL((string)pair.Value) + "&"; //**Encoding が必要
+				#endif
 			}
 			if (parameter.Count > 0) {
 				result = result.Remove (result.Length - 1);
