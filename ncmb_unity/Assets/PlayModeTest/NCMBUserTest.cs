@@ -507,7 +507,7 @@ public class NCMBUserTest
 		Assert.AreEqual ("dummyObjectId", user.ObjectId);
 
 		// 登録成功の確認
-		Assert.IsNotEmpty (NCMBUser._getCurrentSessionToken ());
+		Assert.IsEmpty (NCMBUser._getCurrentSessionToken ());
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
     /**
