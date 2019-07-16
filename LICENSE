@@ -1,4 +1,4 @@
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
                                  Apache License
                            Version 2.0, January 2004
@@ -207,4 +207,3 @@
                 Copyright (c) 2013 Calvin Rien
            Based on the JSON parser by Patrick van Bergen
    http://techblog.procurios.nl/k/618/news/view/14605/14863/How-do-I-write-my-own-parser-for-JSON.html
-
