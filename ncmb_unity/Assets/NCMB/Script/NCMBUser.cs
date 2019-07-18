@@ -23,6 +23,9 @@ using MiniJSON;
 using NCMB.Internal;
 using System.Linq;
 using UnityEngine;
+#if UNITY_2017_3_OR_NEWER
+using UnityEngine.Networking;
+#endif
 
 namespace  NCMB
 {
@@ -214,8 +217,15 @@ namespace  NCMB
         	//save後処理 　オーバーライド用　ローカルのcurrentUserを反映する
 		internal override void _afterSave (int statusCode, NCMBException error)
 		{
-			if ((statusCode == 201 || statusCode == 200) && error == null) {
-				_saveCurrentUser ((NCMBUser)this);
+			// Base on AuthData 
+			if (statusCode == 201 && this.AuthData != null && error == null) {
+				_saveCurrentUser((NCMBUser)this);
+			} else if (statusCode == 200 && error == null) {
+				// Base on SessionToken 
+				if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
+					this.SessionToken = _currentUser.SessionToken;
+					_saveCurrentUser((NCMBUser)this);
+				}
 			}
 		}
 
@@ -505,7 +515,11 @@ namespace  NCMB
 			string result = url;
 			foreach (KeyValuePair<string, object> pair in parameter) {
 				//result += pair.Key + "=" + NCMBUtility._encodeString ((string)pair.Value) + "&"; //**Encoding が必要
-				result += pair.Key + "=" + WWW.EscapeURL ((string)pair.Value) + "&"; //**Encoding が必要
+				#if UNITY_2017_3_OR_NEWER
+					result += pair.Key + "=" + UnityWebRequest.EscapeURL ((string)pair.Value) + "&"; //**Encoding が必要
+				#else
+					result += pair.Key + "=" + WWW.EscapeURL((string)pair.Value) + "&"; //**Encoding が必要
+				#endif
 			}
 			if (parameter.Count > 0) {
 				result = result.Remove (result.Length - 1);
@@ -690,6 +704,44 @@ namespace  NCMB
 		}
 
 		/// <summary>
+		/// 非同期処理で匿名認証を用いて、ユーザを登録します。<br/>
+		/// </summary>
+		/// <param name="callback">コールバック</param>
+		public void LoginWithAnonymousAsync(NCMBCallback callback)
+		{
+			string randomUUID = createUUID();
+			Dictionary<string, object> param = new Dictionary<string, object>();
+			Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
+				{ "id",  randomUUID}
+			};
+			param.Add("anonymous", anonymousParam);
+
+			this.AuthData = param;
+			SignUpAsync((NCMBException error) => {
+				if (error != null)
+				{
+					// authDataの削除
+					this.AuthData.Clear();
+				}
+
+				if (callback != null)
+				{
+					// callbackを実施
+					callback(error);
+				}
+			});
+		}
+
+		/// <summary>
+		/// 非同期処理で匿名認証を用いて、ユーザを登録します。<br/>
+		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
+		/// </summary>
+		public void LoginWithAnonymousAsync()
+		{
+			this.LoginWithAnonymousAsync(null);
+		}
+
+		/// <summary>
 		/// 非同期処理で現在ログインしているユーザに、authDataの追加を行います。<br/>
 		/// authDataが登録されていないユーザならログインし、authDataの登録を行います。<br/>
 		/// authDataが登録されているユーザなら、authDataの追加を行います。<br/>
@@ -752,10 +804,10 @@ namespace  NCMB
 				throw new NCMBException (new ArgumentException ("Current User authData not exist"));
 			}
 
-			List<string> providerList = new List<string> () { "facebook", "twitter" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
 
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
 			}
 				
 			// authDataの退避
@@ -800,10 +852,10 @@ namespace  NCMB
 		/// <returns> true:登録済　false:未登録 </returns>
 		public bool IsLinkWith (string provider)
 		{
-			List<string> providerList = new List<string> () { "facebook", "twitter" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
 
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
 			}
 
 			if (this.AuthData == null) {
@@ -820,9 +872,9 @@ namespace  NCMB
 		/// <returns>指定されたSNSのauthData</returns>
 		public Dictionary<string, object> GetAuthDataForProvider (string provider)
 		{
-			List<string> providerList = new List<string> () { "facebook", "twitter" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
 			}
 
 			Dictionary<string, object> authData = new Dictionary<string, object> ();
@@ -845,9 +897,18 @@ namespace  NCMB
 				authData.Add ("oauth_token", twitterParam ["oauth_token"]);
 				authData.Add ("oauth_token_secret", twitterParam ["oauth_token_secret"]);
 				break;
+			case "anonymous":
+				var anonymousAuthData = (Dictionary<string, object>)this ["authData"];
+				var anonymousParam = (Dictionary<string, object>)anonymousAuthData ["anonymous"];
+				authData.Add ("id", anonymousParam ["id"]);
+				break;
 			}
 
 			return authData;
+		}
+
+		static String createUUID() {
+			return System.Guid.NewGuid().ToString();
 		}
 	}
 }

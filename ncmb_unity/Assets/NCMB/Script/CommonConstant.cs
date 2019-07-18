@@ -41,7 +41,7 @@ namespace NCMB.Internal
 		public static readonly string DOMAIN_URL = "https://mbaas.api.nifcloud.com";//ドメインのURL
 
 		public static readonly string API_VERSION = "2013-09-01";//APIバージョン
-		public static readonly string SDK_VERSION = "4.0.0"; //SDKバージョン
+		public static readonly string SDK_VERSION = "4.0.1"; //SDKバージョン
 		//DEBUG LOG Setting: NCMBDebugにてdefine設定をしてください
 	}
 }
