@@ -291,6 +291,8 @@ NSInteger pushDelayCount = 0;
         const char * deviceTokenConstChar = [tokenId UTF8String];
         //Unityへデバイストークンを送り、UnityからmBaaS backendのinstallationクラスへ保存します
         notifyUnityWithClassName("NCMBManager", "onTokenReceived", deviceTokenConstChar);
+    } else {
+        NSLog(@"[NCMB]: 不正なデバイストークのため、端末登録を行いません");
     }
 }
 
