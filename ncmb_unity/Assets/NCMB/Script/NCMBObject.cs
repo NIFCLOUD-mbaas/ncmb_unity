@@ -1051,16 +1051,16 @@ namespace NCMB
 			NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
 			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
 				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-				Dictionary<string, object> responseDic = null;
 				try {
-					if (responseData != null) {
-						responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;//***
-					}
-
 					if (error != null) {
 						this._handleFetchResult (false, null);
 						//this.printLog ("DEBUG FETCHASYNC AFTER (FAIL)", null, null);
 					} else {
+						Dictionary<string, object> responseDic = null;
+						if ((responseData != null) && (responseData != ""))
+						{
+							responseDic = MiniJSON.Json.Deserialize(responseData) as Dictionary<string, object>;
+						}
 						this._handleFetchResult (true, responseDic);
 						//this.printLog ("DEBUG FETCHASYNC AFTER (SUCCESS)", null, null);
 					}

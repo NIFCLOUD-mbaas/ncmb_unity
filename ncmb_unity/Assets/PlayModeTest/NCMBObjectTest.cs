@@ -67,6 +67,53 @@ public class NCMBObjectTest
 		Assert.AreEqual ("http://localhost:3000/2013-09-01/classes/TestClass", method.Invoke (obj, null).ToString ());
 	}
 
+    [UnityTest]
+    public IEnumerator FetchAsyncAuthenticationError()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) => {
+            Assert.Null(e);
+
+            NCMBUser.CurrentUser.SessionToken = "invalidToken";
+            NCMBUser.CurrentUser._currentOperations.Clear();
+
+            NCMBObject testObject = new NCMBObject("testclass");
+            testObject.ObjectId = "testclassDummyObjectId";
+
+            testObject.FetchAsync((NCMBException ex) =>
+            {
+                Assert.NotNull(ex);
+                Assert.AreEqual("E401001", ex.ErrorCode);
+                Assert.AreEqual("Authentication error by header incorrect.", ex.ErrorMessage);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+    }
+
+    [UnityTest]
+    public IEnumerator FetchAsyncDataNotAvailable()
+    {
+        // テストデータ作成
+        NCMBObject testObject = new NCMBObject("testclass");
+        testObject.ObjectId = "testclassInvalidObjectId";
+
+        testObject.FetchAsync((NCMBException ex) =>
+        {
+            Assert.NotNull(ex);
+            Assert.AreEqual("E404001", ex.ErrorCode);
+            Assert.AreEqual("No data available.", ex.ErrorMessage);
+            NCMBTestSettings.CallbackFlag = true;
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+    }
+
 
     [UnityTest]
     public IEnumerator FetchObjectAfterLogin()

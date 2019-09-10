@@ -28,6 +28,20 @@ response:
   file: /json/login_response.json
 ---
 request:
+  url: 2013-09-01/users/dummyObjectIdError
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
+---
+request:
+  url: 2013-09-01/users/invalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
   url: 2013-09-01/logout
   method: GET
   body:
@@ -609,6 +623,20 @@ response:
   file: /json/get_object_test_response.json
 ---
 request:
+  url: 2013-09-01/roles/roleDummyObjectId
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
+---
+request:
+  url: 2013-09-01/roles/roleInvalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
   url: 2013-09-01/roles/dummyObjectId
   method: PUT
   body:
@@ -633,5 +661,47 @@ request:
 response:
   status: 200
   file: /json/get_user_test_response.json
+---
+request:
+  url: 2013-09-01/classes/testclass/testclassInvalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
+  url: 2013-09-01/classes/testclass/testclassDummyObjectId
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
+---
+request:
+  url: 2013-09-01/installations/instllInvalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
+  url: 2013-09-01/installations/instllDummyObjectId
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
+---
+request:
+  url: 2013-09-01/push/pushInvalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
+  url: 2013-09-01/push/pushDummyObjectId
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
 ...
 
