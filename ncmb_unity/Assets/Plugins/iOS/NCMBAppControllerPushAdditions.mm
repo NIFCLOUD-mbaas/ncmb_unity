@@ -282,13 +282,18 @@ NSInteger pushDelayCount = 0;
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     //deviceTokenをNSData *からconst char *へ変換します
-    NSMutableString *tokenId = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@",deviceToken]];
-    [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@" " withString:@""]]; //余計な文字を消す
-    [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@"<" withString:@""]];
-    [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@">" withString:@""]];
-    const char * deviceTokenConstChar = [tokenId UTF8String];
-    //Unityへデバイストークンを送り、UnityからmBaaS backendのinstallationクラスへ保存します
-    notifyUnityWithClassName("NCMBManager", "onTokenReceived", deviceTokenConstChar);
+    if ([deviceToken isKindOfClass:[NSData class]] && [deviceToken length] != 0){
+        unsigned char *dataBuffer = (unsigned char*)deviceToken.bytes;
+        NSMutableString *tokenId = [NSMutableString stringWithCapacity:(deviceToken.length * 2)];
+        for (int i = 0; i < deviceToken.length; ++i) {
+            [tokenId appendFormat:@"%02x", dataBuffer[i]];
+        }
+        const char * deviceTokenConstChar = [tokenId UTF8String];
+        //Unityへデバイストークンを送り、UnityからmBaaS backendのinstallationクラスへ保存します
+        notifyUnityWithClassName("NCMBManager", "onTokenReceived", deviceTokenConstChar);
+    } else {
+        NSLog(@"[NCMB]: 不正なデバイストークのため、端末登録を行いません");
+    }
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
