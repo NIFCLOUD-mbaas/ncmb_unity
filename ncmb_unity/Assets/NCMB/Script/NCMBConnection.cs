@@ -69,7 +69,7 @@ namespace NCMB.Internal
 		private static readonly string HEADER_USER_AGENT_VALUE = "unity-" + CommonConstant.SDK_VERSION;
 
 		// time out 10 sec
-		private static readonly int REQUEST_TIME_OUT = 10;
+		// private static readonly int REQUEST_TIME_OUT = 10;
 
 		private string _applicationKey = "";
 		private string _clientKey = "";
@@ -86,6 +86,8 @@ namespace NCMB.Internal
 		private Uri _domainUri = null;
 		private NCMBFile _file = null;
 		internal UnityWebRequest _request = null;
+		// request time out		
+		private int _requestTimeout = 10;
 
 
 		//コンストラクタ(通常)
@@ -101,7 +103,7 @@ namespace NCMB.Internal
 		}
 
 		//コンストラクタ
-		internal NCMBConnection (String url, ConnectType method, string content, string sessionToken, NCMBFile file, string domain)
+		internal NCMBConnection (String url, ConnectType method, string content, string sessionToken, NCMBFile file, string domain, int requestTimeout = 10)
 		{
 			this._method = method;
 			this._content = content;
@@ -112,6 +114,7 @@ namespace NCMB.Internal
 			this._domainUri = new Uri (domain);
 			this._file = file;
 			this._request = _returnRequest ();
+			this._requestTimeout = requestTimeout;
 
 		}
 
@@ -399,7 +402,7 @@ namespace NCMB.Internal
 			while (!req.isDone) {
 				//elapsedTime += Time.deltaTime;
 				elapsedTime += waitTime;
-				if (elapsedTime >= REQUEST_TIME_OUT) { 
+				if (elapsedTime >= connection._requestTimeout) { 
 					req.Abort ();
 					error = new NCMBException ();
 					break;

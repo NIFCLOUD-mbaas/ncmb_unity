@@ -18,6 +18,7 @@ public class MockServerObject
     public string responseJson = "";
     public int status = 404;
     public bool responseSignature = false;
+    public int delay = 0;
     
     public void validate()
     {

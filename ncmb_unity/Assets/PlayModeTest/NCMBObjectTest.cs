@@ -68,5 +68,26 @@ public class NCMBObjectTest
 	}
 
 
+    /**
+     * - 内容：タイムアウトのエラーをチェックする
+     * - 結果：保存の時にタイムアウトした。(error 408)
+     */
+	[UnityTest]
+	public IEnumerator SaveObjectTimeout ()
+	{
+		// テストデータ作成
+		NCMBObject obj = new NCMBObject ("TestClass");
+		obj ["key"] = "\"timeout-test\"";
+		obj.SaveAsync ((NCMBException e) => {
+			if (e != null && string.Compare("408", e.ErrorCode) == 0) {
+			Assert.True(true);
+    
+		} else {
+                	Assert.True (false);
+		}
+            	NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync ();
+	}
 
 }
