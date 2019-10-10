@@ -549,4 +549,345 @@ public class NCMBUserTest
         Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
         Assert.True(NCMBTestSettings.CallbackFlag);
     }
+
+    [UnityTest]
+    public IEnumerator FetchCurrentUserAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) => {
+            Assert.Null(e);
+
+            NCMBUser.CurrentUser.FetchAsync((NCMBException ex) =>
+            {
+                Assert.Null(ex);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("sample@example.com", NCMBUser.CurrentUser.Email);
+    }
+
+    [UnityTest]
+    public IEnumerator UpdateCurrentUserAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) =>
+        {
+            Assert.Null(e);
+
+            NCMBUser.CurrentUser.UserName = "newUserName";
+
+            NCMBUser.CurrentUser.SaveAsync((NCMBException ex) =>
+            {
+                Assert.Null(ex);
+
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("newUserName", NCMBUser.CurrentUser.UserName);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("sample@example.com", NCMBUser.CurrentUser.Email);
+    }
+
+    [UnityTest]
+    public IEnumerator UpdateCurrentUserTwoTimesAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) =>
+        {
+            Assert.Null(e);
+
+            NCMBUser.CurrentUser.UserName = "newUserName";
+
+            NCMBUser.CurrentUser.SaveAsync((NCMBException ex1) =>
+            {
+                Assert.Null(ex1);
+
+                NCMBUser.CurrentUser.UserName = "newUserName";
+                NCMBUser.CurrentUser.SaveAsync((NCMBException ex2) =>
+                {
+                    Assert.Null(ex2);
+
+                    NCMBTestSettings.CallbackFlag = true;
+                });
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("newUserName", NCMBUser.CurrentUser.UserName);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("sample@example.com", NCMBUser.CurrentUser.Email);
+        Assert.AreEqual(0, NCMBUser.CurrentUser._currentOperations.Count);
+    }
+
+    [UnityTest]
+    public IEnumerator SignUpUseCurrentUserAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) =>
+        {
+            Assert.Null(e);
+
+            NCMBUser.CurrentUser.ObjectId = null;
+            NCMBUser.CurrentUser.UserName = "testuser";
+            NCMBUser.CurrentUser.Password = "password";
+
+            // 会員登録
+            NCMBUser.CurrentUser.SignUpAsync((NCMBException ex) => {
+                Assert.Null(ex);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("testuser", NCMBUser.CurrentUser.UserName);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+    }
+
+    [UnityTest]
+    public IEnumerator DeleteUseCurrentUserAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) =>
+        {
+            Assert.Null(e);
+
+            NCMBUser.CurrentUser.DeleteAsync((NCMBException ex) => {
+                Assert.Null(ex);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.IsNull(NCMBUser.CurrentUser);
+    }
+
+    [UnityTest]
+    public IEnumerator FetchOtherUserAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) => {
+            Assert.Null(e);
+
+            NCMBUser user = new NCMBUser();
+            user.ObjectId = "anotherObjectId";
+            user.FetchAsync((NCMBException ex) =>
+            {
+                Assert.Null(ex);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+    }
+
+    [UnityTest]
+    public IEnumerator UpdateOtherUserAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) =>
+        {
+            Assert.Null(e);
+
+            NCMBUser user = new NCMBUser();
+            user.ObjectId = "anotherObjectId";
+            user.UserName = "newUserName";
+            user.SaveAsync((NCMBException ex) =>
+            {
+                Assert.Null(ex);
+
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        // 登録成功の確認
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.IsNotNull(NCMBUser.CurrentUser);
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+    }
+
+    [UnityTest]
+    public IEnumerator DeleteOtherUserAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) =>
+        {
+            Assert.Null(e);
+
+            NCMBUser user = new NCMBUser();
+            user.ObjectId = "anotherObjectId";
+            user.DeleteAsync((NCMBException ex) => {
+                Assert.Null(ex);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+
+        Assert.IsNotNull(NCMBUser.CurrentUser);
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+    }
+
+    [UnityTest]
+    public IEnumerator SignUpOtherUserAfterLogin()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e) =>
+        {
+            Assert.Null(e);
+
+            NCMBUser user = new NCMBUser();
+            user.UserName = "testuser";
+            user.Password = "password";
+
+            // 会員登録
+            user.SignUpAsync((NCMBException ex) => {
+                Assert.Null(ex);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+    }
+
+    [UnityTest]
+    public IEnumerator LoginLogoutFetchUser()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e1) =>
+        {
+            Assert.Null(e1);
+            NCMBTestSettings.CallbackFlag = true;
+            NCMBUser.LogOutAsync();
+            NCMBUser.LogInAsync("tarou", "tarou", (e2) =>
+            {
+                Assert.Null(e2);
+                NCMBUser user = new NCMBUser();
+                user.ObjectId = "anotherObjectId";
+                user.FetchAsync((NCMBException e3) =>
+                {
+                    Assert.Null(e3);
+                    NCMBTestSettings.CallbackFlag = true;
+                });
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+    }
+
+    [UnityTest]
+    public IEnumerator LoginLogoutUpdateUser()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e1) =>
+        {
+            Assert.Null(e1);
+            NCMBTestSettings.CallbackFlag = true;
+            NCMBUser.LogOutAsync();
+            NCMBUser.LogInAsync("tarou", "tarou", (e2) =>
+            {
+                Assert.Null(e2);
+                NCMBUser user = new NCMBUser();
+                user.ObjectId = "anotherObjectId";
+                user.UserName = "newUserName";
+                user.SaveAsync((NCMBException e3) =>
+                {
+                    Assert.Null(e3);
+
+                    NCMBTestSettings.CallbackFlag = true;
+                });
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+    }
+
+    [UnityTest]
+    public IEnumerator LoginLogoutAddUser()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e1) =>
+        {
+            Assert.Null(e1);
+            NCMBTestSettings.CallbackFlag = true;
+            NCMBUser.LogOutAsync();
+            NCMBUser.LogInAsync("tarou", "tarou", (e2) =>
+            {
+                Assert.Null(e2);
+                NCMBUser user = new NCMBUser();
+                user.UserName = "testuser";
+                user.Password = "password";
+                user.SignUpAsync((NCMBException e3) => {
+                    Assert.Null(e3);
+                    NCMBTestSettings.CallbackFlag = true;
+                });
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+    }
+
+    [UnityTest]
+    public IEnumerator LoginLogoutDeleteUser()
+    {
+        // テストデータ作成
+        NCMBUser.LogInAsync("tarou", "tarou", (e1) =>
+        {
+            Assert.Null(e1);
+            NCMBTestSettings.CallbackFlag = true;
+            NCMBUser.LogOutAsync();
+            NCMBUser.LogInAsync("tarou", "tarou", (e2) =>
+            {
+                Assert.Null(e2);
+                NCMBUser user = new NCMBUser();
+                user.ObjectId = "anotherObjectId";
+                user.DeleteAsync((NCMBException e3) => {
+                    Assert.Null(e3);
+                    NCMBTestSettings.CallbackFlag = true;
+                });
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.AreEqual("dummySessionToken", NCMBUser._getCurrentSessionToken());
+        Assert.AreEqual("tarou", NCMBUser.CurrentUser.UserName);
+    }
 }

@@ -225,6 +225,7 @@ namespace  NCMB
 				if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
 					this.SessionToken = _currentUser.SessionToken;
 					_saveCurrentUser((NCMBUser)this);
+					this._currentOperations.Remove("sessionToken");
 				}
 			}
 		}
@@ -233,7 +234,9 @@ namespace  NCMB
 		internal override void _afterDelete (NCMBException error)
 		{
 			if (error == null) {
-				_logOutEvent ();
+				if ((_currentUser != null) && (_currentUser.ObjectId == this.ObjectId)) {
+					_logOutEvent ();
+				}
 			}
 		}
 
