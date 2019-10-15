@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ namespace NCMB.Internal
 				this.objects.Add (values);
 			}
 		}
-		
+
 		//AndroidのmaybeReferenceAndEncode注意
 		public object Encode ()
 		{
@@ -49,7 +49,7 @@ namespace NCMB.Internal
 			dic.Add ("objects", NCMBUtility._maybeEncodeJSONObject (this.objects, true));
 			return dic;
 		}
-		
+
 		public INCMBFieldOperation MergeWithPrevious (INCMBFieldOperation previous)
 		{
 			if (previous == null) {
@@ -77,7 +77,7 @@ namespace NCMB.Internal
 			}
 			throw new  InvalidOperationException ("Operation is invalid after previous operation.");
 		}
-		
+
 		public object Apply (object oldValue, NCMBObject obj, string key)
 		{
 			if (oldValue == null) {
@@ -90,6 +90,6 @@ namespace NCMB.Internal
 			}
 			throw new  InvalidOperationException ("Operation is invalid after previous operation.");
 		}
-		
+
 	}
 }

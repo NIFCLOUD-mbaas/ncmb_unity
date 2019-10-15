@@ -1,12 +1,12 @@
 /*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,7 @@ namespace NCMB
 	{
 		#if UNITY_ANDROID
 		static AndroidJavaClass m_AJClass;
-		
+
 #elif UNITY_IOS
 		[DllImport ("__Internal")]
 		private static extern void registerNotification (bool useAnalytics);
@@ -48,7 +48,7 @@ namespace NCMB
 			#if UNITY_ANDROID && !UNITY_EDITOR
                         m_AJClass = new AndroidJavaClass("com.nifcloud.mbaas.ncmbfcmplugin.FCMInit");
 			#endif
-			
+
 		}
 
 		/// <summary>
@@ -59,41 +59,41 @@ namespace NCMB
 		{
 		}
 		#if UNITY_ANDROID
-		public static void Register () 	
-		{ 	
-				
+		public static void Register ()
+		{
+
 #if !UNITY_EDITOR
-				m_AJClass.CallStatic("Init"); 	
-		#endif	
-		} 	
+				m_AJClass.CallStatic("Init");
+		#endif
+		}
 
 #elif UNITY_IOS
 		public static void Register (bool useAnalytics)
-		{ 	
-			#if !UNITY_EDITOR 	
-		registerNotification(useAnalytics); 	
-			#endif 	
-		} 	
+		{
+			#if !UNITY_EDITOR
+		registerNotification(useAnalytics);
+			#endif
+		}
 		#endif
 		#if UNITY_ANDROID
-	public static void RegisterWithLocation () 	
-	{ 		
+	public static void RegisterWithLocation ()
+	{
 
 #if !UNITY_EDITOR
-			m_AJClass.CallStatic("Init"); 	
+			m_AJClass.CallStatic("Init");
 		#endif
-	} 	
+	}
 
 #elif UNITY_IOS
-		/// <summary> 	
-		/// Register for receiving remote notifications (with current location). 	
-		/// </summary> 	
+		/// <summary>
+		/// Register for receiving remote notifications (with current location).
+		/// </summary>
 		internal static void RegisterWithLocation ()
-		{ 	
-			#if !UNITY_EDITOR 	
-	registerNotificationWithLocation(); 	
-			#endif 	
-		} 	
+		{
+			#if !UNITY_EDITOR
+	registerNotificationWithLocation();
+			#endif
+		}
 		#endif
 		/*** Push設定 ***/
 		/// <summary>
@@ -323,7 +323,7 @@ namespace NCMB
 			if (!ContainsKey ("deliveryTime")) {  //配信日時（日付）の指定がなければ即時配信
 				ImmediateDeliveryFlag = true;
 			}
-		
+
 			base.SaveAsync (callback);
 		}
 

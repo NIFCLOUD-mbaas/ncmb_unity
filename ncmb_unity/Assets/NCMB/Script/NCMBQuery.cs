@@ -1,12 +1,12 @@
 /*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,7 +60,7 @@ namespace NCMB
 		}
 
 		/// <summary>
-		/// 取得開始位置の取得、または設定を行います。 
+		/// 取得開始位置の取得、または設定を行います。
 		/// </summary>
 		/// <returns> 取得開始位置</returns>
 		public int Skip {
@@ -72,7 +72,7 @@ namespace NCMB
 		}
 
 		/// <summary>
-		/// 取得件数の取得、または設定を行います。 
+		/// 取得件数の取得、または設定を行います。
 		/// </summary>
 		/// <returns> 取得件数</returns>
 		public int Limit {
@@ -329,7 +329,7 @@ namespace NCMB
 
 
 		//現状WhereNotContainedInと全く同じ機能のためコメントアウトしています
-		/*		
+		/*
 		/// <summary>
 		/// いずれも含まれない。
 		/// </summary>
@@ -519,7 +519,7 @@ namespace NCMB
 		/// </summary>
 		private void _addCondition (string key, string condition, object value)
 		{
-			Dictionary<string, object> whereValue = null; 
+			Dictionary<string, object> whereValue = null;
 			value = NCMBUtility._maybeEncodeJSONObject (value, true);
 			if (_where.ContainsKey (key)) {
 				//キーの前回条件がWhereEqualToだった場合はint型 それ以外はDictionary型が入る
@@ -584,7 +584,7 @@ namespace NCMB
 				} catch (Exception e) {
 					error = new NCMBException (e);
 				}
-							
+
 				callback (resultList, error);
 
 				return;
@@ -645,7 +645,7 @@ namespace NCMB
 			if (callback == null) {
 				throw new ArgumentException ("It is necessary to always set a callback.");
 			}
-				
+
 			string url = _getSearchUrl (this._className);//クラス毎のURL作成
 			//オブジェクト取得API
 			url += "/" + objectId;
@@ -737,7 +737,7 @@ namespace NCMB
 				}
 				//引数は検索条件のカウント数とエラーをユーザーに返す
 				callback (count, error);
-				
+
 				return;
 			});
 		}
@@ -901,7 +901,7 @@ namespace NCMB
 
 		/// <summary>
 		/// <para>_includeの設定を取り出し文字列に変換する。_includeが複数合った場合は「,」で連結して返す</para>
-		///<para>_orderも同様の仕様に変更</para>		
+		///<para>_orderも同様の仕様に変更</para>
 		/// </summary>
 		private string _join (List<string> items, string delimiter)
 		{
