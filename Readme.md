@@ -11,6 +11,7 @@
 - 会員管理
 - ファイルストア
 - SNS連携
+- スクリプト
 
 といった機能をアプリから利用することが可能です。
 
@@ -26,7 +27,8 @@
 (NCMB.package内部に含まれているので、別途用意する必要はありません。)
 
 - Android Support Library
-- Google Play Serivce SDK
+- Google Play Service SDK
+- Firebase Service Library
 
 ## 動作環境
 
