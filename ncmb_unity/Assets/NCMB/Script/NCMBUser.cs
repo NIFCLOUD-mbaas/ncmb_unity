@@ -1,12 +1,12 @@
 /*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,7 +55,7 @@ namespace  NCMB
 
 		/// <summary>
 		/// Eメールの取得、または設定を行います。
-		/// </summary>		
+		/// </summary>
 		public string Email {
 			get {
 				return (string)this ["mailAddress"];
@@ -67,7 +67,7 @@ namespace  NCMB
 
 		/// <summary>
 		/// パスワードの設定を行います。
-		/// </summary>		
+		/// </summary>
 		public string Password {
 			private get {
 				return (string)this ["password"];
@@ -110,7 +110,7 @@ namespace  NCMB
 
 		/// <summary>
 		/// ログイン中のユーザ情報の取得を行います。
-		/// </summary>		
+		/// </summary>
 		public static NCMBUser CurrentUser {
 			get {
 				if (_currentUser != null) {
@@ -126,22 +126,22 @@ namespace  NCMB
 					_currentUser._isCurrentUser = true;
 					return _currentUser;
 				}
-				return null;	
+				return null;
 			}
 		}
 
 		/// <summary>
 		/// コンストラクター。
-		/// </summary>	
+		/// </summary>
 		public NCMBUser () : base ()
 		{
 			this._isCurrentUser = false;
 		}
-		
+
 		// キーを設定するときのバリデーション
 		internal override void _onSettingValue (string key, object value)
 		{
-			base._onSettingValue (key, value);		
+			base._onSettingValue (key, value);
 		}
 
 		/// <summary>
@@ -217,11 +217,11 @@ namespace  NCMB
         	//save後処理 　オーバーライド用　ローカルのcurrentUserを反映する
 		internal override void _afterSave (int statusCode, NCMBException error)
 		{
-			// Base on AuthData 
+			// Base on AuthData
 			if (statusCode == 201 && this.AuthData != null && error == null) {
 				_saveCurrentUser((NCMBUser)this);
 			} else if (statusCode == 200 && error == null) {
-				// Base on SessionToken 
+				// Base on SessionToken
 				if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
 					this.SessionToken = _currentUser.SessionToken;
 					_saveCurrentUser((NCMBUser)this);
@@ -255,7 +255,7 @@ namespace  NCMB
 		/// </summary>
 		/// <param name="callback">コールバック</param>
 		public override void DeleteAsync (NCMBCallback callback)
-		{	
+		{
 			base.DeleteAsync (callback);
 			//Cleanup authdata for other Services if needed
 		}
@@ -308,7 +308,7 @@ namespace  NCMB
 		/// </summary>
 		/// <param name="callback">コールバック</param>
 		public override void SaveAsync (NCMBCallback callback)
-		{	
+		{
 			base.SaveAsync (callback);
 		}
 
@@ -357,9 +357,9 @@ namespace  NCMB
 			}
 		}
 
-		
+
 		internal static string _getCurrentSessionToken ()
-		{	
+		{
 			if (CurrentUser != null) {
 				return CurrentUser.SessionToken;
 			}
@@ -385,7 +385,7 @@ namespace  NCMB
 			RequestPasswordResetAsync (email, null);
 		}
 
-		
+
 		/// <summary>
 		/// 非同期処理でユーザのパスワード再発行依頼を行います。<br/>
 		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
@@ -415,7 +415,7 @@ namespace  NCMB
 			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
 				try {
 					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					if (error != null) {		
+					if (error != null) {
 						NCMBDebug.Log ("[DEBUG AFTER CONNECT] Error: " + error.ErrorMessage);
 					} else {
 						NCMBDebug.Log ("[DEBUG AFTER CONNECT] Successful: ");
@@ -430,7 +430,7 @@ namespace  NCMB
 			});
 		}
 
-		
+
 		/// <summary>
 		/// 非同期処理でユーザ名とパスワードを指定して、ユーザのログインを行います。<br/>
 		/// 通信結果が不要な場合はコールバックを指定しないこちらを使用します。
@@ -439,7 +439,7 @@ namespace  NCMB
 		/// <param name="password">パスワード</param>
 		public static void LogInAsync (string name, string password)
 		{
-			LogInAsync (name, password, null);		
+			LogInAsync (name, password, null);
 		}
 
 		/// <summary>
@@ -573,7 +573,7 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public static void RequestAuthenticationMailAsync (string email, NCMBCallback callback)
 		{
-			
+
 			//URL
 			string url = _getmailAddressUserEntryUrl ();//URL
 
@@ -582,7 +582,7 @@ namespace  NCMB
 			user.Email = email;
 			string content = user._toJSONObjectForSaving (user.StartSave ());
 
-			//Type	
+			//Type
 			ConnectType type = ConnectType.POST;
 
 			NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
@@ -593,7 +593,7 @@ namespace  NCMB
 					callback (error);
 				}
 				return;
-			});	
+			});
 
 		}
 
@@ -607,7 +607,7 @@ namespace  NCMB
 			LogOutAsync (null);
 		}
 
-		
+
 		/// <summary>
 		/// 非同期処理でユーザのログアウトを行います。<br/>
 		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
@@ -630,7 +630,7 @@ namespace  NCMB
 				if (callback != null) {
 					callback (null);
 				}
-				
+
 			}
 		}
 
@@ -646,7 +646,7 @@ namespace  NCMB
 			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
 				try {
 					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					if (error != null) {		
+					if (error != null) {
 						NCMBDebug.Log ("[DEBUG AFTER CONNECT] Error: " + error.ErrorMessage);
 					} else {
 						_logOutEvent ();
@@ -663,12 +663,12 @@ namespace  NCMB
 					}
 				}
 				return;
-			});	
+			});
 		}
 
 		internal override void _mergeFromServer (Dictionary<string, object> responseDic, bool completeData)
 		{
-			
+
 			base._mergeFromServer (responseDic, completeData);
 		}
 
@@ -812,7 +812,7 @@ namespace  NCMB
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
 				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
 			}
-				
+
 			// authDataの退避
 			Dictionary<string, object> currentParam = new Dictionary<string, object> ();
 			currentParam = this.AuthData;

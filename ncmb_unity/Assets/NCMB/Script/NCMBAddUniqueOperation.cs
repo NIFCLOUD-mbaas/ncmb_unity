@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,20 +63,20 @@ namespace NCMB.Internal
 			}
 
 			if ((previous is NCMBSetOperation)) {
-				object value = ((NCMBSetOperation)previous).getValue ();	
-				if ((value is IList)) {	
+				object value = ((NCMBSetOperation)previous).getValue ();
+				if ((value is IList)) {
 					return new NCMBSetOperation (Apply (value, null, null));
 				}
 				throw new  InvalidOperationException ("You can only add an item to a List.");
 			}
 
 			if ((previous is NCMBAddUniqueOperation)) {
-				IList result = new ArrayList (((NCMBAddUniqueOperation)previous).objects);	
+				IList result = new ArrayList (((NCMBAddUniqueOperation)previous).objects);
 				return new NCMBAddUniqueOperation ((IList)Apply (result, null, null));
 			}
 			throw new  InvalidOperationException ("Operation is invalid after previous operation.");
 		}
-		
+
 		public object Apply (object oldValue, NCMBObject obj, string key)
 		{
 			//初回 estimatedDataに対象のデータが無かった場合
@@ -112,7 +112,7 @@ namespace NCMB.Internal
 						NCMBObject objectsNCMBObject = (NCMBObject)objectsValue;
 						if (existingObjectIds.ContainsKey (objectsNCMBObject.ObjectId)) {
 							//すでにある
-							int index = Convert.ToInt32 (existingObjectIds [objectsNCMBObject.ObjectId]);	
+							int index = Convert.ToInt32 (existingObjectIds [objectsNCMBObject.ObjectId]);
 							result.Insert (index, objectsValue);
 						} else {
 							//ユニークなのでadd。追加する

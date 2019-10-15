@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,10 +30,10 @@ namespace NCMB.Internal
 {
 	internal static class NCMBDebug
 	{
-		
+
 		//改行
-		private static string newLine = "\n"; 
-		
+		private static string newLine = "\n";
+
 		/// <summary>
 		/// ログを出力する
 		/// </summary>
@@ -43,7 +43,7 @@ namespace NCMB.Internal
 		{
 			UnityEngine.Debug.Log (message);
 		}
-		
+
 		/// <summary>
 		/// 警告ログを出力する
 		/// </summary>
@@ -53,7 +53,7 @@ namespace NCMB.Internal
 		{
 			UnityEngine.Debug.LogWarning (message);
 		}
-		
+
 		/// <summary>
 		/// エラーログを出力する
 		/// </summary>
@@ -63,7 +63,7 @@ namespace NCMB.Internal
 		{
 			UnityEngine.Debug.LogError (message);
 		}
-		
+
 		/// <summary>
 		/// エラーログを出力する
 		/// </summary>
@@ -74,7 +74,7 @@ namespace NCMB.Internal
 		{
 			//UnityEngine.Debug.LogError(message, context);
 		}
-		
+
 		/// <summary>
 		/// listの中身をログに出力する
 		/// </summary>
@@ -90,7 +90,7 @@ namespace NCMB.Internal
 			}
 			UnityEngine.Debug.Log (result);
 		}
-		
+
 		/// <summary>
 		/// Dictionaryの中身をログに表示します
 		/// </summary>
@@ -108,6 +108,6 @@ namespace NCMB.Internal
 			}
 			UnityEngine.Debug.Log (result);
 		}
-		
+
 	}
 }

@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,9 +40,9 @@ namespace NCMB
 	/// </summary>
 	public class NCMBManager : MonoBehaviour
 	{
-		
+
 		public virtual void Awake ()
-		{			
+		{
 			if (!NCMBSettings._isInitialized) {
 				DontDestroyOnLoad (base.gameObject);
 			}
@@ -96,7 +96,7 @@ namespace NCMB
 		void OnRegistration (string message)
 		{
 			Inited = true;
-			
+
 			if (onRegistration != null) {
 				if (message == "") {
 					message = null;
@@ -138,9 +138,9 @@ namespace NCMB
 		{
 			// Payload data dictionary
 			IDictionary dd = UnityEngine.iOS.NotificationServices.remoteNotifications [0].userInfo;
-			
+
 			// Payload key list
-			string[] kl = new string[] { 
+			string[] kl = new string[] {
 				"com.nifcloud.mbaas.PushId",
 				"com.nifcloud.mbaas.Data",
 				"com.nifcloud.mbaas.Title",
@@ -172,7 +172,7 @@ namespace NCMB
 
 			// Create payload
 			NCMBPushPayload pl = new NCMBPushPayload (vl [0], vl [1], vl [2], vl [3], vl [4], vl [5], vl [6], UnityEngine.iOS.NotificationServices.remoteNotifications [0].userInfo);
-		
+
 			// Notify
 			if (onNotificationReceived != null) {
 				onNotificationReceived (pl);
@@ -250,7 +250,7 @@ namespace NCMB
 			installation.SaveAsync ((NCMBException saveError) => {	//更新実行
 				if (saveError != null) {
 					//対処可能なエラー
-				if (saveError.ErrorCode.Equals(NCMBException.DUPPLICATION_ERROR)){	
+				if (saveError.ErrorCode.Equals(NCMBException.DUPPLICATION_ERROR)){
 					//過去に登録したデバイストークンと衝突。アプリの再インストール後などに発生
 					updateExistedInstallation (installation, path);
 				} else if (saveError.ErrorCode.Equals(NCMBException.DATA_NOT_FOUND)) {
@@ -263,7 +263,7 @@ namespace NCMB
 							OnRegistration("");
 						}
 					});
-				} else {	
+				} else {
 					//想定外のエラー
 					OnRegistration (saveError.ErrorMessage);
 				}
@@ -277,7 +277,7 @@ namespace NCMB
 		{
 			//デバイストークンを更新
 			NCMBQuery<NCMBInstallation> query = NCMBInstallation.GetQuery ();	//ObjectId検索
-			installation.GetDeviceToken((token, error) => { 
+			installation.GetDeviceToken((token, error) => {
 				query.WhereEqualTo("deviceToken", token);
 				query.FindAsync ((List<NCMBInstallation> objList, NCMBException findError) => {
 					if (findError != null) {
@@ -328,14 +328,14 @@ namespace NCMB
 			if (System.IO.File.Exists (@path)) {	//ファイル存在確認
 				try {
 					StreamReader sr = new StreamReader (
-						                  path, Encoding.GetEncoding ("UTF-8"));	
+						                  path, Encoding.GetEncoding ("UTF-8"));
 					text = sr.ReadToEnd ();
 					sr.Close ();
 				} catch (Exception tryReadError) {
 					if (tryReadError != null) {
 						path = NCMBSettings.currentInstallationPath;//Unityからのアクセス権があり、環境に依存しないパスを設定
 						try {
-							StreamReader sr = new StreamReader (path, Encoding.GetEncoding ("UTF-8"));	
+							StreamReader sr = new StreamReader (path, Encoding.GetEncoding ("UTF-8"));
 							text = sr.ReadToEnd ();
 							sr.Close ();
 						} catch (FileNotFoundException readError) {
