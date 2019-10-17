@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,7 +74,7 @@ namespace NCMB
 		internal static string currentInstallationPath = "";
 
 		/// <summary>
-		/// Current userの取得、または設定を行います。 
+		/// Current userの取得、または設定を行います。
 		/// </summary>
 		internal static string CurrentUser {
 			get {
@@ -86,7 +86,7 @@ namespace NCMB
 		}
 
 		/// <summary>
-		/// アプリケションキーの取得、または設定を行います。 
+		/// アプリケションキーの取得、または設定を行います。
 		/// </summary>
 		public static string ApplicationKey {
 			get {
@@ -98,7 +98,7 @@ namespace NCMB
 		}
 
 		/// <summary>
-		/// クライアントキーの取得、または設定を行います。 
+		/// クライアントキーの取得、または設定を行います。
 		/// </summary>
 		public static string ClientKey {
 			get {
@@ -128,7 +128,7 @@ namespace NCMB
 		}
 
 		/// <summary>
-		/// ドメインURLの取得、または設定を行います。 
+		/// ドメインURLの取得、または設定を行います。
 		/// </summary>
 		internal static string DomainURL {
 			get {
@@ -140,7 +140,7 @@ namespace NCMB
 		}
 
 		/// <summary>
-		/// APIバージョンの取得、または設定を行います。 
+		/// APIバージョンの取得、または設定を行います。
 		/// </summary>
 		internal static string APIVersion {
 			get {
@@ -185,7 +185,7 @@ namespace NCMB
 		/// <param name="getLocation">true:位置情報有効　false:位置情報無効</param>
 		private static void RegisterPush (bool usePush, bool useAnalytics, bool getLocation = false)
 		{
-		
+
 			//Push関連設定
 			_usePush = usePush;
 			_useAnalytics = useAnalytics;

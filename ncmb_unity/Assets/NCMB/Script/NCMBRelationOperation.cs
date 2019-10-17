@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -98,7 +98,7 @@ namespace NCMB.Internal
 				adds.Add ("__op", "AddRelation");
 				adds.Add ("objects", _convertSetToArray (this._relationsToAdd));
 			}
-			
+
 			if (this._relationsToRemove.Count > 0) {
 				removes = new Dictionary<string,object> ();
 				removes.Add ("__op", "RemoveRelation");
@@ -108,7 +108,7 @@ namespace NCMB.Internal
 			if (adds != null) {
 				return adds;
 			}
-			
+
 			if (removes != null) {
 				return removes;
 			}
@@ -141,7 +141,7 @@ namespace NCMB.Internal
 			}
 			if ((previous is NCMBRelationOperation<T>)) {
 				NCMBRelationOperation<T> previousOperation = (NCMBRelationOperation<T>)previous;
-				
+
 				if ((previousOperation._targetClass != null) && (!previousOperation._targetClass.Equals (this._targetClass))) {
 					throw new NCMBException (new  ArgumentException ("Related object object must be of class " + previousOperation._targetClass + ", but " + this._targetClass + " was passed in."));
 				}
@@ -185,7 +185,7 @@ namespace NCMB.Internal
 
 		//前回のローカルデータから新規ローカルデータの作成
 		public object Apply (object oldValue, NCMBObject obj, string key)
-		{				
+		{
 			//前回のローカルデータ(estimatedDataに指定のキーが無い場合)がNullの場合
 			if (oldValue == null || oldValue is IList && ((IList)oldValue).Count == 0) {
 				NCMBRelation<T> relation = new NCMBRelation<T> (obj, key);//親のNCMBObjectと指定キーでrelation作成

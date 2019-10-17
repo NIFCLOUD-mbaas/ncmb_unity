@@ -11,6 +11,13 @@ response:
   file: /json/login_response.json
 ---
 request:
+  url: 2013-09-01/users/dummyObjectId
+  method: GET
+response:
+  status: 200
+  file: /json/fetch_user_response.json
+---
+request:
   url: 2013-09-01/login
   method: GET
   query:
@@ -19,6 +26,20 @@ request:
 response:
   status: 200
   file: /json/login_response.json
+---
+request:
+  url: 2013-09-01/users/dummyObjectIdError
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
+---
+request:
+  url: 2013-09-01/users/invalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
 ---
 request:
   url: 2013-09-01/logout
@@ -233,6 +254,38 @@ response:
 ---
 request:
   url: 2013-09-01/users/dummyObjectId
+  method: PUT
+  body:
+    userName: newUserName
+response:
+  status: 200
+  file: /json/valid_put_response.json
+---
+request:
+  url: 2013-09-01/users/anotherObjectId
+  method: GET
+response:
+  status: 200
+  file: /json/fetch_other_user_response.json
+---
+request:
+  url: 2013-09-01/users/anotherObjectId
+  method: PUT
+  body:
+    userName: newUserName
+response:
+  status: 200
+  file: /json/valid_put_response.json
+---
+request:
+  url: 2013-09-01/users/dummyObjectId
+  method: DELETE
+response:
+  status: 200
+  file: /json/valid_empty_script_response.json
+---
+request:
+  url: 2013-09-01/users/anotherObjectId
   method: DELETE
 response:
   status: 200
@@ -257,6 +310,23 @@ request:
 response:
   status: 201
   file: /json/valid_post_registerUser_response.json
+---
+request:
+  url: 2013-09-01/users
+  method: POST
+  body:
+    userName: "testuser"
+    password: "password"
+response:
+  status: 201
+  file: /json/valid_post_registerTestUser_response.json
+---
+request:
+  url: 2013-09-01/users/dummyObjectId
+  method: DELETE
+response:
+  status: 200
+  file: /json/post_success_response.json
 # Use NCMBUserTest
 ---
 request:
@@ -346,6 +416,38 @@ request:
 response:
   status: 201
   file: /json/post_success_response.json
+---
+request:
+  url: 2013-09-01/classes/TestClass/testclassDummyObjectId
+  method: GET
+response:
+  status: 200
+  file: /json/get_testclass_object_response.json
+---
+request:
+  url: 2013-09-01/classes/TestClass
+  method: POST
+  body:
+    key: value
+response:
+  status: 201
+  file: /json/post_success_response.json
+---
+request:
+  url: 2013-09-01/classes/TestClass/dummyObjectId
+  method: PUT
+  body:
+      key: newValue
+response:
+  status: 200
+  file: /json/get_object_test_response.json
+---
+request:
+  url: 2013-09-01/classes/TestClass/dummyObjectId
+  method: DELETE
+response:
+  status: 200
+  file: /json/valid_empty_script_response.json
 ---
 request:
   url: 2013-09-01/classes/TestClass
@@ -521,6 +623,20 @@ response:
   file: /json/get_object_test_response.json
 ---
 request:
+  url: 2013-09-01/roles/roleDummyObjectId
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
+---
+request:
+  url: 2013-09-01/roles/roleInvalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
   url: 2013-09-01/roles/dummyObjectId
   method: PUT
   body:
@@ -545,5 +661,47 @@ request:
 response:
   status: 200
   file: /json/get_user_test_response.json
+---
+request:
+  url: 2013-09-01/classes/testclass/testclassInvalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
+  url: 2013-09-01/classes/testclass/testclassDummyObjectId
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
+---
+request:
+  url: 2013-09-01/installations/instllInvalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
+  url: 2013-09-01/installations/instllDummyObjectId
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
+---
+request:
+  url: 2013-09-01/push/pushInvalidObjectId
+  method: GET
+response:
+  status: 404
+  file: /json/fetch_object_not_available.json
+---
+request:
+  url: 2013-09-01/push/pushDummyObjectId
+  method: GET
+response:
+  status: 401
+  file: /json/authentication_error_invalid_token.json
 ...
 

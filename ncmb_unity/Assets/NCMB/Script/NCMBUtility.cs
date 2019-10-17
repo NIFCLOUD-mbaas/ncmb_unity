@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ namespace NCMB.Internal
 				return customAttribute.ClassName;
 			} catch (Exception e) {
 				throw new NCMBException (e);
-			} 
+			}
 		}
 
 		internal static void CopyDictionary (IDictionary<string, object> listSouce, IDictionary<string, object> listDestination)
@@ -49,7 +49,7 @@ namespace NCMB.Internal
 				}
 			} catch (Exception e) {
 				throw new NCMBException (e);
-			} 
+			}
 		}
 
 
@@ -144,7 +144,7 @@ namespace NCMB.Internal
 			if ((value is INCMBFieldOperation)) {
 				return ((INCMBFieldOperation)value).Encode ();
 			}
-			
+
 			//リストの値を全てJSON形式に変換
 			//各値を_maybeEncodeJSONObjectで各JSON形式に変換
 			if (value is IList) {
@@ -160,7 +160,7 @@ namespace NCMB.Internal
 			//特にオブジェクト変換が必要ない場合はこちら
 			return value;
 		}
-		
+
 		internal static Object decodeJSONObject (object jsonDicParameter)
 		{
 			//check array
@@ -181,7 +181,7 @@ namespace NCMB.Internal
 				}
 				return tmpArrayList;
 			}
-				
+
 			//check if json or not
 			Dictionary<string, object> jsonDic;
 			if ((jsonDicParameter is IDictionary)) {
@@ -190,14 +190,14 @@ namespace NCMB.Internal
 				return null;
 			}
 			object typeString;
-			jsonDic.TryGetValue ("__type", out typeString);     
-						
+			jsonDic.TryGetValue ("__type", out typeString);
+
 			/*
 						if (typeString == null) {
 								return jsonDic;
 						}
 						*/
-						
+
 			if (typeString == null) { //Dictionary
 				Dictionary<string, object> tmpDic = new Dictionary<string, object> ();
 				object decodeObj;
@@ -206,22 +206,22 @@ namespace NCMB.Internal
 					if (decodeObj != null) {
 						//NCMBDebug.Log ("[TEST：" + pair.Key + "　VALUE:" + pair.Value);
 						tmpDic.Add (pair.Key, decodeObj);
-					} else { 
+					} else {
 						tmpDic.Add (pair.Key, pair.Value);
-					} 
-										
+					}
+
 				}
 				//return jsonDic;
 				return tmpDic;
 			}
-						
-						
+
+
 			if (typeString.Equals ("Date")) {
 				object iso;
 				jsonDic.TryGetValue ("iso", out iso);
 				return parseDate ((string)iso);
 			}
-			
+
 			if (typeString.Equals ("Pointer")) {
 				object className;
 				jsonDic.TryGetValue ("className", out className);
@@ -246,7 +246,7 @@ namespace NCMB.Internal
 				}
 				return new NCMBGeoPoint (latitude, longitude);
 			}
-			
+
 			if (typeString.Equals ("Object")) {
 				object className;
 				jsonDic.TryGetValue ("className", out className);
@@ -274,18 +274,18 @@ namespace NCMB.Internal
 			string format = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
 			return DateTime.ParseExact (dateString, format, null);
 		}
-		
+
 		static internal string encodeDate (DateTime dateObject)
 		{
 			string dateString = dateObject.ToString ("yyyy-MM-dd'T'HH:mm:ss.fff'Z'");
 			return dateString;
 		}
-		
+
 		static bool isContainerObject (Object object1)
 		{
 			return  ((object1 is NCMBGeoPoint)) || ((object1 is IDictionary));
 		}
-		
+
 		static internal string _encodeString (string str)
 		{
 			StringBuilder builder = new StringBuilder ();
@@ -345,6 +345,5 @@ namespace NCMB.Internal
         }
 
 	}
-	
-}
 
+}

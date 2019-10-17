@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,29 +38,29 @@ namespace NCMB
 		private static bool defaultACLUsesCurrentUser; //デフォルトACLでログイン中ユーザに権限を付与するかどうか
 
 		/// <summary>
-		/// パブリック読込権限の取得、または設定を行います。 
+		/// パブリック読込権限の取得、または設定を行います。
 		/// </summary>
-		public bool PublicReadAccess {			
+		public bool PublicReadAccess {
 			set {
 				SetReadAccess ("*", value);
-			}			
+			}
 			get {
 				return GetReadAccess ("*");
-			}			
+			}
 		}
 
 		/// <summary>
-		/// パブリック書込権限の取得、または設定を行います。 
+		/// パブリック書込権限の取得、または設定を行います。
 		/// </summary>
-		public bool PublicWriteAccess {			
+		public bool PublicWriteAccess {
 			set {
 				SetWriteAccess ("*", value);
-			}			
+			}
 			get {
 				return GetWriteAccess ("*");
-			}			
+			}
 		}
-		
+
 		/// <summary>
 		/// コンストラクター。
 		/// </summary>
@@ -75,12 +75,12 @@ namespace NCMB
 		/// </summary>
 		/// <param name="objectId">NCMBUserのobjectId</param>
 		public NCMBACL (string objectId):this()
-		{			
+		{
 			if (objectId == null) {
-				throw new NCMBException (new ArgumentException ("objectId may not be null "));				
-			}				
-			SetWriteAccess (objectId, true);		
-			SetReadAccess (objectId, true);			
+				throw new NCMBException (new ArgumentException ("objectId may not be null "));
+			}
+			SetWriteAccess (objectId, true);
+			SetReadAccess (objectId, true);
 		}
 
 
@@ -88,7 +88,7 @@ namespace NCMB
 		{
 			return this.shared;
 		}
-		
+
 		internal void _setShared (bool shared)
 		{
 			this.shared = shared;
@@ -101,10 +101,10 @@ namespace NCMB
 			try {
 				copy.permissionsById = new Dictionary<string, object> (this.permissionsById);
 			} catch (NCMBException e) {
-				throw new NCMBException (e);			
-			}			
-			//unresolvedユーザ処理必要ならここに書く			
-			return copy;			
+				throw new NCMBException (e);
+			}
+			//unresolvedユーザ処理必要ならここに書く
+			return copy;
 		}
 
 		/// <summary>
@@ -115,11 +115,11 @@ namespace NCMB
 		public void SetReadAccess (String objectId, bool allowed)
 		{
 			if (objectId == null) {
-				throw new NCMBException (new ArgumentException ("cannot SetReadAccess for null objectId "));				
+				throw new NCMBException (new ArgumentException ("cannot SetReadAccess for null objectId "));
 			}
 			_setAccess ("read", objectId, allowed);
 		}
-		
+
 		/// <summary>
 		/// ユーザ書込権限の設定を行います。
 		/// </summary>
@@ -129,7 +129,7 @@ namespace NCMB
 		{
 			if (objectId == null) {
 				throw new NCMBException (new ArgumentException ("cannot SetWriteAccess for null objectId "));
-				
+
 			}
 			_setAccess ("write", objectId, allowed);
 		}
@@ -168,9 +168,9 @@ namespace NCMB
 				defaultACLUsesCurrentUser = withAccessForCurrentUser;
 			} else {
 				defaultACL = null;
-			}		
+			}
 		}
-		
+
 		//permissionsByIdにobjectIdのaccessType（read,write）権限allowed（true,false）を設定
 		private void _setAccess (string accessType, string objectId, bool allowed)
 		{
@@ -182,24 +182,24 @@ namespace NCMB
 				}
 
 				if (permissions == null) {
-					if (!allowed) { 												
+					if (!allowed) {
 						return;
 					}
 					permissions = new Dictionary<string, object> ();
-					this.permissionsById [objectId] = permissions;					
+					this.permissionsById [objectId] = permissions;
 				}
-				
+
 				if (allowed) {
-					permissions [accessType] = true;					
+					permissions [accessType] = true;
 				} else {
 					permissions.Remove (accessType);
 					if (permissions.Count == 0) {
 						this.permissionsById.Remove (objectId);
 					}
 				}
-			} catch (NCMBException e) {					
+			} catch (NCMBException e) {
 				throw new NCMBException (new ArgumentException ("JSON failure with ACL: " + e.GetType ().ToString ()));
-				
+
 			}
 		}
 
@@ -212,7 +212,7 @@ namespace NCMB
 		{
 			if (objectId == null) {
 				throw new NCMBException (new ArgumentException ("cannot GetReadAccess for null objectId "));
-				
+
 			}
 			return _getAccess ("read", objectId);
 		}
@@ -226,7 +226,7 @@ namespace NCMB
 		{
 			if (objectId == null) {
 				throw new NCMBException (new ArgumentException ("cannot GetWriteAccess for null objectId "));
-				
+
 			}
 			return _getAccess ("write", objectId);
 		}
@@ -238,7 +238,7 @@ namespace NCMB
 		/// <returns> true:許可　false:不許可 </returns>
 		public bool GetRoleReadAccess (string roleName)
 		{
-			return GetReadAccess ("role:" + roleName);		
+			return GetReadAccess ("role:" + roleName);
 		}
 
 		/// <summary>
@@ -256,9 +256,9 @@ namespace NCMB
 		{
 			//ログイン中ユーザの権限付与をする場合
 			if ((defaultACLUsesCurrentUser) && (defaultACL != null)) {
-				//ログイン中ユーザが存在しないか、ストア登録されていない場合	
+				//ログイン中ユーザが存在しないか、ストア登録されていない場合
 				if (NCMBUser.CurrentUser == null || NCMBUser.CurrentUser.ObjectId == null) {
-					return defaultACL;		
+					return defaultACL;
 				}
 				//ログイン中ユーザが存在し、ストア登録されている場合
 				defaultACLWithCurrentUser = defaultACL._copy ();
@@ -266,23 +266,23 @@ namespace NCMB
 				defaultACLWithCurrentUser.SetReadAccess (NCMBUser.CurrentUser.ObjectId, true);
 				defaultACLWithCurrentUser.SetWriteAccess (NCMBUser.CurrentUser.ObjectId, true);
 
-				return defaultACLWithCurrentUser;	
-			}	
+				return defaultACLWithCurrentUser;
+			}
 			return defaultACL;
 		}
 
 		//permissionsByIdからobjectIdのaccessType（read,write）の権限情報を（true,false）を取得
 		private bool _getAccess (string accessType, string objectId)
-		{			
+		{
 			try {
 				Dictionary<string,object> permissions = null;
 				Object value;
 				if (this.permissionsById.TryGetValue (objectId, out value)) {
 					permissions = (Dictionary<string,object>)value;
 				}
-								
-				if (permissions == null) {															
-					return false;					
+
+				if (permissions == null) {
+					return false;
 				}
 
 				if (!permissions.TryGetValue (accessType, out value)) {
@@ -295,10 +295,10 @@ namespace NCMB
 			}
 		}
 
-		
+
 		internal IDictionary<string, object> _toJSONObject ()
 		{
-			return this.permissionsById;			
+			return this.permissionsById;
 		}
 
 		//サーバーから取得したACL(各権限)データをNCMBACLに保持する
@@ -326,7 +326,7 @@ namespace NCMB
 				}
 			}
 			return acl;
-		}		
-		
+		}
+
 	}
 }

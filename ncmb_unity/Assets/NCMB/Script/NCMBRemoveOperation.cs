@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ namespace NCMB.Internal
 	//Remove操作の履歴操作を扱う
 	internal class NCMBRemoveOperation : INCMBFieldOperation
 	{
-	
+
 		//protected HashSet<object> objects = new HashSet<object> ();
 		ArrayList objects = new ArrayList ();//追加
 		public NCMBRemoveOperation (object values)
@@ -97,7 +97,7 @@ namespace NCMB.Internal
 				//削除処理を行う
 				//ArrayList result = new ArrayList ((IList)oldValue);
 				//result = NCMBUtility._removeAllFromListMainFunction ((IList)oldValue, this.objects);
-								
+
 				//１．取り出したローカルデータから今回の引数で渡されたオブジェクトの削除
 				//例：estimatedData(result)＝{1,NCMBObject}　引数(values)={2,NCMBObject}の時,結果:{1}
 				ArrayList result = new ArrayList ((IList)oldValue);
@@ -112,7 +112,7 @@ namespace NCMB.Internal
 				//estimatedData(result)の中のNCMBObjectと引数のNCMBObjectがどちらもnewで作られたものなら上で消せるが、
 				//どちらかがnewでどちらかがCreateWithoutDataで作られた場合は上で消せない。
 				//そのため下の処理はobjectIdで検索をかけてobjectIdが一致するNCMBObjectの削除を行う
-				
+
 				//２．今回引数で渡されたオブジェクトから１.のオブジェクトの削除
 				//例：引数(objectsToBeRemoved)＝{2,NCMBObject}　1の結果={1}の時,結果:{2,NCMBObject}
 				ArrayList objectsToBeRemoved = new ArrayList ((IList)this.objects);
@@ -122,7 +122,7 @@ namespace NCMB.Internal
 						objectsToBeRemoved.Remove (removeObj2);
 					}
 				}
-								
+
 				//３．２の結果のリスト（引数）の中のNCMBObjectがすでに保存されている場合はobjectIdを返す
 				//まだ保存されていない場合はnullを返す
 				//例：CreateWithoutDataの場合「objectIds　Value:ppmQNGZahXpO8YSV」newの場合「objectIds　Value:null」
@@ -132,11 +132,11 @@ namespace NCMB.Internal
 						NCMBObject valuesNCMBObject = (NCMBObject)hashSetValue;
 						objectIds.Add (valuesNCMBObject.ObjectId);
 					}
-					
+
 					//４．resultの中のNCMBObjectからobjectIdsの中にあるObjectIdと一致するNCMBObjectの削除
 					//ここだけfor文で対応している理由は,
 					//「foreach文により要素を列挙している最中には、そのリスト(result)から要素を削除することはできない(Exception吐く)」
-					//例：上記の例の場合の結果result = {1}				
+					//例：上記の例の場合の結果result = {1}
 					object resultValue;
 					for (int i = 0; i < result.Count; i++) {
 						resultValue = result [i];
