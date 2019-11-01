@@ -1,7 +1,7 @@
 {
-  "createDate":"2017-01-01T00:00:00.000Z",
-  "objectId":"dummyObjectId",
-  "userName":"Ncmb Tarou",
-  "authData":{},
+  "createDate":"2019-11-01T03:43:37.889Z",
+  "objectId":"userDummyObjectId",
+  "userName":"ncmb",
   "sessionToken":"dummySessionToken",
+  "authData": null
 }

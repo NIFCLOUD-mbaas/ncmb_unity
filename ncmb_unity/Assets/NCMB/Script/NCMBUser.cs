@@ -217,15 +217,15 @@ namespace  NCMB
         	//save後処理 　オーバーライド用　ローカルのcurrentUserを反映する
 		internal override void _afterSave (int statusCode, NCMBException error)
 		{
-			// Base on AuthData
 			if (statusCode == 201 && this.AuthData != null && error == null) {
 				_saveCurrentUser((NCMBUser)this);
 			} else if (statusCode == 200 && error == null) {
-				// Base on SessionToken
-				if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
+				if (_currentUser == null) {
+					_saveCurrentUser((NCMBUser)this);
+				} else if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
 					this.SessionToken = _currentUser.SessionToken;
 					_saveCurrentUser((NCMBUser)this);
-					this._currentOperations.Remove("sessionToken");
+					this._currentOperations.Clear();
 				}
 			}
 		}
