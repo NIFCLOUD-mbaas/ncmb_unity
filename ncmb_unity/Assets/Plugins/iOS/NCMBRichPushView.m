@@ -16,6 +16,7 @@
 
 #import "NCMBRichPushView.h"
 #import "NCMBCloseImageView.h"
+#import "NCMBPush.h"
 
 #define SIZE_OF_STATUS_BAR 20.0
 #define DEFAULT_MARGIN_WIDTH 10
@@ -26,11 +27,11 @@
 #define CLOSE_BUTTON_BOTTOM_MARGIN 5.0
 #define CLOSE_BUTTON_LEFT_MARGIN 20.0
 
-@interface NCMBRichPushView() <UIWebViewDelegate, UIActionSheetDelegate>
+@interface NCMBRichPushView() <WKNavigationDelegate>
 
 @property (nonatomic) UIView *cv; //clear view
 @property (nonatomic) UIView *uv; //ui view
-@property (nonatomic) UIWebView *wv; // web view
+@property (nonatomic) WKWebView *wv; // web view
 @property (nonatomic) UIButton* closeButton;
 
 @end
@@ -58,8 +59,7 @@ enum{
     
     
     self.uv = [[UIView alloc]init];
-    
-    self.wv = [[UIWebView alloc]init];
+    self.wv = [[WKWebView alloc]init];
     
     //make instance of closeImageView
     NCMBCloseImageView *closeImage = [[NCMBCloseImageView alloc]initWithFrame:CGRectMake(0, 5, CLOSE_BUTTON_WIDTH, CLOSE_IMAGE_FRAME_SIZE)];
@@ -120,24 +120,24 @@ enum{
     self.uv.layer.cornerRadius = 5;
     self.uv.clipsToBounds = YES;
     
-    //set webpage size to webview size
-    self.wv.scalesPageToFit = YES;
-    
-    self.wv.delegate = self;
+    self.wv.navigationDelegate = self;
     
     //add subview to main view
-    [window addSubview:self.cv];
+    [window.rootViewController.view addSubview:self.cv];
     [self.uv addSubview:self.wv];
-    [window addSubview:self.uv];
+    [window.rootViewController.view addSubview:self.uv];
     
     [UIView animateWithDuration:0.4f animations:^{
         self.uv.alpha = 1.0f;
     }];
     
+    NSURL *url = [NSURL URLWithString:richUrl];
+    NSURLRequest *req = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
+    [self.wv loadRequest:req];
 }
 
--(void)loadRequest:(NSURLRequest *)request{
-    [self.wv loadRequest:request];
+- (WKNavigation *)loadRequest:(NSURLRequest *)request{
+    return [self.wv loadRequest:request];
 }
 
 - (void)resizeWebViewWithNotification:(NSNotification *)notification {
@@ -211,10 +211,15 @@ enum{
     self.wv = nil;
     self.cv = nil;
     
-    [rv removeFromSuperview];
-    rv = nil;
     // define selector
     SEL selector = NSSelectorFromString(@"resetRichPushView");
+    // get method signeture
+    NSMethodSignature* signature = [[NCMBPush class] methodSignatureForSelector: selector];
+    // make NSInvocation instance
+    NSInvocation* invocation = [ NSInvocation invocationWithMethodSignature: signature ];
+    [invocation setSelector:selector];
+    [invocation setTarget:[NCMBPush class]];
+    [invocation invoke];
 }
 
 -(void)startWebViewLoading{
@@ -231,83 +236,25 @@ enum{
     [activity stopAnimating];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
     [self endWebViewLoading];
 }
 
 # pragma webview delegate
 
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch (buttonIndex) {
-        case 0:
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:actionSheet.title]];
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (BOOL) webView:(UIWebView*) webView
-shouldStartLoadWithRequest:(NSURLRequest*) request
-  navigationType:(UIWebViewNavigationType) navigationType
-{
-        /* リッチプッシュ通知の仕様変更でシンプルになった
-    NSString* urlStr = [self.wv stringByEvaluatingJavaScriptFromString:@"document.URL"];
-    NSURL *homeUrl = [NSURL URLWithString:urlStr];
-    if (navigationType == UIWebViewNavigationTypeLinkClicked){
-
-        if (![request.URL.host isEqualToString:homeUrl.host]){
-            //UIWindow* window = [UIApplication sharedApplication].windows[0];
-            
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
-            actionSheet.delegate = self;
-            actionSheet.title = [[request URL] absoluteString];
-            [actionSheet addButtonWithTitle:@"Safariで開く"];
-            [actionSheet addButtonWithTitle:@"キャンセル"];
-            actionSheet.cancelButtonIndex = 1;
-            
-            [actionSheet showInView:self.wv];
-            
-            return NO;
-        }
-    }
-     */
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
     [self startWebViewLoading];
-    
-    return YES;
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error{
     if ([error code] != NSURLErrorCancelled){
         UIView* bg = [self.wv viewWithTag:ActivityIndicatorBackgroundTag];
         [bg removeFromSuperview];
 
         NSString *html = @"<html><body><h1>ページを開けません。</h1></body></html>";
         NSData *bodyData = [html dataUsingEncoding:NSUTF8StringEncoding];
-        [self.wv loadData:bodyData MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:nil];
-    }
-}
-
-# pragma handleRichPush
-
-static NCMBRichPushView *rv;
-
-+ (void) handleRichPush:(NSDictionary *)userInfo {
-    NSString *urlStr = [userInfo objectForKey:@"com.nifcloud.mbaas.RichUrl"];
-    
-    if ([urlStr isKindOfClass:[NSString class]]) {
-        if (rv == nil){
-            rv = [[NCMBRichPushView alloc]init];
-        }
-        // リッチビューが表示する
-        UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
-        [rv appearWebView:orientation url:urlStr];
-
-        NSURL *url = [NSURL URLWithString:urlStr];
-        NSURLRequest *req = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
-        [rv loadRequest:req];
+        [self.wv loadData:bodyData MIMEType:@"text/html" characterEncodingName:@"utf-8" baseURL:[[NSURL alloc]init]];
     }
 }
 
