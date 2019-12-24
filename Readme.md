@@ -32,9 +32,10 @@
 
 ## 動作環境
 
-- Unity 5.3~/Unity 2017.x~2019.x
-- Android 4.2~9.x
+- Unity 2017.x~2019.x
+- Android 7.x~9.x
 - iOS 10.x〜13.x
+(※2019年12月時点)
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
@@ -55,4 +56,4 @@
 
 - [ニフクラ mobile backend](https://mbaas.nifcloud.com)
 - [ドキュメント](https://mbaas.nifcloud.com/doc/current)
-- [ユーザーコミュニティ](https://github.com/NIFCloud-mbaas/UserCommunity)
+- [ユーザーコミュニティ](https://github.com/NIFCLOUD-mbaas/UserCommunity)
