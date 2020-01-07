@@ -1,0 +1,16 @@
+{
+  "createDate":"2017-01-01T00:00:00.000Z",
+  "objectId":"dummyObjectId",
+  "userName":"Ncmb Tarou",
+  "authData":{
+    "facebook":{
+      "id":"facebookDummyId200",
+      "access_token": "facebookDummyAccessToken200",
+      "expiration_date":{
+        "__type":"Date",
+        "iso":"2017-02-07T01:02:03.004Z"
+      }
+    }
+  },
+  "sessionToken":"dummySessionToken"
+}
