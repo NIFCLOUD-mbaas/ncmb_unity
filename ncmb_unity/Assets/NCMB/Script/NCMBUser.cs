@@ -220,7 +220,7 @@ namespace  NCMB
 			if (statusCode == 201 && this.AuthData != null && error == null) {
 				_saveCurrentUser((NCMBUser)this);
 			} else if (statusCode == 200 && error == null) {
-				if (_currentUser == null) {
+				if (_currentUser == null && this.AuthData != null) {
 					_saveCurrentUser((NCMBUser)this);
 				} else if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
 					this.SessionToken = _currentUser.SessionToken;
