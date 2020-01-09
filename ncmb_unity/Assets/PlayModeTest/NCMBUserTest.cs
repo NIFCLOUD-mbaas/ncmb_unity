@@ -1368,16 +1368,19 @@ public class NCMBUserTest
     }
 
 	[UnityTest]
-    public IEnumerator UpdateUserNotLogin()
+    public IEnumerator UpdateUserNotLoginYet()
     {
-        // テストデータ作成
-		NCMBUser user = new NCMBUser();
-		user.ObjectId = "anotherObjectId";
-		user.UserName = "newUserName";
-		user.SaveAsync((NCMBException e) =>
-		{
-			Assert.Null(e);
-			NCMBTestSettings.CallbackFlag = true;
+		NCMBUser.LogOutAsync((NCMBException e) => {
+			Assert.Null (e);
+			Assert.Null (NCMBUser.CurrentUser);
+			NCMBUser user = new NCMBUser();
+			user.ObjectId = "anotherObjectId";
+			user.UserName = "newUserName";
+			user.SaveAsync((NCMBException e1) =>
+			{
+				Assert.Null(e1);
+				NCMBTestSettings.CallbackFlag = true;
+			});
 		});
 
         yield return NCMBTestSettings.AwaitAsync();
