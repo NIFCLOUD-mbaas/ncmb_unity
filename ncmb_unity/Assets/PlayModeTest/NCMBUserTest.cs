@@ -883,6 +883,7 @@ public class NCMBUserTest
 		yield return NCMBTestSettings.AwaitAsync ();
 
 		Assert.AreEqual ("dummyObjectId", user.ObjectId);
+		Assert.Null(NCMBUser.CurrentUser);
 
 		// 登録成功の確認
 		Assert.IsEmpty (NCMBUser._getCurrentSessionToken ());
@@ -1364,5 +1365,26 @@ public class NCMBUserTest
         yield return NCMBTestSettings.AwaitAsync();
         // 登録成功の確認
         Assert.True(NCMBTestSettings.CallbackFlag);
+    }
+
+    [UnityTest]
+    public IEnumerator UpdateUserNotLoginYet()
+    {
+        NCMBUser.LogOutAsync((NCMBException e) => {
+            Assert.Null (e);
+            Assert.Null (NCMBUser.CurrentUser);
+            NCMBUser user = new NCMBUser();
+            user.ObjectId = "anotherObjectId";
+            user.UserName = "newUserName";
+            user.SaveAsync((NCMBException e1) =>
+            {
+                Assert.Null(e1);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
+
+        yield return NCMBTestSettings.AwaitAsync();
+        Assert.True(NCMBTestSettings.CallbackFlag);
+        Assert.Null (NCMBUser.CurrentUser);
     }
 }
