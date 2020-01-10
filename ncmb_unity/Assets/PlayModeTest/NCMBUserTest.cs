@@ -1367,21 +1367,21 @@ public class NCMBUserTest
         Assert.True(NCMBTestSettings.CallbackFlag);
     }
 
-	[UnityTest]
+    [UnityTest]
     public IEnumerator UpdateUserNotLoginYet()
     {
-		NCMBUser.LogOutAsync((NCMBException e) => {
-			Assert.Null (e);
-			Assert.Null (NCMBUser.CurrentUser);
-			NCMBUser user = new NCMBUser();
-			user.ObjectId = "anotherObjectId";
-			user.UserName = "newUserName";
-			user.SaveAsync((NCMBException e1) =>
-			{
-				Assert.Null(e1);
-				NCMBTestSettings.CallbackFlag = true;
-			});
-		});
+        NCMBUser.LogOutAsync((NCMBException e) => {
+            Assert.Null (e);
+            Assert.Null (NCMBUser.CurrentUser);
+            NCMBUser user = new NCMBUser();
+            user.ObjectId = "anotherObjectId";
+            user.UserName = "newUserName";
+            user.SaveAsync((NCMBException e1) =>
+            {
+                Assert.Null(e1);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+        });
 
         yield return NCMBTestSettings.AwaitAsync();
         Assert.True(NCMBTestSettings.CallbackFlag);

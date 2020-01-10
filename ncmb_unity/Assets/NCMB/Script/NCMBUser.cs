@@ -221,11 +221,10 @@ namespace  NCMB
 			if (statusCode == 201 && error == null
 					&& this.ContainsKey("authData") && this["authData"] != null) {
 				_saveCurrentUser((NCMBUser)this);
-			// login or reauthen by SNS
 			} else if (statusCode == 200 && error == null) {
-				if (_currentUser == null &&
-					(this.ContainsKey("authData") && this["authData"] != null)
-					|| (this.ContainsKey("sessionToken") && this["sessionToken"] != null)) {
+				// reauthen by SNS
+				if (_currentUser == null
+						&& this.ContainsKey("authData") && this["authData"] != null) {
 					_saveCurrentUser((NCMBUser)this);
 				// update logged user
 				} else if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
