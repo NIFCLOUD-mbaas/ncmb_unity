@@ -8,7 +8,7 @@
 ### バグ報告をする前の確認
 
 - SDKのバグについては、Github issuesで管理します
- - REST APIやダッシュボードのバグは、[不具合報告フォーム](https://inquiry.nifty.com/webeq/pub/mbaas/bug_report)からご連絡ください
+ - REST APIやダッシュボードのバグは、[不具合報告フォーム](https://inquiry.nifcloud.com/webeq/pub/mbaas/bug_report)からご連絡ください
  - issueを作成する前に、正しいリポジトリかを確認してください
  - Openになっているissueで、すでに報告されていないかを確認してください
 
@@ -20,7 +20,7 @@
 ## 要望の追加
 
 - 要望を追加する場合は、フリーフォーマットでissueを作成してください
- - REST APIやダッシュボードの改善要望は、[改善要望フォーム](https://inquiry.nifty.com/webeq/pub/mbaas/improvement)からご連絡ください
+ - REST APIやダッシュボードの改善要望は、[改善要望フォーム](https://inquiry.nifcloud.com/webeq/pub/mbaas/improvement)からご連絡ください
 
 ## プルリクエストを作成する
 
@@ -34,7 +34,7 @@
 ### Before submitting a bug report
 
 - We use Github issues to track SDKs' bugs
- - Please report bugs of the REST API, Dashboard using this Trouble Report Form [Support page](https://inquiry.nifty.com/webeq/pub/mbaas/bug_report)
+ - Please report bugs of the REST API, Dashboard using this Trouble Report Form [Support page](https://inquiry.nifcloud.com/webeq/pub/mbaas/bug_report)
  - Please check that you report bug for corresponding repository
  - Please check that if is already reported
 
@@ -46,7 +46,7 @@
 ## Request for enhancements
 
 - Please register Request for enhancements issues in free format
- - Please send request for enhancement of the REST API, Dashboard using this [Enhancement Request Form](https://inquiry.nifty.com/webeq/pub/mbaas/improvement)
+ - Please send request for enhancement of the REST API, Dashboard using this [Enhancement Request Form](https://inquiry.nifcloud.com/webeq/pub/mbaas/improvement)
 
 ## Pull Requests
 
