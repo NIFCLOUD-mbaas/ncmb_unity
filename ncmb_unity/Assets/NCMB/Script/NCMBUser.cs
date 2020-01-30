@@ -1,5 +1,5 @@
 /*******
- Copyright 2017-2019 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2020 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -217,15 +217,20 @@ namespace  NCMB
         	//save後処理 　オーバーライド用　ローカルのcurrentUserを反映する
 		internal override void _afterSave (int statusCode, NCMBException error)
 		{
-			// Base on AuthData
-			if (statusCode == 201 && this.AuthData != null && error == null) {
+			// register by SNS
+			if (statusCode == 201 && error == null
+					&& this.ContainsKey("authData") && this["authData"] != null) {
 				_saveCurrentUser((NCMBUser)this);
 			} else if (statusCode == 200 && error == null) {
-				// Base on SessionToken
-				if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
+				// reauthen by SNS
+				if (_currentUser == null
+						&& this.ContainsKey("authData") && this["authData"] != null) {
+					_saveCurrentUser((NCMBUser)this);
+				// update logged user
+				} else if (_currentUser != null && _currentUser.ObjectId.Equals(this.ObjectId)) {
 					this.SessionToken = _currentUser.SessionToken;
 					_saveCurrentUser((NCMBUser)this);
-					this._currentOperations.Remove("sessionToken");
+					this._currentOperations.Clear();
 				}
 			}
 		}
