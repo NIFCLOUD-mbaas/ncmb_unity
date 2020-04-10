@@ -1,20 +1,29 @@
+/*
+Copyright 2017-2020 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef void (*NativeMessageHandlerDelegate)(uint requestId,  const char* payload);
+typedef void (*CallbackDelegate)(uint requestId,  const char* payload);
 
 @interface NCMBAppleAuth : NSObject
-
 + (instancetype) sharedManager;
-
 - (void) loginWithAppleId:(uint)requestId;
-
 @end
 
-//bool AppleAuth_IOS_IsCurrentPlatformSupported();
-void AppleAuth_IOS_SetupNativeMessageHandlerCallback(NativeMessageHandlerDelegate callback);
-void AppleAuth_IOS_LoginWithAppleId(uint requestId);
-void AppleAuth_IOS_RegisterCredentialsRevokedCallbackId(uint requestId);
+void AppleAuth_HandlerCallback(CallbackDelegate callback);
+void AppleAuth_LoginWithAppleId(uint requestId);
 NS_ASSUME_NONNULL_END
