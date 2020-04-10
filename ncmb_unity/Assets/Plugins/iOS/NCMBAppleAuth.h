@@ -24,6 +24,6 @@ typedef void (*CallbackDelegate)(uint requestId,  const char* payload);
 - (void) loginWithAppleId:(uint)requestId;
 @end
 
-void AppleAuth_HandlerCallback(CallbackDelegate callback);
-void AppleAuth_LoginWithAppleId(uint requestId);
+void NCMBAppleAuth_HandlerCallback(CallbackDelegate callback);
+void NCMBAppleAuth_LoginWithAppleId(uint requestId);
 NS_ASSUME_NONNULL_END

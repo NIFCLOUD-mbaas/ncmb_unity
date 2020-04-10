@@ -18,8 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
+using UnityEngine;
 
-namespace UnityEngine.SignInWithAppleCustom
+namespace NCMB
 {
     public class NCMBAppleAuthenManager
     {
