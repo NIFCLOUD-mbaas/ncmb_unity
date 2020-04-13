@@ -699,8 +699,8 @@ public class NCMBUserTest
 		Assert.True(NCMBTestSettings.CallbackFlag);
 	}
 
-	[UnityTest]
-	public IEnumerator LogInLogoutThenLogInWithAuthDataAsyncApple()
+    [UnityTest]
+    public IEnumerator LogInLogoutThenLogInWithAuthDataAsyncApple()
 	{
 		// テストデータ作成
 		NCMBUser user = new NCMBUser();
@@ -714,7 +714,7 @@ public class NCMBUserTest
 				Assert.Null(e1);
 				Assert.Null(NCMBUser.CurrentUser);
 				user = new NCMBUser();
-				user.AuthData = facebookParams.param;
+				user.AuthData = appleParams.param;
 				user.LogInWithAuthDataAsync((NCMBException e2) => {
 					Assert.Null(e2);
 
