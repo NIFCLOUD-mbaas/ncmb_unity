@@ -906,17 +906,17 @@ namespace  NCMB
 				authData.Add ("oauth_token_secret", twitterParam ["oauth_token_secret"]);
 				break;
 			case "apple":
-				var fappleAuthData = (Dictionary<string, object>)this["authData"];
-				var appleParam = (Dictionary<string, object>)fappleAuthData["apple"];
+				var appleAuthData = (Dictionary<string, object>)this["authData"];
+				var appleParam = (Dictionary<string, object>)appleAuthData["apple"];
 				authData.Add("id", appleParam["id"]);
 				authData.Add("access_token", appleParam["access_token"]);
 				authData.Add("client_id", appleParam["client_id"]);
 				break;
 			case "anonymous":
-			var anonymousAuthData = (Dictionary<string, object>)this ["authData"];
-			var anonymousParam = (Dictionary<string, object>)anonymousAuthData ["anonymous"];
-			authData.Add ("id", anonymousParam ["id"]);
-			break;
+			    var anonymousAuthData = (Dictionary<string, object>)this ["authData"];
+			    var anonymousParam = (Dictionary<string, object>)anonymousAuthData ["anonymous"];
+			    authData.Add ("id", anonymousParam ["id"]);
+			    break;
 			}
 
 			return authData;
