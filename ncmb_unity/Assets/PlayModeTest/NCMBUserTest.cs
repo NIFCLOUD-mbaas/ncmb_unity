@@ -55,6 +55,21 @@ public class NCMBUserTest
 		                                             "invalidTwitterDummyAuthToken",
 		                                             "invalidTwitterDummyAuthSecret"
 	                                             );
+	NCMBAppleParameters appleParams = new NCMBAppleParameters(
+		                                        "appleDummyId",
+		                                        "appleDummyAccessToken",
+		                                        "com.apple.singinapple"
+		                                        );
+	NCMBAppleParameters appleParams200 = new NCMBAppleParameters(
+												"appleDummyId200",
+												"appleDummyAccessToken200",
+												"com.apple.singinapple"
+												);
+	NCMBAppleParameters invalidAppleParams = new NCMBAppleParameters(
+												"invalidAppleDummyId",
+												"invalidAppleDummyAccessToken",
+												"com.apple.singinapple"
+												);
 
 	[SetUp]
 	public void Init ()
@@ -623,6 +638,236 @@ public class NCMBUserTest
 	}
 
 	/**
+     * - 内容：LogInWithAuthDataAsyncがAppleで成功する事を確認する
+     * - 結果：各パラメータが正しく取得できること
+     */
+	[UnityTest]
+	public IEnumerator LogInWithAuthDataAsyncApple()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		user = NCMBUser.CurrentUser;
+		Assert.AreEqual("dummyObjectId", user.ObjectId);
+
+		// appleパラメータ確認
+		Dictionary<string, object> authData = user.GetAuthDataForProvider("apple");
+		Assert.AreEqual("appleDummyId", authData["id"]);
+		Assert.AreEqual("appleDummyAccessToken", authData["access_token"]);
+		Assert.AreEqual("com.apple.singinapple", authData["client_id"]);
+
+		// 登録成功の確認
+		Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.True(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	[UnityTest]
+	public IEnumerator LogInWithAuthDataAsyncAppleStatus200()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams200.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e1) => {
+			Assert.Null(e1);
+			NCMBUser currentUser = NCMBUser.CurrentUser;
+			Assert.NotNull(currentUser);
+			Assert.AreEqual("dummyObjectId", currentUser.ObjectId);
+
+			// appleパラメータ確認
+			Dictionary<string, object> authData = currentUser.GetAuthDataForProvider("apple");
+			Assert.AreEqual("appleDummyId200", authData["id"]);
+			Assert.AreEqual("appleDummyAccessToken200", authData["access_token"]);
+			Assert.AreEqual("com.apple.singinapple", authData["client_id"]);
+
+			// 登録成功の確認
+			Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+			Assert.True(currentUser.IsLinkWith("apple"));
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	[UnityTest]
+	public IEnumerator LogInLogoutThenLogInWithAuthDataAsyncApple()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+			NCMBUser.LogOutAsync((NCMBException e1) =>
+			{
+				Assert.Null(e1);
+				Assert.Null(NCMBUser.CurrentUser);
+				user = new NCMBUser();
+				user.AuthData = facebookParams.param;
+				user.LogInWithAuthDataAsync((NCMBException e2) => {
+					Assert.Null(e2);
+
+					NCMBUser currentUser = NCMBUser.CurrentUser;
+					Assert.NotNull(currentUser);
+					Assert.AreEqual("dummyObjectId", currentUser.ObjectId);
+
+					// appleパラメータ確認
+					Dictionary<string, object> authData = user.GetAuthDataForProvider("apple");
+					Assert.AreEqual("appleDummyId", authData["id"]);
+					Assert.AreEqual("appleDummyAccessToken", authData["access_token"]);
+					Assert.AreEqual("com.apple.singinapple", authData["client_id"]);
+
+					// 登録成功の確認
+					Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+					Assert.True(user.IsLinkWith("apple"));
+
+					NCMBTestSettings.CallbackFlag = true;
+				});
+			});
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	[UnityTest]
+	public IEnumerator LogInWithAuthDataAsyncAppleThenFetchOtherUser()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+
+			user = new NCMBUser();
+			user.ObjectId = "anotherObjectId";
+			user.FetchAsync();
+
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		user = NCMBUser.CurrentUser;
+		Assert.AreEqual("dummyObjectId", user.ObjectId);
+
+		// appleパラメータ確認
+		Dictionary<string, object> authData = user.GetAuthDataForProvider("apple");
+		Assert.AreEqual("appleDummyId", authData["id"]);
+		Assert.AreEqual("appleDummyAccessToken", authData["access_token"]);
+		Assert.AreEqual("com.apple.singinapple", authData["client_id"]);
+
+		// 登録成功の確認
+		Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.True(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	[UnityTest]
+	public IEnumerator LogInWithAuthDataAsyncAppleThenDeleteOtherUser()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+			user = new NCMBUser();
+			user.ObjectId = "anotherObjectId";
+			user.DeleteAsync((NCMBException e1) => {
+				Assert.Null(e1);
+				NCMBTestSettings.CallbackFlag = true;
+			});
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		user = NCMBUser.CurrentUser;
+		Assert.AreEqual("dummyObjectId", user.ObjectId);
+
+		// appleパラメータ確認
+		Dictionary<string, object> authData = user.GetAuthDataForProvider("apple");
+		Assert.AreEqual("appleDummyId", authData["id"]);
+		Assert.AreEqual("appleDummyAccessToken", authData["access_token"]);
+		Assert.AreEqual("com.apple.singinapple", authData["client_id"]);
+
+		// 登録成功の確認
+		Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.True(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	[UnityTest]
+	public IEnumerator LogInWithAuthDataAsyncAppleThenUpdateOtherUser()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+			user = new NCMBUser();
+			user.ObjectId = "anotherObjectId";
+			user.UserName = "newUserName";
+			user.SaveAsync((NCMBException e2) => {
+				Assert.Null(e2);
+				NCMBTestSettings.CallbackFlag = true;
+			});
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		user = NCMBUser.CurrentUser;
+		Assert.AreEqual("dummyObjectId", user.ObjectId);
+
+		// appleパラメータ確認
+		Dictionary<string, object> authData = user.GetAuthDataForProvider("apple");
+		Assert.AreEqual("appleDummyId", authData["id"]);
+		Assert.AreEqual("appleDummyAccessToken", authData["access_token"]);
+		Assert.AreEqual("com.apple.singinapple", authData["client_id"]);
+
+		// 登録成功の確認
+		Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.True(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	/**
+     * - 内容：LogInWithAuthDataAsyncが無効なリクエストの時にAppleで失敗する事を確認する
+     * - 結果：session Tokenがnullであること
+     */
+	[UnityTest]
+	public IEnumerator LogInWithAuthDataAsyncInvalidApple()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = invalidAppleParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		// 登録失敗の確認
+		Assert.IsEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.False(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	/**
      * - 内容：LinkWithAuthDataAsyncがFacebookで成功する事を確認する
      * - 結果：リンクしているauth dataがFacebookであること
      */
@@ -755,6 +1000,72 @@ public class NCMBUserTest
 	}
 
 	/**
+     * - 内容：LinkWithAuthDataAsyncがAppleで成功する事を確認する
+     * - 結果：リンクしているauth dataがAppleであること
+     */
+	[UnityTest]
+	public IEnumerator LinkWithAuthDataAsyncApple()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+		NCMBTestSettings.CallbackFlag = false;
+
+		// authData追加
+		user.LinkWithAuthDataAsync(twitterParams.param, (NCMBException e1) => {
+			Assert.Null(e1);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		// 追加成功の確認
+		Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.True(user.IsLinkWith("apple"));
+		Assert.True(user.IsLinkWith("twitter"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	/**
+     * - 内容：LinkWithAuthDataAsyncがAppleで無効なリクエストで失敗する事を確認する
+     * - 結果：リンクしているauth dataがAppleでないこと
+     */
+	[UnityTest]
+	public IEnumerator LinkWithAuthDataAsyncInvalidApple()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = twitterParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+		NCMBTestSettings.CallbackFlag = false;
+
+		// authData追加
+		user.LinkWithAuthDataAsync(invalidAppleParams.param, (NCMBException e) => {
+			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		// 追加失敗の確認
+		Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.True(user.IsLinkWith("twitter"));
+		Assert.False(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	/**
      * - 内容：UnLinkがFacebookで成功する事を確認する
      * - 結果：リンクしているauth dataがFacebookでないこと
      */
@@ -818,6 +1129,39 @@ public class NCMBUserTest
 		// 削除成功の確認
 		Assert.False (user.IsLinkWith ("twitter"));
 		Assert.True (NCMBTestSettings.CallbackFlag);
+	}
+
+	/**
+     * - 内容：UnLinkがAppleで成功する事を確認する
+     * - 結果：リンクしているauth dataがAppleでないこと
+     */
+	[UnityTest]
+	public IEnumerator UnLinkWithAuthDataAsyncApple()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+		NCMBTestSettings.CallbackFlag = false;
+
+		Assert.True(user.IsLinkWith("apple"));
+
+		// authData削除
+		user.UnLinkWithAuthDataAsync("apple", (NCMBException e1) => {
+			Assert.Null(e1);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		// 削除成功の確認
+		Assert.False(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
 	}
 
 	/**

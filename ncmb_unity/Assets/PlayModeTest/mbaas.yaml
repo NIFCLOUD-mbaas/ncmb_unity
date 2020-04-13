@@ -245,6 +245,81 @@ response:
   file: /json/valid_put_response.json
 ---
 request:
+  url: 2013-09-01/users/dummyObjectId
+  method: PUT
+  body:
+    authData:
+      apple:
+        id: invalidAppleDummyId
+        access_token: invalidAppleDummyAccessToken
+        client_id: com.apple.singinapple
+response:
+  status: 401
+  file: /json/authentication_error_apple.json
+---
+request:
+  url: 2013-09-01/users
+  method: POST
+  body:
+    authData:
+      apple:
+        id: appleDummyId
+        access_token: appleDummyAccessToken
+        client_id: com.apple.singinapple
+response:
+  status: 201
+  file: /json/valid_post_registerUserApple_response.json
+---
+request:
+  url: 2013-09-01/users
+  method: POST
+  body:
+    authData:
+      apple:
+        id: appleDummyId200
+        access_token: appleDummyAccessToken200
+        client_id: com.apple.singinapple
+response:
+  status: 200
+  file: /json/valid_post_registerUserApple_response200.json
+---
+request:
+  url: 2013-09-01/users
+  method: POST
+  body:
+    authData:
+      apple:
+        id: invalidAppleDummyId
+        access_token: invalidAppleDummyAccessToken
+        client_id: com.apple.singinapple
+response:
+  status: 404
+  file: /json/authentication_error_apple.json
+---
+request:
+  url: 2013-09-01/users/dummyObjectId
+  method: PUT
+  body:
+    authData:
+      apple:
+        id: appleDummyId
+        access_token: appleDummyAccessToken
+        client_id: com.apple.singinapple
+response:
+  status: 200
+  file: /json/valid_put_response.json
+---
+request:
+  url: 2013-09-01/users/dummyObjectId
+  method: PUT
+  body:
+    authData:
+      apple: null
+response:
+  status: 201
+  file: /json/valid_put_response.json
+---
+request:
   url: 2013-09-01/users
   method: POST
   body:
