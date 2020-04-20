@@ -65,6 +65,16 @@ public class NCMBUserTest
 												"appleDummyAccessToken200",
 												"com.apple.singinapple"
 												);
+	NCMBAppleParameters appleParams409 = new NCMBAppleParameters(
+												"appleDummyId409",
+												"appleDummyAccessToken409",
+												"com.apple.singinapple"
+												);
+	NCMBAppleParameters appleParams403 = new NCMBAppleParameters(
+												"appleDummyId403",
+												"appleDummyAccessToken403",
+												"com.apple.singinapple"
+												);
 	NCMBAppleParameters invalidAppleParams = new NCMBAppleParameters(
 												"invalidAppleDummyId",
 												"invalidAppleDummyAccessToken",
@@ -868,6 +878,54 @@ public class NCMBUserTest
 	}
 
 	/**
+     * - 内容：LogInWithAuthDataAsync apple id fails with a duplicate user error.
+     * - 結果：session Tokenがnullであること
+     */
+	[UnityTest]
+	public IEnumerator LogInWithAuthDataAsyncAppleStatus409()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams409.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.AreEqual(NCMBException.DUPPLICATION_ERROR, e.ErrorCode);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		// 登録失敗の確認
+		Assert.IsEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.False(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	/**
+     * - 内容：LogInWithAuthDataAsync apple id fails with a invalid setting error.
+     * - 結果：session Tokenがnullであること
+     */
+	[UnityTest]
+	public IEnumerator LogInWithAuthDataAsyncAppleStatus403()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = appleParams403.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.AreEqual(NCMBException.INVALID_SETTING, e.ErrorCode);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		// 登録失敗の確認
+		Assert.IsEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.False(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	/**
      * - 内容：LinkWithAuthDataAsyncがFacebookで成功する事を確認する
      * - 結果：リンクしているauth dataがFacebookであること
      */
@@ -1054,6 +1112,39 @@ public class NCMBUserTest
 		// authData追加
 		user.LinkWithAuthDataAsync(invalidAppleParams.param, (NCMBException e) => {
 			Assert.AreEqual(NCMBException.OAUTH_ERROR, e.ErrorCode);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+
+		// 追加失敗の確認
+		Assert.IsNotEmpty(NCMBUser._getCurrentSessionToken());
+		Assert.True(user.IsLinkWith("twitter"));
+		Assert.False(user.IsLinkWith("apple"));
+		Assert.True(NCMBTestSettings.CallbackFlag);
+	}
+
+	/**
+     * - 内容：LinkWithAuthDataAsync apple id fails with a invalid setting error.
+     * - 結果：リンクしているauth dataがAppleでないこと
+     */
+	[UnityTest]
+	public IEnumerator LinkWithAuthDataAsyncAppleStatus403()
+	{
+		// テストデータ作成
+		NCMBUser user = new NCMBUser();
+		user.AuthData = twitterParams.param;
+
+		// authData登録
+		user.LogInWithAuthDataAsync((NCMBException e) => {
+			Assert.Null(e);
+			NCMBTestSettings.CallbackFlag = true;
+		});
+		yield return NCMBTestSettings.AwaitAsync();
+		NCMBTestSettings.CallbackFlag = false;
+
+		// authData追加
+		user.LinkWithAuthDataAsync(appleParams403.param, (NCMBException e) => {
+			Assert.AreEqual(NCMBException.INVALID_SETTING, e.ErrorCode);
 			NCMBTestSettings.CallbackFlag = true;
 		});
 		yield return NCMBTestSettings.AwaitAsync();
