@@ -812,10 +812,10 @@ namespace  NCMB
 				throw new NCMBException (new ArgumentException ("Current User authData not exist"));
 			}
 
-			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "apple", "anonymous" };
 
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or apple or anonymous"));
 			}
 
 			// authDataの退避
@@ -860,10 +860,10 @@ namespace  NCMB
 		/// <returns> true:登録済　false:未登録 </returns>
 		public bool IsLinkWith (string provider)
 		{
-			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "apple", "anonymous" };
 
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or apple or anonymous"));
 			}
 
 			if (this.AuthData == null) {
@@ -880,9 +880,9 @@ namespace  NCMB
 		/// <returns>指定されたSNSのauthData</returns>
 		public Dictionary<string, object> GetAuthDataForProvider (string provider)
 		{
-			List<string> providerList = new List<string> () { "facebook", "twitter", "anonymous" };
+			List<string> providerList = new List<string> () { "facebook", "twitter", "apple", "anonymous" };
 			if (string.IsNullOrEmpty (provider) || !providerList.Contains (provider)) {
-				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or anonymous"));
+				throw new NCMBException (new ArgumentException ("Provider must be facebook or twitter or apple or anonymous"));
 			}
 
 			Dictionary<string, object> authData = new Dictionary<string, object> ();
@@ -905,11 +905,18 @@ namespace  NCMB
 				authData.Add ("oauth_token", twitterParam ["oauth_token"]);
 				authData.Add ("oauth_token_secret", twitterParam ["oauth_token_secret"]);
 				break;
-			case "anonymous":
-				var anonymousAuthData = (Dictionary<string, object>)this ["authData"];
-				var anonymousParam = (Dictionary<string, object>)anonymousAuthData ["anonymous"];
-				authData.Add ("id", anonymousParam ["id"]);
+			case "apple":
+				var appleAuthData = (Dictionary<string, object>)this["authData"];
+				var appleParam = (Dictionary<string, object>)appleAuthData["apple"];
+				authData.Add("id", appleParam["id"]);
+				authData.Add("access_token", appleParam["access_token"]);
+				authData.Add("client_id", appleParam["client_id"]);
 				break;
+			case "anonymous":
+			    var anonymousAuthData = (Dictionary<string, object>)this ["authData"];
+			    var anonymousParam = (Dictionary<string, object>)anonymousAuthData ["anonymous"];
+			    authData.Add ("id", anonymousParam ["id"]);
+			    break;
 			}
 
 			return authData;
