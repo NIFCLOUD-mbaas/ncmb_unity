@@ -45,7 +45,7 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 
 ## ライセンス
 
-このSDKのライセンスはApache License Version 2.0、YamlDotNet（ https://github.com/aaubry/YamlDotNet ）に従います。
+このSDKのライセンスはApache License Version 2.0、[YamlDotNet](https://github.com/aaubry/YamlDotNet)に従います。
 
 ## 参考URL集
 
