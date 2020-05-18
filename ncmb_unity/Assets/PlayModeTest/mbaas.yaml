@@ -724,7 +724,7 @@ request:
   method: GET
 response:
   status: 200
-  file: /json/get_User_response.json
+  file: /json/get_User_response.json
 ---
 request:
   url: 2013-09-01/files/delete.txt

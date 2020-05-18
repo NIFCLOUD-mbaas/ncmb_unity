@@ -109,8 +109,9 @@ public class MockServer
 			mockObj.status = 200;
 
 		} else {
+			String decodeUrl = WWW.UnEscapeURL(request.Url.ToString());
 			foreach (MockServerObject mock in mockObjectDic[request.HttpMethod]) {
-				if (request.Url.ToString ().Equals (mock.url)) {
+				if (decodeUrl.Equals (mock.url)) {
 					if (bodyJson.Length > 0) {
 						if (bodyJson.Equals (mock.body) || request.ContentType.Equals ("multipart/form-data; boundary=_NCMBBoundary")) {
 							mockObj = mock;
@@ -235,7 +236,7 @@ public class MockServer
 			// Read from file into a string
 			string content = File.ReadAllText (filePath);
 			if (removeBreakline) {
-				return content.Replace ("\n", "");
+				return content.Replace ("\n", "").Replace("\r","");
 			}
 			return content;
 		}
