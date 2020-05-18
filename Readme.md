@@ -2,7 +2,7 @@
 
 ## 概要
 
-スマートフォンアプリ向けクラウド「ニフクラ mobile backend（https://mbaas.nifcloud.com/）」用の **** SDK です。
+スマートフォンアプリ向けクラウド「[ニフクラ mobile backend](https://mbaas.nifcloud.com/)」用の Unity SDK です。
 SDKを導入することで、以下の機能をアプリから利用することが可能です。
 
 - [プッシュ通知](https://mbaas.nifcloud.com/doc/current/push/basic_usage_unity.html)
