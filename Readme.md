@@ -2,24 +2,19 @@
 
 ## 概要
 
-ニフクラ mobile backend Unity SDKは、
-モバイルアプリのバックエンド機能を提供するクラウドサービス
-[ニフクラ mobile backend](https://mbaas.nifcloud.com)用のUnity SDKです。
+スマートフォンアプリ向けクラウド「[ニフクラ mobile backend](https://mbaas.nifcloud.com/)」用の Unity SDK です。
+SDKを導入することで、以下の機能をアプリから利用することが可能です。
 
-- プッシュ通知
-- データストア
-- 会員管理
-- ファイルストア
-- SNS連携
-- スクリプト
+- [プッシュ通知](https://mbaas.nifcloud.com/doc/current/push/basic_usage_unity.html)
+- [会員管理・認証](https://mbaas.nifcloud.com/doc/current/user/basic_usage_unity.html)
+- [SNS連携](https://mbaas.nifcloud.com/doc/current/sns/facebook_unity.html)
+- [データストア](https://mbaas.nifcloud.com/doc/current/datastore/basic_usage_unity.html)
+- [ファイルストア](https://mbaas.nifcloud.com/doc/current/filestore/basic_usage_unity.html)
+- [位置情報検索](https://mbaas.nifcloud.com/doc/current/geopoint/basic_usage_unity.html)
+- [スクリプト](https://mbaas.nifcloud.com/doc/current/script/basic_usage_unity.html)
 
-といった機能をアプリから利用することが可能です。
-
-このSDKを利用する前に、ニフクラ mobile backendのアカウントを作成する必要があります。
-[ニフクラ mobile backend](https://mbaas.nifcloud.com)のサービスサイトからアカウント登録を行ってください。
-
-アカウント作成後のSDK導入手順については、
-[クイックスタート](https://mbaas.nifcloud.com/doc/current/introduction/quickstart_unity.html)をご覧ください。
+SDKを通じてAPIを利用するには、[ニフクラ mobile backend](https://mbaas.nifcloud.com)の会員登録が必要です。
+SDK導入手順については、[クイックスタート](https://mbaas.nifcloud.com/doc/current/introduction/quickstart_unity.html)をご覧ください。
 
 ## 依存ライブラリ
 
@@ -35,7 +30,7 @@
 - Unity 2017.x~2019.x
 - Android 7.x~9.x
 - iOS 10.x〜13.x
-(※2020年4月時点)
+(※2020年5月時点)
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
@@ -46,11 +41,11 @@
 ※なお、mobile backend にて大規模な改修が行われた際は、1年半以内のSDKであっても対応出来ない場合がございます。<br>
 その際は[informationブログ](https://mbaas.nifcloud.com/info/)にてお知らせいたします。予めご了承ください。
 
-- v4.0.1 ～ (※2020年1月時点)
+- v4.0.1 ～ (※2020年5月時点)
 
 ## ライセンス
 
-このSDKのライセンスはApache License Version 2.0、YamlDotNet（ https://github.com/aaubry/YamlDotNet ）に従います。
+このSDKのライセンスはApache License Version 2.0、[YamlDotNet](https://github.com/aaubry/YamlDotNet)に従います。
 
 ## 参考URL集
 
