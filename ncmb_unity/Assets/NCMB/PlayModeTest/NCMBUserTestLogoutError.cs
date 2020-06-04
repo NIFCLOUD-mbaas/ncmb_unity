@@ -9,7 +9,7 @@ public class NCMBUserTestLogoutError
 	[SetUp]
 	public void Init ()
 	{
-        NCMBTestSettings.Initialize ("PlayModeTest/mbaasErrors.yaml");
+        NCMBTestSettings.Initialize ("NCMB/PlayModeTest/mbaasErrors.yaml");
 	}
 	/**
 	* - 内容：LogoutAsyncError
