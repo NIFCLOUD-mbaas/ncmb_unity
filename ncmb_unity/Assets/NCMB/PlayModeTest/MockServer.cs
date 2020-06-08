@@ -109,8 +109,9 @@ public class MockServer
 			mockObj.status = 200;
 
 		} else {
+			var url = Uri.UnescapeDataString (request.Url.ToString());
 			foreach (MockServerObject mock in mockObjectDic[request.HttpMethod]) {
-				if (request.Url.ToString ().Equals (mock.url)) {
+				if (url.Equals (mock.url)) {
 					if (bodyJson.Length > 0) {
 						if (bodyJson.Equals (mock.body) || request.ContentType.Equals ("multipart/form-data; boundary=_NCMBBoundary")) {
 							mockObj = mock;
