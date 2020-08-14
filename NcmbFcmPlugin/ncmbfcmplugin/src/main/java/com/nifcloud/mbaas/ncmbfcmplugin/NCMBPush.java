@@ -68,15 +68,6 @@ public class NCMBPush {
 			return;
 		}
 
-		ApplicationInfo appInfo;
-		String activityName ="";
-		try {
-			appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-			activityName = appInfo.packageName + appInfo.metaData.getString(".UnityPlayerNativeActivity");
-		} catch (PackageManager.NameNotFoundException e) {
-			e.printStackTrace();
-		}
-
 		//NCMBDialogActivityクラスを呼び出す
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setClass(context.getApplicationContext(), NCMBDialogActivity.class);
@@ -84,7 +75,6 @@ public class NCMBPush {
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		int themeWallpaperNoTitleBar = context.getResources().getIdentifier("Theme.Wallpaper.NoTitleBar", "style", "android");
 		intent.putExtra(NCMBDialogActivity.INTENT_EXTRA_THEME, themeWallpaperNoTitleBar);
-		intent.putExtra(NCMBDialogActivity.INTENT_EXTRA_LAUNCH_CLASS, activityName);
 		intent.putExtra(NCMBDialogActivity.INTENT_EXTRA_SUBJECT, bundle.getString("title"));
 		intent.putExtra(NCMBDialogActivity.INTENT_EXTRA_MESSAGE, bundle.getString("message"));
 		intent.putExtra(NCMBDialogActivity.INTENT_EXTRA_DISPLAYTYPE, dialogPushConfiguration.getDisplayType());
