@@ -90,9 +90,13 @@ namespace NCMB
 		[Serializable]
 		public class AuthToken
 		{
+			public string id;
+			public string username;
 			public string token;
 			public string secret;
 
+			public string Id { get { return this.id; } }
+			public string Username { get { return this.username; } }
 			public string Token { get { return this.token; } }
 			public string Secret { get { return this.secret; } }
 

@@ -1,10 +1,18 @@
-//
-//  TwitterAPI.m
-//  demoTwitter
-//
-//  Created by Jimmy Huynh on 8/27/20.
-//  Copyright © 2020 Jimmy Huynh. All rights reserved.
-//
+/*
+ Copyright 2017-2020 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 #import "TwitterAPI.h"
 
@@ -79,8 +87,6 @@ static char * cStringCopy(const char *string)
     NSLog(@"-- callbackScheme: %@", self.callbackScheme);
     
      [[TwitterAPI sharedManager].twitter postTokenRequest:^(NSURL *url, NSString *oauthToken) {
-             NSLog(@"-- url: %@", url);
-             NSLog(@"-- oauthToken: %@", oauthToken);
              [[UIApplication sharedApplication] openURL:url];
          } authenticateInsteadOfAuthorize:NO
                          forceLogin:@(YES)
@@ -91,7 +97,7 @@ static char * cStringCopy(const char *string)
          // Callback error
          NSMutableDictionary *tmpAppleDic = [NSMutableDictionary dictionary];
          [tmpAppleDic setObject:[NSNumber numberWithInt:error.code] forKey:@"code"];
-         [tmpAppleDic setValue:error.localizedFailureReason forKey: @"message"];
+         [tmpAppleDic setValue:error.localizedDescription forKey: @"message"];
 
          NSDictionary *responseDictionary = [tmpAppleDic copy];
          char *serializedSession = serializedJSONFromNSDictionary(responseDictionary);
@@ -105,19 +111,33 @@ static char * cStringCopy(const char *string)
 - (void)onOpenURL:(NSNotification *)notification
 {
     NSURL *url = notification.userInfo[@"url"];
-    if ([[url scheme] isEqualToString:@"myapp"] != NO) {
+    if ([[url scheme] isEqualToString:[TwitterAPI sharedManager].callbackScheme] != NO) {
         NSDictionary *d = [self parametersDictionaryFromQueryString:[url query]];
         NSString *token = d[@"oauth_token"];
         NSString *verifier = d[@"oauth_verifier"];
-
-        // Callback login success
-        NSMutableDictionary *tmpAppleDic = [NSMutableDictionary dictionary];
-        [tmpAppleDic setValue:token forKey: @"token"];
-        [tmpAppleDic setValue:verifier forKey: @"secret"];
-        NSDictionary *responseDictionary = [tmpAppleDic copy];
-        char *serializedSession = serializedJSONFromNSDictionary(responseDictionary);
-        UnitySendMessage("NCMBTwitterObject", "LoginComplete", serializedSession);
         
+        [[TwitterAPI sharedManager].twitter postAccessTokenRequestWithPIN:verifier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
+            
+            // Callback login success
+            NSMutableDictionary *tmpAppleDic = [NSMutableDictionary dictionary];
+            [tmpAppleDic setValue:oauthToken forKey: @"token"];
+            [tmpAppleDic setValue:oauthTokenSecret forKey: @"secret"];
+            [tmpAppleDic setValue:screenName forKey: @"username"];
+            [tmpAppleDic setValue:userID forKey: @"id"];
+            NSDictionary *responseDictionary = [tmpAppleDic copy];
+            char *serializedSession = serializedJSONFromNSDictionary(responseDictionary);
+            UnitySendMessage("NCMBTwitterObject", "LoginComplete", serializedSession);
+            
+        } errorBlock:^(NSError *error) {
+            // Callback error
+            NSMutableDictionary *tmpAppleDic = [NSMutableDictionary dictionary];
+            [tmpAppleDic setObject:[NSNumber numberWithInt:error.code] forKey:@"code"];
+            [tmpAppleDic setValue:error.localizedDescription forKey: @"message"];
+
+            NSDictionary *responseDictionary = [tmpAppleDic copy];
+            char *serializedSession = serializedJSONFromNSDictionary(responseDictionary);
+            UnitySendMessage("NCMBTwitterObject", "LoginFailed", serializedSession);
+        }];
         
     }
 }
