@@ -84,7 +84,6 @@ static char * cStringCopy(const char *string)
 -(void) loginTwitter:(NSString *) consumerConsumerKey consumerSecretConsumerKey:(NSString *) consumerSecretConsumerKey callbackScheme:(NSString *) callbackScheme {
      self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey: consumerConsumerKey consumerSecret:consumerSecretConsumerKey];
     self.callbackScheme = callbackScheme;
-    NSLog(@"-- callbackScheme: %@", self.callbackScheme);
     
      [[TwitterAPI sharedManager].twitter postTokenRequest:^(NSURL *url, NSString *oauthToken) {
              [[UIApplication sharedApplication] openURL:url];
@@ -93,7 +92,6 @@ static char * cStringCopy(const char *string)
                          screenName:nil
                         oauthCallback:[TwitterAPI sharedManager].callbackScheme
                          errorBlock:^(NSError *error) {
-                             NSLog(@"-- error: %@", error);
          // Callback error
          NSMutableDictionary *tmpAppleDic = [NSMutableDictionary dictionary];
          [tmpAppleDic setObject:[NSNumber numberWithInt:error.code] forKey:@"code"];
@@ -111,7 +109,9 @@ static char * cStringCopy(const char *string)
 - (void)onOpenURL:(NSNotification *)notification
 {
     NSURL *url = notification.userInfo[@"url"];
-    if ([[url scheme] isEqualToString:[TwitterAPI sharedManager].callbackScheme] != NO) {
+    NSString *fullScheme = [TwitterAPI sharedManager].callbackScheme;
+    fullScheme = [fullScheme stringByReplacingOccurrencesOfString:@"://" withString:@""];
+    if ([[url scheme] isEqualToString:fullScheme] != NO) {
         NSDictionary *d = [self parametersDictionaryFromQueryString:[url query]];
         NSString *token = d[@"oauth_token"];
         NSString *verifier = d[@"oauth_verifier"];
