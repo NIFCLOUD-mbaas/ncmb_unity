@@ -44,6 +44,7 @@ public class NCMBDialogActivity extends Activity {
 
     static final String SMALL_ICON_KEY = "smallIcon";
 
+    static final String INTENT_EXTRA_LAUNCH_CLASS = "STARTACTIVITY";
     static final String INTENT_EXTRA_THEME = "THEME";
     static final String INTENT_EXTRA_SUBJECT = "SUBJECT";
     static final String INTENT_EXTRA_MESSAGE = "MESSAGE";
@@ -559,6 +560,7 @@ public class NCMBDialogActivity extends Activity {
         finish();
 
         // Start specified activity
+        String str = getIntent().getExtras().getString(INTENT_EXTRA_LAUNCH_CLASS);
         Intent launch = new Intent();
         launch.putExtras(getIntent().getBundleExtra("com.nifcloud.mbaas.OriginalData"));
         launch.setClassName(getApplicationContext(), "com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerActivity");
