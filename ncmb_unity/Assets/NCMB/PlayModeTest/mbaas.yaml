@@ -70,6 +70,17 @@ response:
   file: /json/valid_put_response.json
 ---
 request:
+  url: 2013-09-01/users
+  method: POST
+  body:
+    authData:
+      anonymous:
+        id: anonymousId
+response:
+  status: 200
+  file: /json/valid_post_registerUserAnonymous_response.json
+---
+request:
   url: 2013-09-01/users/dummyObjectId
   method: PUT
   body:
