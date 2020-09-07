@@ -46,81 +46,81 @@ namespace NCMB
 #endif
 		}
 
-		private class TwitterComponent : MonoBehaviour
-		{
-			public Action<AuthToken> LoginSuccessAction { set; get; }
-
-			public Action<ApiError> LoginFailureAction { set; get; }
-
-			public void Awake()
+			private class TwitterComponent : MonoBehaviour
 			{
-				MonoBehaviour.DontDestroyOnLoad(this);
+				public Action<AuthToken> LoginSuccessAction { set; get; }
+
+				public Action<ApiError> LoginFailureAction { set; get; }
+
+				public void Awake()
+				{
+					MonoBehaviour.DontDestroyOnLoad(this);
+				}
+
+				public void LoginComplete(string session)
+				{
+					if (LoginSuccessAction != null)
+					{
+						LoginSuccessAction(JsonUtility.FromJson<AuthToken>(session));
+					}
+					else
+					{
+						UnityEngine.Debug.Log("FAILED calling login success action");
+					}
+				}
+
+				public void LoginFailed(string error)
+				{
+					if (LoginFailureAction != null)
+					{
+						LoginFailureAction(JsonUtility.FromJson<ApiError>(error));
+					}
+					else
+					{
+						Debug.Log("FAILED calling login fail action");
+					}
+				}
+
+
 			}
 
-			public void LoginComplete(string session)
+			/// <summary>
+			/// Model for response AuthToken
+			/// </summary>
+			[Serializable]
+			public class AuthToken
 			{
-				if (LoginSuccessAction != null)
-				{
-					LoginSuccessAction(JsonUtility.FromJson<AuthToken>(session));
-				}
-				else
-				{
-					UnityEngine.Debug.Log("FAILED calling login success action");
-				}
+				public string id;
+				public string username;
+				public string token;
+				public string secret;
+
+				public string Id { get { return this.id; } }
+				public string Username { get { return this.username; } }
+				public string Token { get { return this.token; } }
+				public string Secret { get { return this.secret; } }
+
 			}
 
-			public void LoginFailed(string error)
+			/// <summary>
+			/// Model for error
+			/// </summary>
+			[Serializable]
+			public class ApiError
 			{
-				if (LoginFailureAction != null)
-				{
-					LoginFailureAction(JsonUtility.FromJson<ApiError>(error));
-				}
-				else
-				{
-					Debug.Log("FAILED calling login fail action");
-				}
+				public int code;
+				public string message;
+
+				public int Code { get { return this.code; } }
+				public string Message { get { return this.message; } }
+
 			}
-
-
-		}
-
-		/// <summary>
-		/// Model for response AuthToken
-		/// </summary>
-		[Serializable]
-		public class AuthToken
-		{
-			public string id;
-			public string username;
-			public string token;
-			public string secret;
-
-			public string Id { get { return this.id; } }
-			public string Username { get { return this.username; } }
-			public string Token { get { return this.token; } }
-			public string Secret { get { return this.secret; } }
-
-		}
-
-		/// <summary>
-		/// Model for error
-		/// </summary>
-		[Serializable]
-		public class ApiError
-		{
-			public int code;
-			public string message;
-
-			public int Code { get { return this.code; } }
-			public string Message { get { return this.message; } }
-
-		}
-#if (UNITY_IOS) && !UNITY_EDITOR
-		private static class ExecuteInvoke
-		{
-			[DllImport("__Internal")]
-			public static extern void NCMB_LoginWithTwitter(string consumerConsumerKey, string consumerSecretConsumerKey, string callbackScheme);
-		}
-#endif
+	#if (UNITY_IOS) && !UNITY_EDITOR
+			private static class ExecuteInvoke
+			{
+				[DllImport("__Internal")]
+				public static extern void NCMB_LoginWithTwitter(string consumerConsumerKey, string consumerSecretConsumerKey, string callbackScheme);
+			}
+	#endif
 	}
 }
