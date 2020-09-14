@@ -130,7 +130,7 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 		try {
 			appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
 			applicationName = getPackageManager().getApplicationLabel(getPackageManager().getApplicationInfo(getPackageName(), 0)).toString();
-			activityName = appInfo.packageName + ".UnityPlayerNativeActivity";
+			activityName = appInfo.packageName + ".UnityPlayerActivity";
 			packageName = appInfo.packageName;
 		} catch (PackageManager.NameNotFoundException e) {
 			throw new IllegalArgumentException(e);
