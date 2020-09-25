@@ -11,6 +11,12 @@ public class NCMBUserTestLogoutError
 	{
         NCMBTestSettings.Initialize ("NCMB/PlayModeTest/mbaasErrors.yaml");
 	}
+	[TearDown]
+	public void Teardown()
+    {
+		// Reset default mock server
+		MockServer.startMock();
+	}
 	/**
 	* - 内容：LogoutAsyncError
 	*/
