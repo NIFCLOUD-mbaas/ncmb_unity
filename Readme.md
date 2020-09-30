@@ -28,9 +28,9 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 ## 動作環境
 
 - Unity 2017.x~2019.x
-- Android 7.x~9.x
+- Android 7.x~10.x
 - iOS 10.x〜13.x
-(※2020年5月時点)
+(※2020年9月時点)
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
@@ -41,7 +41,7 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 ※なお、mobile backend にて大規模な改修が行われた際は、1年半以内のSDKであっても対応出来ない場合がございます。<br>
 その際は[informationブログ](https://mbaas.nifcloud.com/info/)にてお知らせいたします。予めご了承ください。
 
-- v4.0.1 ～ (※2020年5月時点)
+- v4.0.1 ～ (※2020年9月時点)
 
 ## ライセンス
 

@@ -347,7 +347,7 @@ namespace NCMB
 		#endregion
 
 		/// <summary>
-		/// installation内のオブジェクトで使用出来るクエリを取得します。
+		/// Push内のオブジェクトで使用出来るクエリを取得します。
 		/// </summary>
 		/// <returns> クエリ</returns>
 		public static NCMBQuery<NCMBPush> GetQuery ()
