@@ -1,0 +1,15 @@
+{
+    "name": "assemblymem",
+    "references": [
+        "GUID:0f47f4bc7ec8a451c92268bb7602c5a6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

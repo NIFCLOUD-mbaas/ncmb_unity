@@ -72,7 +72,7 @@ public class NCMBPush {
 		String activityName ="";
 		try {
 			appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-			activityName = appInfo.packageName + appInfo.metaData.getString(".UnityPlayerNativeActivity");
+			activityName = appInfo.packageName + appInfo.metaData.getString(".UnityPlayerActivity");
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
