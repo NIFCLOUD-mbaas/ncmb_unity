@@ -1,5 +1,5 @@
 {
-    "name": "assemblymem",
+    "name": "NCMBassembly",
     "references": [
         "GUID:0f47f4bc7ec8a451c92268bb7602c5a6"
     ],
