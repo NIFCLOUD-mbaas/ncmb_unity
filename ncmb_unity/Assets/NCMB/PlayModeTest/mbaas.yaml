@@ -513,16 +513,7 @@ request:
   url: 2015-09-01/script/testScriptObject_GET.js
   method: GET
   query:
-    name: "[\"tarou1\",\"tarou2\"]"
-response:
-  status: 200
-  file: /json/valid_script_object_test_response.json
----
-request:
-  url: 2015-09-01/script/testScriptObject_GET2.js
-  method: GET
-  query:
-    name: "[\"tarou1\",\"tarou2\"]"
+    name: tarou
 response:
   status: 200
   file: /json/valid_script_object_test_response.json
@@ -724,7 +715,7 @@ request:
   method: GET
 response:
   status: 200
-  file: /json/get_User_response.json
+  file: /json/fetch_other_user_response.json
 ---
 request:
   url: 2013-09-01/files/delete.txt

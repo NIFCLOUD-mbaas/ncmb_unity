@@ -29,7 +29,7 @@ public class MockServer
 	private HttpListener listener = null;
 	private static MockServer instance = null;
 	private static string pathFileLoad = "";
-	private static string DATA_PATH_DEFAULT = "PlayModeTest/mbaas.yaml";
+	private static string DATA_PATH_DEFAULT = "NCMB/PlayModeTest/mbaas.yaml";
 	//Dictionary to store all mock data
 	Dictionary<string, List<MockServerObject>> mockObjectDic = new Dictionary<string, List<MockServerObject>> ();
     Uri _domainUri = new Uri(NCMBTestSettings.DOMAIN_URL);
@@ -109,8 +109,9 @@ public class MockServer
 			mockObj.status = 200;
 
 		} else {
+			var url = Uri.UnescapeDataString (request.Url.ToString());
 			foreach (MockServerObject mock in mockObjectDic[request.HttpMethod]) {
-				if (request.Url.ToString ().Equals (mock.url)) {
+				if (url.Equals (mock.url)) {
 					if (bodyJson.Length > 0) {
 						if (bodyJson.Equals (mock.body) || request.ContentType.Equals ("multipart/form-data; boundary=_NCMBBoundary")) {
 							mockObj = mock;
@@ -223,7 +224,7 @@ public class MockServer
 			mock.status = Convert.ToInt32 (status.Value);
 
 			YamlScalarNode file = (YamlScalarNode)response.Children [new YamlScalarNode ("file")];
-			mock.responseJson = LoadFileData ("PlayModeTest" + file.Value, true, "");
+			mock.responseJson = LoadFileData ("NCMB/PlayModeTest" + file.Value, true, "");
 			mockObjectDic [mock.method].Add (mock);
 		}
 	}
