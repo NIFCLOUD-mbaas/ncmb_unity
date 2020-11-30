@@ -27,10 +27,11 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 
 ## 動作環境
 
-- Unity 2017.x~2019.x
-- Android 7.x~10.x
-- iOS 10.x〜13.x
-(※2020年9月時点)
+* MacOS Mojave v10.15.6 (Catalina)
+* Android studio: 4.0
+* Simulator: Pixel 4a Android OS Version 11
+* Unity 2020.1.8f1
+(※2020年11月時点)
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
