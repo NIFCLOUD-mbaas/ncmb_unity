@@ -30,7 +30,7 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 - Unity 2017.x~2020.x
 - Android 7.x~11.x
 - iOS 10.x〜14.x
-(※2020年11月時点)
+(※2021年2月時点)
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
@@ -41,7 +41,7 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 ※なお、mobile backend にて大規模な改修が行われた際は、1年半以内のSDKであっても対応出来ない場合がございます。<br>
 その際は[informationブログ](https://mbaas.nifcloud.com/info/)にてお知らせいたします。予めご了承ください。
 
-- v4.0.1 ～ (※2020年9月時点)
+- v4.0.2 ～ (※2021年2月時点)
 
 ## ライセンス
 
@@ -49,6 +49,7 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 
 ## 参考URL集
 
-- [ニフクラ mobile backend](https://mbaas.nifcloud.com)
-- [ドキュメント](https://mbaas.nifcloud.com/doc/current)
+- [ニフクラ mobile backend](https://mbaas.nifcloud.com/)
+- [SDKの詳細な使い方](https://mbaas.nifcloud.com/doc/current/)
+- [サンプル＆チュートリアル](https://mbaas.nifcloud.com/doc/current/tutorial/tutorial_unity.html)
 - [ユーザーコミュニティ](https://github.com/NIFCLOUD-mbaas/UserCommunity)
