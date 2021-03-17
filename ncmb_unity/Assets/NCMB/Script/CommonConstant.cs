@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2017-2020 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2021 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ namespace NCMB.Internal
 		public static readonly string DOMAIN_URL = "https://mbaas.api.nifcloud.com";//ドメインのURL
 
 		public static readonly string API_VERSION = "2013-09-01";//APIバージョン
-		public static readonly string SDK_VERSION = "4.3.0"; //SDKバージョン
+		public static readonly string SDK_VERSION = "4.4.0"; //SDKバージョン
 		//DEBUG LOG Setting: NCMBDebugにてdefine設定をしてください
 	}
 }

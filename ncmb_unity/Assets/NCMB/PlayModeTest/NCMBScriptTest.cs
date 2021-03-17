@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2017-2020 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2021 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -222,14 +222,13 @@ public class NCMBScriptTest
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptObjectTest_GET ()
 	{
-		string[] strArray = { "tarou1", "tarou2" };
 		NCMBScript script = new NCMBScript ("testScriptObject_GET.js", NCMBScript.MethodType.GET, _endPoint);
-		Dictionary<string, object> query = new Dictionary<string, object> () { { "name", strArray } };
+		Dictionary<string, object> query = new Dictionary<string, object> () { { "name", "tarou" } };
 		script.ExecuteAsync (null, null, query, (byte[] result, NCMBException e) => {
 			if (e == null) {
 				string cmd = System.Text.Encoding.UTF8.GetString (result);
 				cmd = cmd.TrimEnd ('\0');//終端文字の削除
-				Assert.AreEqual ("{\"name\":\"[\\\"tarou1\\\",\\\"tarou2\\\"]\"}", cmd);
+				Assert.AreEqual ("{\"name\":\"tarou\"}", cmd);
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
