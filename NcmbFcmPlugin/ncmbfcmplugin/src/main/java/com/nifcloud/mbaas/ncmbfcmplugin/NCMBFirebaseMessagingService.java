@@ -175,6 +175,7 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 		//Notification作成
 		Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, com.nifcloud.mbaas.ncmbfcmplugin.NCMBNotificationUtils.getDefaultChannel())
+				.setStyle(new NotificationCompat.BigTextStyle().bigText(message).setBigContentTitle(title))
 				.setSmallIcon(icon)//通知エリアのアイコン
 				.setColor(smallIconColor)//通知エリアのアイコンカラー
 				.setContentTitle(title)
