@@ -44,8 +44,6 @@
 #include "UI/UnityView.h"
 #include "UI/SplashScreen.h"
 #include "Unity/DisplayManager.h"
-#include "Unity/EAGLContextHelper.h"
-#include "Unity/GlesHelper.h"
 #include "PluginBase/AppDelegateListener.h"
 
 // For Push
