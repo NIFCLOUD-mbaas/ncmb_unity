@@ -769,7 +769,7 @@ namespace NCMB
 					//その他
 					jsonValue = (string)beforejsonData [key];
 				}
-				string encodeJsonValue = Uri.EscapeUriString (jsonValue);//JSON化された値をエンコードされた文字列
+				string encodeJsonValue = Uri.EscapeDataString (jsonValue);//JSON化された値をエンコードされた文字列
 				encodeJsonValue = encodeJsonValue.Replace (":", "%3A");
 
 				//結合
