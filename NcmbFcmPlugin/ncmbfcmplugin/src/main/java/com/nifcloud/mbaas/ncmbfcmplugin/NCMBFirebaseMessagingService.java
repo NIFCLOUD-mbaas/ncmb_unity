@@ -1,5 +1,5 @@
 /*******
- Copyright 2017-2020 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2021 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 		try {
 			appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
 			applicationName = getPackageManager().getApplicationLabel(getPackageManager().getApplicationInfo(getPackageName(), 0)).toString();
-			activityName = appInfo.packageName + ".UnityPlayerNativeActivity";
+			activityName = appInfo.packageName + ".UnityPlayerActivity";
 			packageName = appInfo.packageName;
 		} catch (PackageManager.NameNotFoundException e) {
 			throw new IllegalArgumentException(e);
@@ -175,6 +175,7 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 		//Notification作成
 		Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, com.nifcloud.mbaas.ncmbfcmplugin.NCMBNotificationUtils.getDefaultChannel())
+				.setStyle(new NotificationCompat.BigTextStyle().bigText(message).setBigContentTitle(title))
 				.setSmallIcon(icon)//通知エリアのアイコン
 				.setColor(smallIconColor)//通知エリアのアイコンカラー
 				.setContentTitle(title)

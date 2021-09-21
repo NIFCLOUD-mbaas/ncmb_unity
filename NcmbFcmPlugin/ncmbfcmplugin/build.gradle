@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
         minSdkVersion 14
@@ -17,10 +17,7 @@ android {
     }
 }
 repositories {
-    maven {
-        url 'https://maven.google.com'
-        // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
-    }
+    mavenCentral()
 }
 
 dependencies {
