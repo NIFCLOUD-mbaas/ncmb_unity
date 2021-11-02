@@ -11,7 +11,7 @@ namespace NCMB
         private static string _callbackScheme;
 		static INCMBTwitterCallback _iNCMBTwitterCallback;
 
-#if (UNITY_IOS && !UNITY_EDITOR)
+#if (UNITY_IOS && !UNITY_EDITOR && NCMB_ENABLE_TWITTER)
 		private static GameObject NCMBTwitterObject;
 #endif
 #if (UNITY_ANDROID && !UNITY_EDITOR)
@@ -25,7 +25,7 @@ namespace NCMB
 			_consumerConsumerKey = key;
 			_consumerSecretConsumerKey = secretKey;
 			_callbackScheme = scheme;
-#if (UNITY_IOS && !UNITY_EDITOR)
+#if (UNITY_IOS && !UNITY_EDITOR && NCMB_ENABLE_TWITTER)
 			NCMBTwitterObject = new GameObject("NCMBTwitterObject");
             NCMBTwitterObject.AddComponent<TwitterComponent>();
 #endif
@@ -37,11 +37,11 @@ namespace NCMB
 			androidClass.SetStatic<AndroidJavaObject>("mainActivity", activity);
 			PluginInstance = androidClass.CallStatic<AndroidJavaObject>("getInstance");
 #endif
-        }
-        public static void LogIn(INCMBTwitterCallback iNCMBTwitterCallback)
+		}
+		public static void LogIn(INCMBTwitterCallback iNCMBTwitterCallback)
 		{
 			_iNCMBTwitterCallback = iNCMBTwitterCallback;
-#if (UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_IOS) && !UNITY_EDITOR && NCMB_ENABLE_TWITTER
 			IOSTwitterLogin(
 				success => {
 					
@@ -57,19 +57,19 @@ namespace NCMB
             AndroidTwitterLogin();
 #endif
 
-        }
+		}
 
-        private static void IOSTwitterLogin(Action<AuthToken> successCallback = null, Action<ApiError> failureCallback = null)
+		private static void IOSTwitterLogin(Action<AuthToken> successCallback = null, Action<ApiError> failureCallback = null)
 		{
-#if (UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_IOS) && !UNITY_EDITOR && NCMB_ENABLE_TWITTER
 			NCMBTwitterObject.GetComponent<TwitterComponent>().LoginSuccessAction = successCallback;
 			NCMBTwitterObject.GetComponent<TwitterComponent>().LoginFailureAction = failureCallback;
 			// Execute Twitter Login
 			ExecuteInvoke.NCMB_LoginWithTwitter(_consumerConsumerKey, _consumerSecretConsumerKey, _callbackScheme);
 #endif
-        }
+		}
 
-        private static void AndroidTwitterLogin()
+		private static void AndroidTwitterLogin()
         {
 #if (UNITY_ANDROID && !UNITY_EDITOR)
 			PluginInstance.Call("getTwitterAuthentication", _consumerConsumerKey, _consumerSecretConsumerKey, _callbackScheme, new AuThenCallback());
@@ -95,7 +95,7 @@ namespace NCMB
             }
         }
 #endif
-#if (UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_IOS) && !UNITY_EDITOR && NCMB_ENABLE_TWITTER
         private class TwitterComponent : MonoBehaviour
 		{
 			public Action<AuthToken> LoginSuccessAction { set; get; }
@@ -166,16 +166,16 @@ namespace NCMB
 
 		}
 
-#if (UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_IOS) && !UNITY_EDITOR && NCMB_ENABLE_TWITTER
 		private static class ExecuteInvoke
 		{
 			[DllImport("__Internal")]
 			public static extern void NCMB_LoginWithTwitter(string consumerConsumerKey, string consumerSecretConsumerKey, string callbackScheme);
 		}
 #endif
-    }
+	}
 
-    public interface INCMBTwitterCallback {
+	public interface INCMBTwitterCallback {
         void OnSuccess(string id, string userName, string token, string tokenSecret);
         void OnFailure(string errorMessage);
     }
