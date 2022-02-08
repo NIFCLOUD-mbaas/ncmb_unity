@@ -413,11 +413,15 @@ namespace NCMB.Internal
 				// タイムアウト
 				error.ErrorCode = "408";
 				error.ErrorMessage = "Request Timeout.";
+			#if UNITY_2020_2_OR_NEWER
+			} else if (req.result == UnityWebRequest.Result.ConnectionError) {
+			#else
 				#if UNITY_2017_1_OR_NEWER
 			} else if (req.isNetworkError) {
 				#else
 			} else if (req.isError) {
 				#endif
+			#endif
 				// 通信エラー
 				error = new NCMBException ();
 				error.ErrorCode = req.responseCode.ToString ();
