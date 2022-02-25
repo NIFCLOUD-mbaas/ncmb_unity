@@ -7,235 +7,234 @@ using System;
 using MiniJSON;
 using System.Collections.Generic;
 using System.Collections;
-
-public class NCMBAnonymousTest
-{
-	[SetUp]
-	public void Init ()
-	{
-		NCMBTestSettings.Initialize ();
-	}
-
-    /**
-     * - 内容：update curent user info after loging in by anonymous user, 
-     * - 結果：current user info has updated
-     */
-    [UnityTest]
-    public IEnumerator UpdateCurrentUser()
+    public class NCMBAnonymousTest
     {
-        // テストデータ作成
-        NCMBUser anonymousUser = new NCMBUser();
-        Dictionary<string, object> param = new Dictionary<string, object>();
-        Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
-                { "id",  "anonymousId"}
-            };
-        param.Add("anonymous", anonymousParam);
-
-        anonymousUser.AuthData = param;
-        anonymousUser.SignUpAsync((NCMBException e) => {
-            Assert.Null(e);
-            Assert.NotNull(NCMBUser.CurrentUser);
-
-            NCMBUser.CurrentUser.UserName = "newUserName";
-            NCMBUser.CurrentUser.SaveAsync((NCMBException ex) =>
-            {
-                Assert.Null(ex);
-
-                NCMBTestSettings.CallbackFlag = true;
-            });
-        });
-
-        yield return NCMBTestSettings.AwaitAsync();
-        // 登録成功の確認
-        Assert.True(NCMBTestSettings.CallbackFlag);
-        Assert.AreEqual("newUserName", NCMBUser.CurrentUser.UserName);
-        Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
-    }
-
-    /**
-     * - 内容：create a new user after loging in by anonymous user, 
-     * - 結果：current user has no change
-     */
-    [UnityTest]
-    public IEnumerator CreateNewUser()
-    {
-        // テストデータ作成
-        NCMBUser anonymousUser = new NCMBUser();
-        Dictionary<string, object> param = new Dictionary<string, object>();
-        Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
-                { "id",  "anonymousId"}
-            };
-        param.Add("anonymous", anonymousParam);
-
-        anonymousUser.AuthData = param;
-        anonymousUser.SignUpAsync((NCMBException e) => {
-            Assert.Null(e);
-            Assert.NotNull(NCMBUser.CurrentUser);
-            Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
-            NCMBTestSettings.CallbackFlag = true;
-        });
-
-        yield return NCMBTestSettings.AwaitAsync();
-        NCMBTestSettings.CallbackFlag = false;
-
-        NCMBUser user = new NCMBUser();
-        user.ObjectId = "anotherObjectId";
-        user.UserName = "newUserName";
-        user.SignUpAsync((NCMBException e1) =>
+        [SetUp]
+        public void Init ()
         {
-            Assert.Null(e1);
-            NCMBTestSettings.CallbackFlag = true;
+            NCMBTestSettings.Initialize ();
+        }
 
-        });
+        /**
+        * - 内容：update curent user info after loging in by anonymous user, 
+        * - 結果：current user info has updated
+        */
+        [UnityTest]
+        public IEnumerator UpdateCurrentUser()
+        {
+            // テストデータ作成
+            NCMBUser anonymousUser = new NCMBUser();
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
+                    { "id",  "anonymousId"}
+                };
+            param.Add("anonymous", anonymousParam);
 
-        yield return NCMBTestSettings.AwaitAsync();
-        Assert.NotNull(NCMBUser.CurrentUser);
-        Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
-    }
+            anonymousUser.AuthData = param;
+            anonymousUser.SignUpAsync((NCMBException e) => {
+                Assert.Null(e);
+                Assert.NotNull(NCMBUser.CurrentUser);
 
-    /**
-     * - 内容：delete current user after loging in by anonymous user, 
-     * - 結果：current user is null
-     */
-    [UnityTest]
-    public IEnumerator DeleteCurrentUser()
-    {
-        // テストデータ作成
-        NCMBUser anonymousUser = new NCMBUser();
-        Dictionary<string, object> param = new Dictionary<string, object>();
-        Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
-                { "id",  "anonymousId"}
-            };
-        param.Add("anonymous", anonymousParam);
+                NCMBUser.CurrentUser.UserName = "newUserName";
+                NCMBUser.CurrentUser.SaveAsync((NCMBException ex) =>
+                {
+                    Assert.Null(ex);
 
-        anonymousUser.AuthData = param;
-        anonymousUser.SignUpAsync((NCMBException e) => {
-            Assert.Null(e);
-            Assert.NotNull(NCMBUser.CurrentUser);
+                    NCMBTestSettings.CallbackFlag = true;
+                });
+            });
+
+            yield return NCMBTestSettings.AwaitAsync();
+            // 登録成功の確認
+            Assert.True(NCMBTestSettings.CallbackFlag);
+            Assert.AreEqual("newUserName", NCMBUser.CurrentUser.UserName);
             Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
-            NCMBTestSettings.CallbackFlag = true;
-        });
+        }
 
-        yield return NCMBTestSettings.AwaitAsync();
-        NCMBTestSettings.CallbackFlag = false;
+        /**
+        * - 内容：create a new user after loging in by anonymous user, 
+        * - 結果：current user has no change
+        */
+        [UnityTest]
+        public IEnumerator CreateNewUser()
+        {
+            // テストデータ作成
+            NCMBUser anonymousUser = new NCMBUser();
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
+                    { "id",  "anonymousId"}
+                };
+            param.Add("anonymous", anonymousParam);
 
-        NCMBUser.CurrentUser.DeleteAsync((NCMBException e3) => {
-            Assert.Null(e3);
-            NCMBTestSettings.CallbackFlag = true;
-        });
-        yield return NCMBTestSettings.AwaitAsync();
-        Assert.Null(NCMBUser.CurrentUser);
-    }
+            anonymousUser.AuthData = param;
+            anonymousUser.SignUpAsync((NCMBException e) => {
+                Assert.Null(e);
+                Assert.NotNull(NCMBUser.CurrentUser);
+                Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+                NCMBTestSettings.CallbackFlag = true;
+            });
 
-    /**
-     * - 内容：create datastore object after loging in by anonymous user, 
-     * - 結果：current user has no change
-     */
-    [UnityTest]
-    public IEnumerator CreateObject()
-    {
-        // テストデータ作成
-        NCMBUser anonymousUser = new NCMBUser();
-        Dictionary<string, object> param = new Dictionary<string, object>();
-        Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
-                { "id",  "anonymousId"}
-            };
-        param.Add("anonymous", anonymousParam);
+            yield return NCMBTestSettings.AwaitAsync();
+            NCMBTestSettings.CallbackFlag = false;
 
-        anonymousUser.AuthData = param;
-        anonymousUser.SignUpAsync((NCMBException e) => {
-            Assert.Null(e);
-            Assert.NotNull(NCMBUser.CurrentUser);
-            Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
-            NCMBTestSettings.CallbackFlag = true;
-        });
-
-        yield return NCMBTestSettings.AwaitAsync();
-        NCMBTestSettings.CallbackFlag = false;
-
-        NCMBObject obj = new NCMBObject("TestClass");
-        obj["key"] = "\"test\"";
-        obj.SaveAsync((NCMBException e) => {
-            if (e != null)
+            NCMBUser user = new NCMBUser();
+            user.ObjectId = "anotherObjectId";
+            user.UserName = "newUserName";
+            user.SignUpAsync((NCMBException e1) =>
             {
-                Assert.Fail(e.ErrorMessage);
-            }
-            NCMBTestSettings.CallbackFlag = true;
-        });
+                Assert.Null(e1);
+                NCMBTestSettings.CallbackFlag = true;
 
-        yield return NCMBTestSettings.AwaitAsync();
-        Assert.NotNull(NCMBUser.CurrentUser);
-        Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
-    }
+            });
 
-    /**
-     * - 内容：update datastore object after loging in by anonymous user, 
-     * - 結果：current user has no change
-     */
-    [UnityTest]
-    public IEnumerator UpdateObject()
-    {
-        // テストデータ作成
-        NCMBUser anonymousUser = new NCMBUser();
-        Dictionary<string, object> param = new Dictionary<string, object>();
-        Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
-                { "id",  "anonymousId"}
-            };
-        param.Add("anonymous", anonymousParam);
-
-        anonymousUser.AuthData = param;
-        anonymousUser.SignUpAsync((NCMBException e) => {
-            Assert.Null(e);
+            yield return NCMBTestSettings.AwaitAsync();
             Assert.NotNull(NCMBUser.CurrentUser);
             Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+        }
 
-            NCMBObject obj = new NCMBObject("TestClass");
-            obj.ObjectId = "dummyObjectId";
-            obj.Add("key", "newValue");
-            obj.SaveAsync((NCMBException ex) => {
-                Assert.Null(ex);
+        /**
+        * - 内容：delete current user after loging in by anonymous user, 
+        * - 結果：current user is null
+        */
+        [UnityTest]
+        public IEnumerator DeleteCurrentUser()
+        {
+            // テストデータ作成
+            NCMBUser anonymousUser = new NCMBUser();
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
+                    { "id",  "anonymousId"}
+                };
+            param.Add("anonymous", anonymousParam);
+
+            anonymousUser.AuthData = param;
+            anonymousUser.SignUpAsync((NCMBException e) => {
+                Assert.Null(e);
+                Assert.NotNull(NCMBUser.CurrentUser);
+                Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
                 NCMBTestSettings.CallbackFlag = true;
             });
-        });
 
-        yield return NCMBTestSettings.AwaitAsync();
-        Assert.NotNull(NCMBUser.CurrentUser);
-        Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
-    }
+            yield return NCMBTestSettings.AwaitAsync();
+            NCMBTestSettings.CallbackFlag = false;
 
-    /**
-     * - 内容：delete datastore object after loging in by anonymous user, 
-     * - 結果：current user has no change
-     */
-    [UnityTest]
-    public IEnumerator DeleteObject()
-    {
-        // テストデータ作成
-        NCMBUser anonymousUser = new NCMBUser();
-        Dictionary<string, object> param = new Dictionary<string, object>();
-        Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
-                { "id",  "anonymousId"}
-            };
-        param.Add("anonymous", anonymousParam);
+            NCMBUser.CurrentUser.DeleteAsync((NCMBException e3) => {
+                Assert.Null(e3);
+                NCMBTestSettings.CallbackFlag = true;
+            });
+            yield return NCMBTestSettings.AwaitAsync();
+            Assert.Null(NCMBUser.CurrentUser);
+        }
 
-        anonymousUser.AuthData = param;
-        anonymousUser.SignUpAsync((NCMBException e) => {
-            Assert.Null(e);
+        /**
+        * - 内容：create datastore object after loging in by anonymous user, 
+        * - 結果：current user has no change
+        */
+        [UnityTest]
+        public IEnumerator CreateObject()
+        {
+            // テストデータ作成
+            NCMBUser anonymousUser = new NCMBUser();
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
+                    { "id",  "anonymousId"}
+                };
+            param.Add("anonymous", anonymousParam);
+
+            anonymousUser.AuthData = param;
+            anonymousUser.SignUpAsync((NCMBException e) => {
+                Assert.Null(e);
+                Assert.NotNull(NCMBUser.CurrentUser);
+                Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+                NCMBTestSettings.CallbackFlag = true;
+            });
+
+            yield return NCMBTestSettings.AwaitAsync();
+            NCMBTestSettings.CallbackFlag = false;
+
+            NCMBObject obj = new NCMBObject("TestClass");
+            obj["key"] = "\"test\"";
+            obj.SaveAsync((NCMBException e) => {
+                if (e != null)
+                {
+                    Assert.Fail(e.ErrorMessage);
+                }
+                NCMBTestSettings.CallbackFlag = true;
+            });
+
+            yield return NCMBTestSettings.AwaitAsync();
             Assert.NotNull(NCMBUser.CurrentUser);
             Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+        }
 
-            NCMBObject obj = new NCMBObject("TestClass");
-            obj.ObjectId = "dummyObjectId";
-            obj.DeleteAsync((NCMBException ex) => {
-                Assert.Null(ex);
+        /**
+        * - 内容：update datastore object after loging in by anonymous user, 
+        * - 結果：current user has no change
+        */
+        [UnityTest]
+        public IEnumerator UpdateObject()
+        {
+            // テストデータ作成
+            NCMBUser anonymousUser = new NCMBUser();
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
+                    { "id",  "anonymousId"}
+                };
+            param.Add("anonymous", anonymousParam);
 
-                NCMBTestSettings.CallbackFlag = true;
+            anonymousUser.AuthData = param;
+            anonymousUser.SignUpAsync((NCMBException e) => {
+                Assert.Null(e);
+                Assert.NotNull(NCMBUser.CurrentUser);
+                Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+
+                NCMBObject obj = new NCMBObject("TestClass");
+                obj.ObjectId = "dummyObjectId";
+                obj.Add("key", "newValue");
+                obj.SaveAsync((NCMBException ex) => {
+                    Assert.Null(ex);
+                    NCMBTestSettings.CallbackFlag = true;
+                });
             });
-        });
 
-        yield return NCMBTestSettings.AwaitAsync();
-        Assert.NotNull(NCMBUser.CurrentUser);
-        Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+            yield return NCMBTestSettings.AwaitAsync();
+            Assert.NotNull(NCMBUser.CurrentUser);
+            Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+        }
+
+        /**
+        * - 内容：delete datastore object after loging in by anonymous user, 
+        * - 結果：current user has no change
+        */
+        [UnityTest]
+        public IEnumerator DeleteObject()
+        {
+            // テストデータ作成
+            NCMBUser anonymousUser = new NCMBUser();
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            Dictionary<string, object> anonymousParam = new Dictionary<string, object>() {
+                    { "id",  "anonymousId"}
+                };
+            param.Add("anonymous", anonymousParam);
+
+            anonymousUser.AuthData = param;
+            anonymousUser.SignUpAsync((NCMBException e) => {
+                Assert.Null(e);
+                Assert.NotNull(NCMBUser.CurrentUser);
+                Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+
+                NCMBObject obj = new NCMBObject("TestClass");
+                obj.ObjectId = "dummyObjectId";
+                obj.DeleteAsync((NCMBException ex) => {
+                    Assert.Null(ex);
+
+                    NCMBTestSettings.CallbackFlag = true;
+                });
+            });
+
+            yield return NCMBTestSettings.AwaitAsync();
+            Assert.NotNull(NCMBUser.CurrentUser);
+            Assert.IsTrue(NCMBUser.CurrentUser.IsLinkWith("anonymous"));
+        }
+
     }
-
-}

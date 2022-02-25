@@ -1,10 +1,10 @@
 {
-    "name": "NCMB_TESTS",
+    "name": "Tests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "YamlDotNet"
+        "NCMB"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
