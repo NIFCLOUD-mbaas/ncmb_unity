@@ -64,7 +64,38 @@ public class UpdateXcodeProject
 #else
 		string[] filesToRemove = {
 			"Libraries/Plugins/iOS/TwitterAPI.h",
-			"Libraries/Plugins/iOS/TwitterAPI.mm"
+			"Libraries/Plugins/iOS/TwitterAPI.mm",
+			"Libraries/Plugins/iOS/STTwitter/NSDateFormatter+STTwitter.h",
+			"Libraries/Plugins/iOS/STTwitter/NSDateFormatter+STTwitter.m",
+			"Libraries/Plugins/iOS/STTwitter/NSError+STTwitter.h",
+			"Libraries/Plugins/iOS/STTwitter/NSError+STTwitter.m",
+			"Libraries/Plugins/iOS/STTwitter/NSString+STTwitter.h",
+			"Libraries/Plugins/iOS/STTwitter/NSString+STTwitter.m",
+			"Libraries/Plugins/iOS/STTwitter/STHTTPRequest+STTwitter.h",
+			"Libraries/Plugins/iOS/STTwitter/STHTTPRequest+STTwitter.m",
+			"Libraries/Plugins/iOS/STTwitter/STTwitter.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterAPI.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterAPI.m",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterAppOnly.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterAppOnly.m",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterHTML.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterHTML.m",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterOAuth.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterOAuth.m",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterOS.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterOS.m",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterOSRequest.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterOSRequest.m",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterProtocol.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterRequestProtocol.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterStreamParser.h",
+			"Libraries/Plugins/iOS/STTwitter/STTwitterStreamParser.m",
+			"Libraries/Plugins/iOS/STTwitter/Vendor/BAVPlistNode.h",
+			"Libraries/Plugins/iOS/STTwitter/Vendor/BAVPlistNode.m",
+			"Libraries/Plugins/iOS/STTwitter/Vendor/JSONSyntaxHighlight.h",
+			"Libraries/Plugins/iOS/STTwitter/Vendor/JSONSyntaxHighlight.m",
+			"Libraries/Plugins/iOS/STTwitter/Vendor/STHTTPRequest.h",
+			"Libraries/Plugins/iOS/STTwitter/Vendor/STHTTPRequest.m"
 		};
 		foreach (string name in filesToRemove)
 		{
