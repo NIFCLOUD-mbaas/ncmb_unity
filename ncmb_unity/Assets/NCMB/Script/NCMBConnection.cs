@@ -405,7 +405,7 @@ namespace NCMB.Internal
 					break;
 				}
 				//yield return new WaitForEndOfFrame ();
-				yield return new WaitForSeconds (waitTime);
+				yield return new WaitForSecondsRealtime (waitTime);
 			}
 
 			// 通信結果判定
