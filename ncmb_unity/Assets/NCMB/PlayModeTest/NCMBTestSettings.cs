@@ -61,7 +61,7 @@ public class NCMBTestSettings
 	{
 		while (NCMBTestSettings.CallbackFlag == false) {
 			//yield return new WaitForEndOfFrame ();
-			yield return new WaitForSeconds (0.2f); 
+			yield return new WaitForSecondsRealtime (0.2f);
 		}
 		yield break;
 	}
