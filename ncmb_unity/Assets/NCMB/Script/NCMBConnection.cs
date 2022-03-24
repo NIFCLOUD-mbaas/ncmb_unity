@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2017-2021 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2022 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -405,7 +405,7 @@ namespace NCMB.Internal
 					break;
 				}
 				//yield return new WaitForEndOfFrame ();
-				yield return new WaitForSeconds (waitTime);
+				yield return new WaitForSecondsRealtime (waitTime);
 			}
 
 			// 通信結果判定
@@ -413,11 +413,15 @@ namespace NCMB.Internal
 				// タイムアウト
 				error.ErrorCode = "408";
 				error.ErrorMessage = "Request Timeout.";
+			#if UNITY_2020_2_OR_NEWER
+			} else if (req.result == UnityWebRequest.Result.ConnectionError) {
+			#else
 				#if UNITY_2017_1_OR_NEWER
 			} else if (req.isNetworkError) {
 				#else
 			} else if (req.isError) {
 				#endif
+			#endif
 				// 通信エラー
 				error = new NCMBException ();
 				error.ErrorCode = req.responseCode.ToString ();
