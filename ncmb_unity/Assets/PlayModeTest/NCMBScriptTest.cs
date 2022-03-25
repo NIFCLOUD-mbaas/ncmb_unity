@@ -158,7 +158,7 @@ public class NCMBScriptTest
 			if (e == null) {
 				// string cmd = System.Text.Encoding.UTF8.GetString (result);
 				// cmd = cmd.TrimEnd ('\0');//終端文字の削除
-				Assert.Null(result);
+				Assert.IsEmpty(result);
 				// Assert.AreEqual ("", cmd);
 			} else {
 				Assert.Fail (e.ErrorMessage);
