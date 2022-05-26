@@ -13,7 +13,9 @@
         android:debuggable="true">
         <!-- <meta-data android:name="smallIcon" android:resource="@drawable/comment_icon"/> -->
         <!-- UNITY PLAYER ACTIVITIES ( [WARNING] if use Prime31, edit 'com.nifcloud.mbaas.ncmbfcmplugin' to 'com.prime31' at android:name of 3 these activities) -->
-        <activity android:name="com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerProxyActivity"
+        <activity
+            android:exported="true"
+            android:name="com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerProxyActivity"
             android:label="@string/app_name"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
             <intent-filter>
@@ -22,7 +24,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerActivity"
+        <activity
+            android:exported="true"
+            android:name="com.nifcloud.mbaas.ncmbfcmplugin.UnityPlayerActivity"
             android:launchMode="singleTop"
             android:label="@string/app_name"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
@@ -32,6 +36,7 @@
             
 		<!---ダイアログ -->
 		<activity
+            android:exported="true"
   			android:name="com.nifcloud.mbaas.ncmbfcmplugin.NCMBDialogActivity"
     		android:excludeFromRecents="true"
     		android:launchMode="singleInstance"
