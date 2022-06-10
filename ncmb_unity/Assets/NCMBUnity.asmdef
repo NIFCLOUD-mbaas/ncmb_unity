@@ -1,9 +1,7 @@
 {
-    "name": "SDK",
+    "name": "NCMBUnity",
     "rootNamespace": "",
-    "references": [
-        "GUID:8436a1d0967ea4eda878116e2704c048"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
