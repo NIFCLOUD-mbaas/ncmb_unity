@@ -41,6 +41,7 @@ namespace NCMB
 	public class NCMBManager : MonoBehaviour
 	{
 
+		const string openedPushIdKey = "OpenedPushIdKey";
 		public virtual void Awake ()
 		{
 			if (!NCMBSettings._isInitialized) {
@@ -119,6 +120,17 @@ namespace NCMB
 
 		#region Process notification for iOS only
 
+		#if UNITY_ANDROID
+		void Update ()
+		{
+			if (PlayerPrefs.HasKey(openedPushIdKey)){
+				string pushId = PlayerPrefs.GetString(openedPushIdKey);
+				NCMBAnalytics.TrackAppOpened (pushId);
+				PlayerPrefs.DeleteKey(openedPushIdKey);
+			}
+		}
+		#endif
+
 		#if UNITY_IOS
 		void Start ()
 		{
@@ -127,6 +139,12 @@ namespace NCMB
 
 		void Update ()
 		{
+			if (PlayerPrefs.HasKey(openedPushIdKey)){
+				string pushId = PlayerPrefs.GetString(openedPushIdKey);
+				NCMBAnalytics.TrackAppOpened (pushId);
+				PlayerPrefs.DeleteKey(openedPushIdKey);
+			}
+
 			if (UnityEngine.iOS.NotificationServices.remoteNotificationCount > 0) {
 				ProcessNotification ();
 				NCMBPush push = new NCMBPush ();
@@ -349,7 +367,7 @@ namespace NCMB
 		//ネイティブからプッシュIDを受け取り開封通知
 		private void onAnalyticsReceived (string _pushId)
 		{
-			NCMBAnalytics.TrackAppOpened (_pushId);
+			PlayerPrefs.SetString(openedPushIdKey, _pushId);
 		}
 
 		//installation情報を削除
