@@ -53,7 +53,6 @@
 #import  <UserNotifications/UserNotifications.h>
 #endif
 
-#define MAX_PUSH_DELAY_COUNT 20
 // Converts C style string to NSString
 #define GetStringParam( _x_ ) ( _x_ != NULL ) ? [NSString stringWithUTF8String:_x_] : [NSString stringWithUTF8String:""]
 
@@ -86,7 +85,6 @@ void notifyUnityError(const char * method, NSError * error)
 }
 
 #pragma mark - C#から呼び出し
-extern bool _unityAppReady;
 
 // Native code
 extern "C"
@@ -95,7 +93,9 @@ extern "C"
     // Use location or not
     bool getLocation;
     bool useAnalytics;
-    
+    bool appStartFromNofTap;
+    bool tokenReady;
+
     // Save launch options for using later (after set key)
     NSDictionary * savedLaunchOptions;
     
@@ -195,11 +195,14 @@ extern "C"
         // NCMB Handle Analytics
         if ([userInfo.allKeys containsObject:@"com.nifcloud.mbaas.PushId"])
         {
-            if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
+            if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateInactive
+                || [[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground
+                || appStartFromNofTap)
             {
                 NSString * pushId = [userInfo objectForKey:@"com.nifcloud.mbaas.PushId"];
                 const char *pushIdConstChar = [pushId UTF8String];
                 notifyUnityWithClassName("NCMBManager","onAnalyticsReceived",pushIdConstChar);
+                appStartFromNofTap = false;
             }
         }
         
@@ -231,7 +234,6 @@ extern "C"
 
 @implementation UnityAppController(PushAdditions)
 
-NSInteger pushDelayCount = 0;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -279,6 +281,7 @@ NSInteger pushDelayCount = 0;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
+    tokenReady = true;
     //deviceTokenをNSData *からconst char *へ変換します
     if ([deviceToken isKindOfClass:[NSData class]] && [deviceToken length] != 0){
         unsigned char *dataBuffer = (unsigned char*)deviceToken.bytes;
@@ -317,18 +320,15 @@ NSInteger pushDelayCount = 0;
 
 -(void)handleRichPushIfReady:(NSDictionary*)userInfo
 {
-    //Limit to avoid infinite loop
-    if(pushDelayCount < MAX_PUSH_DELAY_COUNT){
-        if(_unityAppReady){
-            //Remove null values (<null>) to avoid crash
-            NSDictionary *notificationInfo = [self removeNullObjects:userInfo];
-            NCMBPushHandle(notificationInfo);
-            pushDelayCount = 0;
-        } else {
-            pushDelayCount++;
-            //Delay for 100 miliseconds
-            [self performSelector:@selector(handleRichPushIfReady:) withObject:userInfo afterDelay:0.1];
-        }
+    if(tokenReady){
+        //Remove null values (<null>) to avoid crash
+        NSDictionary *notificationInfo = [self removeNullObjects:userInfo];
+        NCMBPushHandle(notificationInfo);
+    } else {
+        appStartFromNofTap = true;
+        NSLog(@"[NCMB]: Set appStartFromNofTap=true");
+        //Delay for 10 miliseconds
+        [self performSelector:@selector(handleRichPushIfReady:) withObject:userInfo afterDelay:0.01];
     }
 }
 
