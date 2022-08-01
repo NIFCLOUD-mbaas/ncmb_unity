@@ -326,7 +326,6 @@ extern "C"
         NCMBPushHandle(notificationInfo);
     } else {
         appStartFromNofTap = true;
-        NSLog(@"[NCMB]: Set appStartFromNofTap=true");
         //Delay for 10 miliseconds
         [self performSelector:@selector(handleRichPushIfReady:) withObject:userInfo afterDelay:0.01];
     }
