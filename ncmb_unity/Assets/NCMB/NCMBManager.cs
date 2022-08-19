@@ -118,8 +118,6 @@ namespace NCMB
 
 		#endregion
 
-		#region Process notification for iOS only
-
 		#if UNITY_ANDROID
 		void Update ()
 		{
@@ -130,6 +128,8 @@ namespace NCMB
 			}
 		}
 		#endif
+
+		#region Process notification for iOS only
 
 		#if UNITY_IOS
 		void Start ()
@@ -368,7 +368,7 @@ namespace NCMB
 		private void SaveOpenedPushId(string pushId)
 		{
 			try
-        	{
+			{
 				if (pushId == null || pushId == "") {
 					if (File.Exists(Application.persistentDataPath + fileName)) {
 						File.Delete(Application.persistentDataPath + fileName);
@@ -382,11 +382,14 @@ namespace NCMB
 						writer.Write(pushId);
 					}
 				}
-			} catch (Exception e){}
+			} catch (Exception e){
+				NCMBDebug.Log ("File save error!【Message】:" + e.Message);
+			}
 		}
+
 		private string LoadOpenedPushId() {
 			try
-        	{
+			{
 				if (File.Exists(Application.persistentDataPath + fileName))
 				{
 					string pushId;
@@ -399,9 +402,12 @@ namespace NCMB
 					}
 					return pushId;
 				}
-			} catch (Exception e){}
-			return "";
+			} catch (Exception e){
+				NCMBDebug.Log ("File read error!【Message】:" + e.Message);
+			}
+			return null;
 		}
+
 		//ネイティブからプッシュIDを受け取り開封通知
 		private void onAnalyticsReceived (string _pushId)
 		{
