@@ -365,6 +365,8 @@ namespace NCMB
 			return text;
 		}
 
+		// ディスク入出力関数
+		// 書き込み
 		private void SaveOpenedPushId(string pushId)
 		{
 			try
@@ -387,6 +389,7 @@ namespace NCMB
 			}
 		}
 
+		// 読み込み
 		private string LoadOpenedPushId() {
 			try
 			{
