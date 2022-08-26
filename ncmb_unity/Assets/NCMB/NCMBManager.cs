@@ -40,6 +40,7 @@ namespace NCMB
 	/// </summary>
 	public class NCMBManager : MonoBehaviour
 	{
+		const string fileName = "/OpenedPushId.dat";
 
 		public virtual void Awake ()
 		{
@@ -117,6 +118,17 @@ namespace NCMB
 
 		#endregion
 
+		#if UNITY_ANDROID
+		void Update ()
+		{
+			string pushId = LoadOpenedPushId(); 
+			if (pushId != null && pushId != ""){
+				NCMBAnalytics.TrackAppOpened (pushId);
+				SaveOpenedPushId(null);
+			}
+		}
+		#endif
+
 		#region Process notification for iOS only
 
 		#if UNITY_IOS
@@ -127,6 +139,12 @@ namespace NCMB
 
 		void Update ()
 		{
+			string pushId = LoadOpenedPushId(); 
+			if (pushId != null && pushId != ""){
+				NCMBAnalytics.TrackAppOpened (pushId);
+				SaveOpenedPushId(null);
+			}
+
 			if (UnityEngine.iOS.NotificationServices.remoteNotificationCount > 0) {
 				ProcessNotification ();
 				NCMBPush push = new NCMBPush ();
@@ -346,10 +364,57 @@ namespace NCMB
 			}
 			return text;
 		}
+
+		// ディスク入出力関数
+		// 書き込み
+		private void SaveOpenedPushId(string pushId)
+		{
+			try
+			{
+				if (pushId == null || pushId == "") {
+					if (File.Exists(Application.persistentDataPath + fileName)) {
+						File.Delete(Application.persistentDataPath + fileName);
+					}
+					return;
+				}
+				using (var stream = File.Open(Application.persistentDataPath + fileName, FileMode.Create))
+				{
+					using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+					{
+						writer.Write(pushId);
+					}
+				}
+			} catch (Exception e){
+				NCMBDebug.Log ("File save error!【Message】:" + e.Message);
+			}
+		}
+
+		// 読み込み
+		private string LoadOpenedPushId() {
+			try
+			{
+				if (File.Exists(Application.persistentDataPath + fileName))
+				{
+					string pushId;
+					using (var stream = File.Open(Application.persistentDataPath + fileName, FileMode.Open))
+					{
+						using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+						{
+							pushId = reader.ReadString();
+						}
+					}
+					return pushId;
+				}
+			} catch (Exception e){
+				NCMBDebug.Log ("File read error!【Message】:" + e.Message);
+			}
+			return null;
+		}
+
 		//ネイティブからプッシュIDを受け取り開封通知
 		private void onAnalyticsReceived (string _pushId)
 		{
-			NCMBAnalytics.TrackAppOpened (_pushId);
+			SaveOpenedPushId (_pushId);
 		}
 
 		//installation情報を削除
