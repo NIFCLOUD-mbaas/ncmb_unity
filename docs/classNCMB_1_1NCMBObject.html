@@ -1,0 +1,1191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.14"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NCMB Unity SDK Library Project: NCMB.NCMBObject クラス</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+  $(document).ready(initResizable);
+/* @license-end */</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">NCMB Unity SDK Library Project
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.14 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','検索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('classNCMB_1_1NCMBObject.html','');});
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pub-static-methods">静的公開メンバ関数</a> &#124;
+<a href="#properties">プロパティ</a> &#124;
+<a href="classNCMB_1_1NCMBObject-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">NCMB.NCMBObject クラス</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>オブジェクトを操作するクラスです。  
+ <a href="classNCMB_1_1NCMBObject.html#details">[詳解]</a></p>
+<div class="dynheader">
+NCMB.NCMBObject の継承関係図</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classNCMB_1_1NCMBObject.png" usemap="#NCMB.NCMBObject_map" alt=""/>
+  <map id="NCMB.NCMBObject_map" name="NCMB.NCMBObject_map">
+<area href="classNCMB_1_1NCMBFile.html" title="ファイルを操作するクラスです。 " alt="NCMB.NCMBFile" shape="rect" coords="0,56,149,80"/>
+<area href="classNCMB_1_1NCMBInstallation.html" title="プッシュ通知の配信端末を操作するクラスです。 " alt="NCMB.NCMBInstallation" shape="rect" coords="159,56,308,80"/>
+<area href="classNCMB_1_1NCMBPush.html" title="プッシュ通知を操作するクラスです。 " alt="NCMB.NCMBPush" shape="rect" coords="318,56,467,80"/>
+<area href="classNCMB_1_1NCMBRole.html" title="ロールを操作するクラスです。 " alt="NCMB.NCMBRole" shape="rect" coords="477,56,626,80"/>
+<area href="classNCMB_1_1NCMBUser.html" title="会員管理を操作するクラスです。 " alt="NCMB.NCMBUser" shape="rect" coords="636,56,785,80"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:a21c50839637e8ba191cf0b25d232e8d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classNCMB_1_1NCMBRelation.html">NCMBRelation</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a21c50839637e8ba191cf0b25d232e8d9">GetRelation&lt; T &gt;</a> (String key)</td></tr>
+<tr class="memdesc:a21c50839637e8ba191cf0b25d232e8d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">指定キーのNCMBRelationを生成します。  <a href="#a21c50839637e8ba191cf0b25d232e8d9">[詳解]</a><br /></td></tr>
+<tr class="separator:a21c50839637e8ba191cf0b25d232e8d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac68e7fba19191eb498a49a3a0345331c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#ac68e7fba19191eb498a49a3a0345331c">NCMBObject</a> (string className)</td></tr>
+<tr class="memdesc:ac68e7fba19191eb498a49a3a0345331c"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクター。<br />
+ 指定クラス名のオブジェクトを生成します。  <a href="#ac68e7fba19191eb498a49a3a0345331c">[詳解]</a><br /></td></tr>
+<tr class="separator:ac68e7fba19191eb498a49a3a0345331c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8e4253a91dec9798b784ab63ebd7ac3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#af8e4253a91dec9798b784ab63ebd7ac3">Revert</a> ()</td></tr>
+<tr class="memdesc:af8e4253a91dec9798b784ab63ebd7ac3"><td class="mdescLeft">&#160;</td><td class="mdescRight">最後に保存を行った状態に戻します。  <a href="#af8e4253a91dec9798b784ab63ebd7ac3">[詳解]</a><br /></td></tr>
+<tr class="separator:af8e4253a91dec9798b784ab63ebd7ac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab33ab8975a7f223f7e4594480e49c621"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#ab33ab8975a7f223f7e4594480e49c621">Add</a> (string key, object value)</td></tr>
+<tr class="memdesc:ab33ab8975a7f223f7e4594480e49c621"><td class="mdescLeft">&#160;</td><td class="mdescRight">指定したキーに値を設定します。<br />
+ すでにあるキーを指定した場合はエラーを返します。  <a href="#ab33ab8975a7f223f7e4594480e49c621">[詳解]</a><br /></td></tr>
+<tr class="separator:ab33ab8975a7f223f7e4594480e49c621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32268f8a1f5e266608e0387d769d6a9c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a32268f8a1f5e266608e0387d769d6a9c">Remove</a> (string key)</td></tr>
+<tr class="memdesc:a32268f8a1f5e266608e0387d769d6a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">指定したキーのフィールドが存在する場合、フィールドを削除します。<br />
+ 指定キーが無い場合でも、エラーは返しません。  <a href="#a32268f8a1f5e266608e0387d769d6a9c">[詳解]</a><br /></td></tr>
+<tr class="separator:a32268f8a1f5e266608e0387d769d6a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3713ff5cffa99a79a7370fc5dfc37f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#aa3713ff5cffa99a79a7370fc5dfc37f9">RemoveRangeFromList</a> (string key, IEnumerable values)</td></tr>
+<tr class="memdesc:aa3713ff5cffa99a79a7370fc5dfc37f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">キーで指定された配列から一致する複数のオブジェクトを削除します。<br />
+ saveAsync()実行時に指定したオブジェクトの削除を行います。  <a href="#aa3713ff5cffa99a79a7370fc5dfc37f9">[詳解]</a><br /></td></tr>
+<tr class="separator:aa3713ff5cffa99a79a7370fc5dfc37f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac10d44eb3f61b0cbc18f7f809d4c858"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#aac10d44eb3f61b0cbc18f7f809d4c858">AddToList</a> (string key, object value)</td></tr>
+<tr class="memdesc:aac10d44eb3f61b0cbc18f7f809d4c858"><td class="mdescLeft">&#160;</td><td class="mdescRight">キーで指定された配列にオブジェクトを追加します。<br />
+ 挿入位置は最後に追加します。  <a href="#aac10d44eb3f61b0cbc18f7f809d4c858">[詳解]</a><br /></td></tr>
+<tr class="separator:aac10d44eb3f61b0cbc18f7f809d4c858"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a102d9a10df3efe370ebfeba938c75e63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a102d9a10df3efe370ebfeba938c75e63">AddRangeToList</a> (string key, IEnumerable values)</td></tr>
+<tr class="memdesc:a102d9a10df3efe370ebfeba938c75e63"><td class="mdescLeft">&#160;</td><td class="mdescRight">キーで指定された配列に複数のオブジェクトを追加します。<br />
+ 挿入位置は最後に追加します。  <a href="#a102d9a10df3efe370ebfeba938c75e63">[詳解]</a><br /></td></tr>
+<tr class="separator:a102d9a10df3efe370ebfeba938c75e63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add973accd115684bffbf054d3dfe2830"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#add973accd115684bffbf054d3dfe2830">AddUniqueToList</a> (string key, object value)</td></tr>
+<tr class="memdesc:add973accd115684bffbf054d3dfe2830"><td class="mdescLeft">&#160;</td><td class="mdescRight">キーで指定された配列にオブジェクトを追加します。<br />
+ 今までに登録されていない値のみの追加を行います。<br />
+ 挿入位置は保証されません。  <a href="#add973accd115684bffbf054d3dfe2830">[詳解]</a><br /></td></tr>
+<tr class="separator:add973accd115684bffbf054d3dfe2830"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae428702387d817a3f3fbdf5693aee08a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#ae428702387d817a3f3fbdf5693aee08a">AddRangeUniqueToList</a> (string key, IEnumerable values)</td></tr>
+<tr class="memdesc:ae428702387d817a3f3fbdf5693aee08a"><td class="mdescLeft">&#160;</td><td class="mdescRight">キーで指定された配列に複数のオブジェクトを追加します。<br />
+ 今までに登録されていない値のみの追加を行います。<br />
+ 挿入位置は保証されません。  <a href="#ae428702387d817a3f3fbdf5693aee08a">[詳解]</a><br /></td></tr>
+<tr class="separator:ae428702387d817a3f3fbdf5693aee08a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2615d547892dc3ff371054aed46e6268"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a2615d547892dc3ff371054aed46e6268">Increment</a> (string key)</td></tr>
+<tr class="memdesc:a2615d547892dc3ff371054aed46e6268"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトに対し、インクリメントを行います。<br />
+ インクリメントした結果の型はlong(Int64)型になります。  <a href="#a2615d547892dc3ff371054aed46e6268">[詳解]</a><br /></td></tr>
+<tr class="separator:a2615d547892dc3ff371054aed46e6268"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7757a0348408a7b6a4508230dbad8d4f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a7757a0348408a7b6a4508230dbad8d4f">Increment</a> (string key, long amount)</td></tr>
+<tr class="memdesc:a7757a0348408a7b6a4508230dbad8d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトに対し、インクリメントを行います。<br />
+ インクリメントした結果の型はlong(Int64)型になります。  <a href="#a7757a0348408a7b6a4508230dbad8d4f">[詳解]</a><br /></td></tr>
+<tr class="separator:a7757a0348408a7b6a4508230dbad8d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a493acf8a1584146ad6f647b2b23000c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a493acf8a1584146ad6f647b2b23000c4">Increment</a> (string key, double amount)</td></tr>
+<tr class="memdesc:a493acf8a1584146ad6f647b2b23000c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトに対し、インクリメントを行います。<br />
+ インクリメントした結果の型はdouble型になります。  <a href="#a493acf8a1584146ad6f647b2b23000c4">[詳解]</a><br /></td></tr>
+<tr class="separator:a493acf8a1584146ad6f647b2b23000c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab56f26a837f690af640fa11181e8f63c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#ab56f26a837f690af640fa11181e8f63c">DeleteAsync</a> (<a class="el" href="namespaceNCMB.html#a65bad14d670bb55b66a5319f4a1f13a6">NCMBCallback</a> callback)</td></tr>
+<tr class="memdesc:ab56f26a837f690af640fa11181e8f63c"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトの削除を行います。<br />
+ 通信結果が必要な場合はコールバックを指定するこちらを使用します。  <a href="#ab56f26a837f690af640fa11181e8f63c">[詳解]</a><br /></td></tr>
+<tr class="separator:ab56f26a837f690af640fa11181e8f63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3e59a7fdca8610b7c450494d0b41be7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#ae3e59a7fdca8610b7c450494d0b41be7">DeleteAsync</a> ()</td></tr>
+<tr class="memdesc:ae3e59a7fdca8610b7c450494d0b41be7"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトの削除を行います。<br />
+ 通信結果が不要な場合はコールバックを指定しないこちらを使用します。  <a href="#ae3e59a7fdca8610b7c450494d0b41be7">[詳解]</a><br /></td></tr>
+<tr class="separator:ae3e59a7fdca8610b7c450494d0b41be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e429d428a70cb7ef9ad6230b0cd2837"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a2e429d428a70cb7ef9ad6230b0cd2837">SaveAsync</a> (<a class="el" href="namespaceNCMB.html#a65bad14d670bb55b66a5319f4a1f13a6">NCMBCallback</a> callback)</td></tr>
+<tr class="memdesc:a2e429d428a70cb7ef9ad6230b0cd2837"><td class="mdescLeft">&#160;</td><td class="mdescRight">非同期処理でオブジェクトの保存を行います。<br />
+ <a class="el" href="classNCMB_1_1NCMBObject.html#a81e3a1173e9b2ca06e67b64a8f4e9bbc" title="非同期処理でオブジェクトの保存を行います。  SaveAsync()を実行してから編集などをしていなく、保存をする...">SaveAsync()</a>を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br />
+ オブジェクトIDが登録されていない新規オブジェクトなら登録を行います。<br />
+ オブジェクトIDが登録されている既存オブジェクトなら更新を行います。<br />
+ 通信結果が必要な場合はコールバックを指定するこちらを使用します。  <a href="#a2e429d428a70cb7ef9ad6230b0cd2837">[詳解]</a><br /></td></tr>
+<tr class="separator:a2e429d428a70cb7ef9ad6230b0cd2837"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81e3a1173e9b2ca06e67b64a8f4e9bbc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a81e3a1173e9b2ca06e67b64a8f4e9bbc">SaveAsync</a> ()</td></tr>
+<tr class="memdesc:a81e3a1173e9b2ca06e67b64a8f4e9bbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">非同期処理でオブジェクトの保存を行います。<br />
+ <a class="el" href="classNCMB_1_1NCMBObject.html#a81e3a1173e9b2ca06e67b64a8f4e9bbc" title="非同期処理でオブジェクトの保存を行います。  SaveAsync()を実行してから編集などをしていなく、保存をする...">SaveAsync()</a>を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br />
+ オブジェクトIDが登録されていない新規オブジェクトなら登録を行います。<br />
+ オブジェクトIDが登録されている既存オブジェクトなら更新を行います。<br />
+ 通信結果が不要な場合はコールバックを指定しないこちらを使用します。  <a href="#a81e3a1173e9b2ca06e67b64a8f4e9bbc">[詳解]</a><br /></td></tr>
+<tr class="separator:a81e3a1173e9b2ca06e67b64a8f4e9bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab63e33ed64054d98ba1dbb439498d9e7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#ab63e33ed64054d98ba1dbb439498d9e7">FetchAsync</a> (<a class="el" href="namespaceNCMB.html#a65bad14d670bb55b66a5319f4a1f13a6">NCMBCallback</a> callback)</td></tr>
+<tr class="memdesc:ab63e33ed64054d98ba1dbb439498d9e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">非同期処理でオブジェクトの取得を行います。<br />
+ 通信結果が必要な場合はコールバックを指定するこちらを使用します。  <a href="#ab63e33ed64054d98ba1dbb439498d9e7">[詳解]</a><br /></td></tr>
+<tr class="separator:ab63e33ed64054d98ba1dbb439498d9e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67feeec06448206a8b676c311c905856"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a67feeec06448206a8b676c311c905856">FetchAsync</a> ()</td></tr>
+<tr class="memdesc:a67feeec06448206a8b676c311c905856"><td class="mdescLeft">&#160;</td><td class="mdescRight">非同期処理でオブジェクトの取得を行います。<br />
+ 通信結果が不要な場合はコールバックを指定しないこちらを使用します。  <a href="#a67feeec06448206a8b676c311c905856">[詳解]</a><br /></td></tr>
+<tr class="separator:a67feeec06448206a8b676c311c905856"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85d760519cb8ab27c4770b29b35af89b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a85d760519cb8ab27c4770b29b35af89b">ContainsKey</a> (string key)</td></tr>
+<tr class="memdesc:a85d760519cb8ab27c4770b29b35af89b"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトに指定したkeyが、存在しているかの判断を行います。  <a href="#a85d760519cb8ab27c4770b29b35af89b">[詳解]</a><br /></td></tr>
+<tr class="separator:a85d760519cb8ab27c4770b29b35af89b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+静的公開メンバ関数</h2></td></tr>
+<tr class="memitem:a2c52649c4033a3b8fb51650a26f61083"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classNCMB_1_1NCMBObject.html">NCMBObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a2c52649c4033a3b8fb51650a26f61083">CreateWithoutData</a> (String className, String objectId)</td></tr>
+<tr class="memdesc:a2c52649c4033a3b8fb51650a26f61083"><td class="mdescLeft">&#160;</td><td class="mdescRight">指定したクラス名,ObjectIdのオブジェクト生成を行います。<br />
+  <a href="#a2c52649c4033a3b8fb51650a26f61083">[詳解]</a><br /></td></tr>
+<tr class="separator:a2c52649c4033a3b8fb51650a26f61083"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
+プロパティ</h2></td></tr>
+<tr class="memitem:a799a2fd20fc71b148cd8728fe7eb30d0"><td class="memItemLeft" align="right" valign="top">virtual object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a799a2fd20fc71b148cd8728fe7eb30d0">this[string key]</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a799a2fd20fc71b148cd8728fe7eb30d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトの取得、または設定を行います。  <a href="#a799a2fd20fc71b148cd8728fe7eb30d0">[詳解]</a><br /></td></tr>
+<tr class="separator:a799a2fd20fc71b148cd8728fe7eb30d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7afcb223495bc97dc61d4182d71c713"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#ab7afcb223495bc97dc61d4182d71c713">ClassName</a><code> [get]</code></td></tr>
+<tr class="memdesc:ab7afcb223495bc97dc61d4182d71c713"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトクラス名の取得を行います。  <a href="#ab7afcb223495bc97dc61d4182d71c713">[詳解]</a><br /></td></tr>
+<tr class="separator:ab7afcb223495bc97dc61d4182d71c713"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4be8eb16b8d3193dbe435df8cfa6f572"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a4be8eb16b8d3193dbe435df8cfa6f572">ObjectId</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a4be8eb16b8d3193dbe435df8cfa6f572"><td class="mdescLeft">&#160;</td><td class="mdescRight">objectIdの取得、または設定を行います。  <a href="#a4be8eb16b8d3193dbe435df8cfa6f572">[詳解]</a><br /></td></tr>
+<tr class="separator:a4be8eb16b8d3193dbe435df8cfa6f572"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75be4058654c17afee30d42e9ad755e0"><td class="memItemLeft" align="right" valign="top">DateTime&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a75be4058654c17afee30d42e9ad755e0">UpdateDate</a><code> [get]</code></td></tr>
+<tr class="memdesc:a75be4058654c17afee30d42e9ad755e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクト更新時刻の取得を行います。  <a href="#a75be4058654c17afee30d42e9ad755e0">[詳解]</a><br /></td></tr>
+<tr class="separator:a75be4058654c17afee30d42e9ad755e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79e588235aa7c482def20f31aa1c0cc8"><td class="memItemLeft" align="right" valign="top">DateTime&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a79e588235aa7c482def20f31aa1c0cc8">CreateDate</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a79e588235aa7c482def20f31aa1c0cc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクト登録日時の取得を行います。  <a href="#a79e588235aa7c482def20f31aa1c0cc8">[詳解]</a><br /></td></tr>
+<tr class="separator:a79e588235aa7c482def20f31aa1c0cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f61a9fa54d182f023ec7dcf630f2a38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classNCMB_1_1NCMBACL.html">NCMBACL</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a4f61a9fa54d182f023ec7dcf630f2a38">ACL</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a4f61a9fa54d182f023ec7dcf630f2a38"><td class="mdescLeft">&#160;</td><td class="mdescRight">ACLの取得、または設定を行います。  <a href="#a4f61a9fa54d182f023ec7dcf630f2a38">[詳解]</a><br /></td></tr>
+<tr class="separator:a4f61a9fa54d182f023ec7dcf630f2a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9606ae9958922bf1e0886faea996345b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a9606ae9958922bf1e0886faea996345b">IsDirty</a><code> [get]</code></td></tr>
+<tr class="memdesc:a9606ae9958922bf1e0886faea996345b"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトが変更済みかどうか、判定の取得を行います。  <a href="#a9606ae9958922bf1e0886faea996345b">[詳解]</a><br /></td></tr>
+<tr class="separator:a9606ae9958922bf1e0886faea996345b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39e248f67d243a4ab6bc36ac7f484c10"><td class="memItemLeft" align="right" valign="top">ICollection&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNCMB_1_1NCMBObject.html#a39e248f67d243a4ab6bc36ac7f484c10">Keys</a><code> [get]</code></td></tr>
+<tr class="memdesc:a39e248f67d243a4ab6bc36ac7f484c10"><td class="mdescLeft">&#160;</td><td class="mdescRight">オブジェクトに格納されている、Keyの取得を行います。  <a href="#a39e248f67d243a4ab6bc36ac7f484c10">[詳解]</a><br /></td></tr>
+<tr class="separator:a39e248f67d243a4ab6bc36ac7f484c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><p>オブジェクトを操作するクラスです。 </p>
+</div><h2 class="groupheader">構築子と解体子</h2>
+<a id="ac68e7fba19191eb498a49a3a0345331c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac68e7fba19191eb498a49a3a0345331c">&#9670;&nbsp;</a></span>NCMBObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">NCMB.NCMBObject.NCMBObject </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>className</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>コンストラクター。<br />
+ 指定クラス名のオブジェクトを生成します。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">className</td><td>クラス名</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">メソッド詳解</h2>
+<a id="ab33ab8975a7f223f7e4594480e49c621"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab33ab8975a7f223f7e4594480e49c621">&#9670;&nbsp;</a></span>Add()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void NCMB.NCMBObject.Add </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">object&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>指定したキーに値を設定します。<br />
+ すでにあるキーを指定した場合はエラーを返します。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>キー</td></tr>
+    <tr><td class="paramname">value</td><td>値</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><a class="el" href="classNCMB_1_1NCMBUser.html#aec4a22c70e420e2d5f7ab0e30b48793e">NCMB.NCMBUser</a>で再実装されています。</p>
+
+</div>
+</div>
+<a id="a102d9a10df3efe370ebfeba938c75e63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a102d9a10df3efe370ebfeba938c75e63">&#9670;&nbsp;</a></span>AddRangeToList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.AddRangeToList </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IEnumerable&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>キーで指定された配列に複数のオブジェクトを追加します。<br />
+ 挿入位置は最後に追加します。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>フィールド名</td></tr>
+    <tr><td class="paramname">values</td><td>配列に追加する値のリスト</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae428702387d817a3f3fbdf5693aee08a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae428702387d817a3f3fbdf5693aee08a">&#9670;&nbsp;</a></span>AddRangeUniqueToList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.AddRangeUniqueToList </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IEnumerable&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>キーで指定された配列に複数のオブジェクトを追加します。<br />
+ 今までに登録されていない値のみの追加を行います。<br />
+ 挿入位置は保証されません。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>フィールド名</td></tr>
+    <tr><td class="paramname">values</td><td>配列に追加する値のリスト</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aac10d44eb3f61b0cbc18f7f809d4c858"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac10d44eb3f61b0cbc18f7f809d4c858">&#9670;&nbsp;</a></span>AddToList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.AddToList </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">object&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>キーで指定された配列にオブジェクトを追加します。<br />
+ 挿入位置は最後に追加します。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>フィールド名</td></tr>
+    <tr><td class="paramname">value</td><td>配列に追加する値</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="add973accd115684bffbf054d3dfe2830"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add973accd115684bffbf054d3dfe2830">&#9670;&nbsp;</a></span>AddUniqueToList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.AddUniqueToList </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">object&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>キーで指定された配列にオブジェクトを追加します。<br />
+ 今までに登録されていない値のみの追加を行います。<br />
+ 挿入位置は保証されません。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>フィールド名</td></tr>
+    <tr><td class="paramname">value</td><td>配列に追加する値</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a85d760519cb8ab27c4770b29b35af89b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85d760519cb8ab27c4770b29b35af89b">&#9670;&nbsp;</a></span>ContainsKey()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NCMB.NCMBObject.ContainsKey </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>オブジェクトに指定したkeyが、存在しているかの判断を行います。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>キー</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>存在有無　true:有　false : 無 </dd></dl>
+
+</div>
+</div>
+<a id="a2c52649c4033a3b8fb51650a26f61083"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c52649c4033a3b8fb51650a26f61083">&#9670;&nbsp;</a></span>CreateWithoutData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classNCMB_1_1NCMBObject.html">NCMBObject</a> NCMB.NCMBObject.CreateWithoutData </td>
+          <td>(</td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>className</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>objectId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>指定したクラス名,ObjectIdのオブジェクト生成を行います。<br />
+ </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">className</td><td>クラス名</td></tr>
+    <tr><td class="paramname">objectId</td><td>ObjectId</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>生成したオブジェクト </dd></dl>
+
+</div>
+</div>
+<a id="ab56f26a837f690af640fa11181e8f63c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab56f26a837f690af640fa11181e8f63c">&#9670;&nbsp;</a></span>DeleteAsync() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void NCMB.NCMBObject.DeleteAsync </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceNCMB.html#a65bad14d670bb55b66a5319f4a1f13a6">NCMBCallback</a>&#160;</td>
+          <td class="paramname"><em>callback</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>オブジェクトの削除を行います。<br />
+ 通信結果が必要な場合はコールバックを指定するこちらを使用します。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>コールバック</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><a class="el" href="classNCMB_1_1NCMBUser.html#a73f0d9aef6b49847c9eea2feef667db1">NCMB.NCMBUser</a>で再実装されています。</p>
+
+</div>
+</div>
+<a id="ae3e59a7fdca8610b7c450494d0b41be7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3e59a7fdca8610b7c450494d0b41be7">&#9670;&nbsp;</a></span>DeleteAsync() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void NCMB.NCMBObject.DeleteAsync </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>オブジェクトの削除を行います。<br />
+ 通信結果が不要な場合はコールバックを指定しないこちらを使用します。 </p>
+
+<p><a class="el" href="classNCMB_1_1NCMBUser.html#ac2ea1c993d78e751831176897ef89369">NCMB.NCMBUser</a>で再実装されています。</p>
+
+</div>
+</div>
+<a id="ab63e33ed64054d98ba1dbb439498d9e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab63e33ed64054d98ba1dbb439498d9e7">&#9670;&nbsp;</a></span>FetchAsync() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void NCMB.NCMBObject.FetchAsync </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceNCMB.html#a65bad14d670bb55b66a5319f4a1f13a6">NCMBCallback</a>&#160;</td>
+          <td class="paramname"><em>callback</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>非同期処理でオブジェクトの取得を行います。<br />
+ 通信結果が必要な場合はコールバックを指定するこちらを使用します。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>コールバック</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a67feeec06448206a8b676c311c905856"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67feeec06448206a8b676c311c905856">&#9670;&nbsp;</a></span>FetchAsync() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void NCMB.NCMBObject.FetchAsync </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>非同期処理でオブジェクトの取得を行います。<br />
+ 通信結果が不要な場合はコールバックを指定しないこちらを使用します。 </p>
+
+<p><a class="el" href="classNCMB_1_1NCMBFile.html#ae4dfe04bb63b5ee6eacb1b4597ac99bd">NCMB.NCMBFile</a>で再実装されています。</p>
+
+</div>
+</div>
+<a id="a21c50839637e8ba191cf0b25d232e8d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21c50839637e8ba191cf0b25d232e8d9">&#9670;&nbsp;</a></span>GetRelation&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNCMB_1_1NCMBRelation.html">NCMBRelation</a>&lt;T&gt; NCMB.NCMBObject.GetRelation&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>指定キーのNCMBRelationを生成します。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>フィールド名</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>keyに対応したNCMBRelationを生成して返します。<br />
+もし、フィールドに既にNCMBRelationが存在した場合、情報を引き継いだNCMBRelationを生成して返します。</dd></dl>
+<div class="typeconstraint">
+<dl><dt><b>型制約</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>T</em></td><td>&#160;:</td><td valign="top"><em>NCMBObject</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
+
+</div>
+</div>
+<a id="a2615d547892dc3ff371054aed46e6268"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2615d547892dc3ff371054aed46e6268">&#9670;&nbsp;</a></span>Increment() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.Increment </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>オブジェクトに対し、インクリメントを行います。<br />
+ インクリメントした結果の型はlong(Int64)型になります。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>インクリメントを行うオブジェクトのkey</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7757a0348408a7b6a4508230dbad8d4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7757a0348408a7b6a4508230dbad8d4f">&#9670;&nbsp;</a></span>Increment() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.Increment </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>amount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>オブジェクトに対し、インクリメントを行います。<br />
+ インクリメントした結果の型はlong(Int64)型になります。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>インクリメントを行うオブジェクトのkey</td></tr>
+    <tr><td class="paramname">amount</td><td>増加量(long) 減算する場合は「-」を使用</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a493acf8a1584146ad6f647b2b23000c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a493acf8a1584146ad6f647b2b23000c4">&#9670;&nbsp;</a></span>Increment() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.Increment </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>amount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>オブジェクトに対し、インクリメントを行います。<br />
+ インクリメントした結果の型はdouble型になります。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>インクリメントを行うオブジェクトのkey</td></tr>
+    <tr><td class="paramname">amount</td><td>増加量(double) 減算する場合は「-」を使用</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a32268f8a1f5e266608e0387d769d6a9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32268f8a1f5e266608e0387d769d6a9c">&#9670;&nbsp;</a></span>Remove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void NCMB.NCMBObject.Remove </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>指定したキーのフィールドが存在する場合、フィールドを削除します。<br />
+ 指定キーが無い場合でも、エラーは返しません。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>フィールド名</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><a class="el" href="classNCMB_1_1NCMBUser.html#adff133a20f8fa93df08755adf8f9aaf7">NCMB.NCMBUser</a>で再実装されています。</p>
+
+</div>
+</div>
+<a id="aa3713ff5cffa99a79a7370fc5dfc37f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3713ff5cffa99a79a7370fc5dfc37f9">&#9670;&nbsp;</a></span>RemoveRangeFromList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.RemoveRangeFromList </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IEnumerable&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>キーで指定された配列から一致する複数のオブジェクトを削除します。<br />
+ saveAsync()実行時に指定したオブジェクトの削除を行います。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>フィールド名</td></tr>
+    <tr><td class="paramname">values</td><td>削除するオブジェクト</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af8e4253a91dec9798b784ab63ebd7ac3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8e4253a91dec9798b784ab63ebd7ac3">&#9670;&nbsp;</a></span>Revert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NCMB.NCMBObject.Revert </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>最後に保存を行った状態に戻します。 </p>
+
+</div>
+</div>
+<a id="a2e429d428a70cb7ef9ad6230b0cd2837"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e429d428a70cb7ef9ad6230b0cd2837">&#9670;&nbsp;</a></span>SaveAsync() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void NCMB.NCMBObject.SaveAsync </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceNCMB.html#a65bad14d670bb55b66a5319f4a1f13a6">NCMBCallback</a>&#160;</td>
+          <td class="paramname"><em>callback</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>非同期処理でオブジェクトの保存を行います。<br />
+ <a class="el" href="classNCMB_1_1NCMBObject.html#a81e3a1173e9b2ca06e67b64a8f4e9bbc" title="非同期処理でオブジェクトの保存を行います。  SaveAsync()を実行してから編集などをしていなく、保存をする...">SaveAsync()</a>を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br />
+ オブジェクトIDが登録されていない新規オブジェクトなら登録を行います。<br />
+ オブジェクトIDが登録されている既存オブジェクトなら更新を行います。<br />
+ 通信結果が必要な場合はコールバックを指定するこちらを使用します。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>コールバック</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><a class="el" href="classNCMB_1_1NCMBUser.html#a3c4253922770a93216787449a773bbaa">NCMB.NCMBUser</a>, <a class="el" href="classNCMB_1_1NCMBFile.html#af46f7399c9f2a64683d23313d6a9331f">NCMB.NCMBFile</a>で再実装されています。</p>
+
+</div>
+</div>
+<a id="a81e3a1173e9b2ca06e67b64a8f4e9bbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81e3a1173e9b2ca06e67b64a8f4e9bbc">&#9670;&nbsp;</a></span>SaveAsync() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void NCMB.NCMBObject.SaveAsync </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>非同期処理でオブジェクトの保存を行います。<br />
+ <a class="el" href="classNCMB_1_1NCMBObject.html#a81e3a1173e9b2ca06e67b64a8f4e9bbc" title="非同期処理でオブジェクトの保存を行います。  SaveAsync()を実行してから編集などをしていなく、保存をする...">SaveAsync()</a>を実行してから編集などをしていなく、保存をする必要が無い場合は通信を行いません。<br />
+ オブジェクトIDが登録されていない新規オブジェクトなら登録を行います。<br />
+ オブジェクトIDが登録されている既存オブジェクトなら更新を行います。<br />
+ 通信結果が不要な場合はコールバックを指定しないこちらを使用します。 </p>
+
+<p><a class="el" href="classNCMB_1_1NCMBUser.html#aad019528e044b699b1534aa124205668">NCMB.NCMBUser</a>, <a class="el" href="classNCMB_1_1NCMBFile.html#a37cb48b0537fcf64f7a3de9e629cb9c7">NCMB.NCMBFile</a>で再実装されています。</p>
+
+</div>
+</div>
+<h2 class="groupheader">プロパティ詳解</h2>
+<a id="a4f61a9fa54d182f023ec7dcf630f2a38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f61a9fa54d182f023ec7dcf630f2a38">&#9670;&nbsp;</a></span>ACL</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNCMB_1_1NCMBACL.html">NCMBACL</a> NCMB.NCMBObject.ACL</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ACLの取得、または設定を行います。 </p>
+
+</div>
+</div>
+<a id="ab7afcb223495bc97dc61d4182d71c713"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7afcb223495bc97dc61d4182d71c713">&#9670;&nbsp;</a></span>ClassName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string NCMB.NCMBObject.ClassName</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>オブジェクトクラス名の取得を行います。 </p>
+
+</div>
+</div>
+<a id="a79e588235aa7c482def20f31aa1c0cc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79e588235aa7c482def20f31aa1c0cc8">&#9670;&nbsp;</a></span>CreateDate</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DateTime NCMB.NCMBObject.CreateDate</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>オブジェクト登録日時の取得を行います。 </p>
+
+</div>
+</div>
+<a id="a9606ae9958922bf1e0886faea996345b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9606ae9958922bf1e0886faea996345b">&#9670;&nbsp;</a></span>IsDirty</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NCMB.NCMBObject.IsDirty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>オブジェクトが変更済みかどうか、判定の取得を行います。 </p>
+<dl class="section return"><dt>戻り値</dt><dd>変更可否　true:変更済　false : 未変更 </dd></dl>
+
+</div>
+</div>
+<a id="a39e248f67d243a4ab6bc36ac7f484c10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39e248f67d243a4ab6bc36ac7f484c10">&#9670;&nbsp;</a></span>Keys</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ICollection&lt;string&gt; NCMB.NCMBObject.Keys</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>オブジェクトに格納されている、Keyの取得を行います。 </p>
+
+</div>
+</div>
+<a id="a4be8eb16b8d3193dbe435df8cfa6f572"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4be8eb16b8d3193dbe435df8cfa6f572">&#9670;&nbsp;</a></span>ObjectId</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string NCMB.NCMBObject.ObjectId</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>objectIdの取得、または設定を行います。 </p>
+
+</div>
+</div>
+<a id="a799a2fd20fc71b148cd8728fe7eb30d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a799a2fd20fc71b148cd8728fe7eb30d0">&#9670;&nbsp;</a></span>this[string key]</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual object NCMB.NCMBObject.this[string key]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>オブジェクトの取得、または設定を行います。 </p>
+
+</div>
+</div>
+<a id="a75be4058654c17afee30d42e9ad755e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75be4058654c17afee30d42e9ad755e0">&#9670;&nbsp;</a></span>UpdateDate</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DateTime NCMB.NCMBObject.UpdateDate</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>オブジェクト更新時刻の取得を行います。 </p>
+
+</div>
+</div>
+<hr/>このクラス詳解は次のファイルから抽出されました:<ul>
+<li>ncmb_unity/Assets/NCMB/Script/NCMBObject.cs</li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespaceNCMB.html">NCMB</a></li><li class="navelem"><a class="el" href="classNCMB_1_1NCMBObject.html">NCMBObject</a></li>
+    <li class="footer">構築:
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
+  </ul>
+</div>
+</body>
+</html>
