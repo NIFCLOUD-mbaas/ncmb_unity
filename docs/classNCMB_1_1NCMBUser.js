@@ -1,0 +1,26 @@
+var classNCMB_1_1NCMBUser =
+[
+    [ "NCMBUser", "classNCMB_1_1NCMBUser.html#a2213769ad2f927cc540424b1aa11c34d", null ],
+    [ "Add", "classNCMB_1_1NCMBUser.html#aec4a22c70e420e2d5f7ab0e30b48793e", null ],
+    [ "DeleteAsync", "classNCMB_1_1NCMBUser.html#ac2ea1c993d78e751831176897ef89369", null ],
+    [ "DeleteAsync", "classNCMB_1_1NCMBUser.html#a73f0d9aef6b49847c9eea2feef667db1", null ],
+    [ "GetAuthDataForProvider", "classNCMB_1_1NCMBUser.html#a7de5d47b3e6a1f5b46d31fec7d2255c1", null ],
+    [ "IsAuthenticated", "classNCMB_1_1NCMBUser.html#a35ca5b2fdc7427eae22925cc76bb4c42", null ],
+    [ "IsLinkWith", "classNCMB_1_1NCMBUser.html#a105d0437567491898b2d6cd879a1f356", null ],
+    [ "LinkWithAuthDataAsync", "classNCMB_1_1NCMBUser.html#a3681a210a7e3c56468d1037945888988", null ],
+    [ "LinkWithAuthDataAsync", "classNCMB_1_1NCMBUser.html#ac290ca2d0491714a63faca6a600abbe8", null ],
+    [ "LogInWithAuthDataAsync", "classNCMB_1_1NCMBUser.html#a70aab8db90d07f3707c7774d251aece7", null ],
+    [ "LogInWithAuthDataAsync", "classNCMB_1_1NCMBUser.html#acc174ddc333710f94be451843044ffdf", null ],
+    [ "Remove", "classNCMB_1_1NCMBUser.html#adff133a20f8fa93df08755adf8f9aaf7", null ],
+    [ "SaveAsync", "classNCMB_1_1NCMBUser.html#aad019528e044b699b1534aa124205668", null ],
+    [ "SaveAsync", "classNCMB_1_1NCMBUser.html#a3c4253922770a93216787449a773bbaa", null ],
+    [ "SignUpAsync", "classNCMB_1_1NCMBUser.html#a9cedc45ec51538c40ade5487698191da", null ],
+    [ "SignUpAsync", "classNCMB_1_1NCMBUser.html#ae701ed11c2bc49f896cb8b6920768e29", null ],
+    [ "UnLinkWithAuthDataAsync", "classNCMB_1_1NCMBUser.html#af176f97bb6020eff99cc29897c1caf90", null ],
+    [ "UnLinkWithAuthDataAsync", "classNCMB_1_1NCMBUser.html#a9cccd583cb1179b6884238b8ad3fb3d8", null ],
+    [ "AuthData", "classNCMB_1_1NCMBUser.html#a25a6f3cc844a7764ca39c95a27f03bcd", null ],
+    [ "Email", "classNCMB_1_1NCMBUser.html#ab71bca0c8ce44582221449ac29ee3d9a", null ],
+    [ "Password", "classNCMB_1_1NCMBUser.html#ab0752cbe79f75b75dc8a5c4072e1d86b", null ],
+    [ "SessionToken", "classNCMB_1_1NCMBUser.html#a41b205ed0cccbd0312046d4e035b609a", null ],
+    [ "UserName", "classNCMB_1_1NCMBUser.html#a8b1d00d8476a59314516d9810dcec26a", null ]
+];
