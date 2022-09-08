@@ -22,10 +22,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 
 import androidx.core.app.NotificationCompat;
 
@@ -33,6 +36,13 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.unity3d.player.UnityPlayer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 import java.util.Random;
 
@@ -45,6 +55,8 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 	static final String SMALL_ICON_COLOR_KEY = "smallIconColor"; //AndroidManifestから情報を取得
 	private final String TAG = "NCMBFirebaseMessagingService";
 	public static final String NS = "NCMB_SPLITTER";
+	static final String USER_SETTING_JSON_KEY = "com.nifcloud.mbaas.Data";
+	static final String USER_SETTING_JSON_BIG_PICTURE_URL_KEY = "bigPictureUrlKey";
 
 	/**
 	 * Called if InstanceID token is updated. This may occur if the security of
@@ -144,7 +156,7 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtras(pushData);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, new Random().nextInt(), intent,
-				PendingIntent.FLAG_CANCEL_CURRENT);
+				PendingIntent.FLAG_IMMUTABLE);
 
 		//pushDataから情報を取得
 		String message = "";
@@ -169,20 +181,37 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 			//それ以外はアプリのアイコンを設定する
 			icon = appInfo.icon;
 		}
+
+		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NCMBNotificationUtils.getDefaultChannel());
 		//SmallIconカラーを設定
 		int smallIconColor = appInfo.metaData.getInt(SMALL_ICON_COLOR_KEY);
 
 		//Notification作成
 		Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, com.nifcloud.mbaas.ncmbfcmplugin.NCMBNotificationUtils.getDefaultChannel())
-				.setStyle(new NotificationCompat.BigTextStyle().bigText(message).setBigContentTitle(title))
-				.setSmallIcon(icon)//通知エリアのアイコン
-				.setColor(smallIconColor)//通知エリアのアイコンカラー
-				.setContentTitle(title)
-				.setContentText(message)
-				.setAutoCancel(true)//通知をタップしたら自動で削除する
-				.setSound(defaultSoundUri)//端末のデフォルトサウンド
-				.setContentIntent(pendingIntent);//通知をタップした際に起動するActivity
+
+		if (pushData.getString(USER_SETTING_JSON_KEY) != null) {
+			String imageUrl = null;
+			Bitmap bitmap = null;
+			try {
+				JSONObject userSettingJson = new JSONObject((String) pushData.get(USER_SETTING_JSON_KEY));
+				String bigPictureUrlKey = appInfo.metaData.getString(USER_SETTING_JSON_BIG_PICTURE_URL_KEY);
+				if (userSettingJson.get(bigPictureUrlKey) != null) {
+					imageUrl = userSettingJson.get(bigPictureUrlKey).toString();
+				}
+			} catch (JSONException e) {}
+
+			if (imageUrl != null && imageUrl.length() > 4 && Patterns.WEB_URL.matcher(imageUrl).matches()) {
+				bitmap = getBitmapFromURL(imageUrl);
+			}
+
+			if (bitmap != null) {
+				settingBigNotification(bitmap, notificationBuilder, icon, smallIconColor, title, message, pendingIntent, defaultSoundUri);
+			} else {
+				settingSmallNotification(notificationBuilder, icon, smallIconColor, title, message, pendingIntent, defaultSoundUri);
+			}
+		} else {
+			settingSmallNotification(notificationBuilder, icon, smallIconColor, title, message, pendingIntent, defaultSoundUri);
+		}
 		return notificationBuilder;
 	}
 
@@ -207,6 +236,48 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 			UnityPlayer.UnitySendMessage("NCMBManager", "OnNotificationReceived", dataString);
 		} catch (UnsatisfiedLinkError error) {
 			//バックグラウンド時
+		}
+	}
+
+	private void settingBigNotification(Bitmap bitmap, NotificationCompat.Builder notificationBuilder, int icon, int smallIconColor, String title, String message, PendingIntent pendingIntent, Uri defaultSoundUri) {
+		NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+		bigPictureStyle.setBigContentTitle(title);
+		bigPictureStyle.setSummaryText(message);
+		bigPictureStyle.bigPicture(bitmap).bigLargeIcon(null);
+
+		notificationBuilder.setSmallIcon(icon)//通知エリアのアイコン設定
+				.setColor(smallIconColor) //通知エリアのアイコンカラー設定
+				.setLargeIcon(bitmap)
+				.setContentTitle(title)
+				.setContentText(message)
+				.setStyle(bigPictureStyle)
+				.setAutoCancel(true)//通知をタップしたら自動で削除する
+				.setSound(defaultSoundUri)//端末のデフォルトサウンド
+				.setContentIntent(pendingIntent);//通知をタップした際に起動するActivity
+	}
+
+	private void settingSmallNotification(NotificationCompat.Builder notificationBuilder, int icon, int smallIconColor, String title, String message, PendingIntent pendingIntent, Uri defaultSoundUri) {
+		notificationBuilder.setSmallIcon(icon)//通知エリアのアイコン設定
+				.setColor(smallIconColor) //通知エリアのアイコンカラー設定
+				.setContentTitle(title)
+				.setContentText(message)
+				.setStyle(new NotificationCompat.BigTextStyle().bigText(message).setBigContentTitle(title))
+				.setAutoCancel(true)//通知をタップしたら自動で削除する
+				.setSound(defaultSoundUri)//端末のデフォルトサウンド
+				.setContentIntent(pendingIntent);//通知をタップした際に起動するActivity
+	}
+
+	private Bitmap getBitmapFromURL(String strURL) {
+		try {
+			URL url = new URL(strURL);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoInput(true);
+			connection.connect();
+			InputStream input = connection.getInputStream();
+			Bitmap myBitmap = BitmapFactory.decodeStream(input);
+			return myBitmap;
+		} catch (IOException e) {
+			return null;
 		}
 	}
 }

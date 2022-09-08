@@ -23,7 +23,7 @@ class PreBuildAndroid : IPreprocessBuild
         //Covert google json to xml 
         string gsXml = parseGoogleJsonToXml(gsJson);
 
-        string valuesFolder = androidPath + "/res/values";
+        string valuesFolder = androidPath + "/ncmb.androidlib/res/values";
         if (!Directory.Exists(valuesFolder))
         {
             Directory.CreateDirectory(valuesFolder);
