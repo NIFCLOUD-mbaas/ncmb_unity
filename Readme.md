@@ -30,7 +30,7 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 - Unity 2021.x〜
 - Android 8.x〜12.x, API level 26.0〜31.0
 - iOS 13.x〜16.x  
-(※2022年9月時点)
+(※2022年10月時点)
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
