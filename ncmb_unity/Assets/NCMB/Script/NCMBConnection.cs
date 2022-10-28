@@ -466,6 +466,8 @@ namespace NCMB.Internal
 				}
 			}
 
+			req.Dispose();
+
 		}
 	}
 }
