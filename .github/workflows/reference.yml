@@ -1,0 +1,45 @@
+name: Auto Generate and Replace Reference Files
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  generate_reference-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}
+    - name: Doxygen Action
+      uses: mattnotmitt/doxygen-action@1.9.4
+      with:
+        working-directory: .
+        doxyfile-path: ./Doxyfile
+
+    - name: Setup git
+      env:
+        EMAIL: ${{ secrets.EMAIL }}
+      run: |
+        git config --global user.email "$EMAIL"
+        git config --global user.name "ncmbadmin"
+
+    - name: Commit docs
+      run: |
+        git add -N .
+        if ! git diff --exit-code --quiet
+        then
+          git add .
+          git commit -m "Auto replace reference files"
+          git push
+        fi
+
+    - name: zip docs
+      run: zip -r docs.zip docs/
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: docs
+        path: docs.zip
