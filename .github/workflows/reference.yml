@@ -1,9 +1,6 @@
 name: Auto Generate and Replace Reference Files
 
-on:
-  push:
-    branches:
-      - develop
+on: [push]
 
 jobs:
   generate_reference-and-commit:
