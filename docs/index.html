@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.4"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NCMB Unity SDK Library Project: ニフクラ mobile backend Unity SDKについて</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">NCMB Unity SDK Library Project
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.9.4 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search",'検索','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','検索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('index.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div><div class="header">
+  <div class="headertitle"><div class="title">ニフクラ mobile backend Unity SDKについて </div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p ><a class="anchor" id="md_Readme"></a> </p><h1>概要</h1>
+<p >スマートフォンアプリ向けクラウド「<a href="https://mbaas.nifcloud.com/">ニフクラ mobile backend</a>」用の Unity SDK です。 SDKを導入することで、以下の機能をアプリから利用することが可能です。</p>
+<ul>
+<li><a href="https://mbaas.nifcloud.com/doc/current/push/basic_usage_unity.html">プッシュ通知</a></li>
+<li><a href="https://mbaas.nifcloud.com/doc/current/user/basic_usage_unity.html">会員管理・認証</a></li>
+<li><a href="https://mbaas.nifcloud.com/doc/current/sns/facebook_unity.html">SNS連携</a></li>
+<li><a href="https://mbaas.nifcloud.com/doc/current/datastore/basic_usage_unity.html">データストア</a></li>
+<li><a href="https://mbaas.nifcloud.com/doc/current/filestore/basic_usage_unity.html">ファイルストア</a></li>
+<li><a href="https://mbaas.nifcloud.com/doc/current/geopoint/basic_usage_unity.html">位置情報検索</a></li>
+<li><a href="https://mbaas.nifcloud.com/doc/current/script/basic_usage_unity.html">スクリプト</a></li>
+</ul>
+<p >SDKを通じてAPIを利用するには、<a href="https://mbaas.nifcloud.com">ニフクラ mobile backend</a>の会員登録が必要です。 SDK導入手順については、<a href="https://mbaas.nifcloud.com/doc/current/introduction/quickstart_unity.html">クイックスタート</a>をご覧ください。</p>
+<h1>依存ライブラリ</h1>
+<p >プッシュ通知機能を利用する場合は、以下のライブラリが必要です。 (NCMB.package内部に含まれているので、別途用意する必要はありません。)</p>
+<ul>
+<li>Android Support Library</li>
+<li>Google Play Service SDK</li>
+<li>Firebase Service Library</li>
+</ul>
+<h1>動作環境</h1>
+<ul>
+<li>Unity 2021.x〜</li>
+<li>Android 8.x〜12.x, API level 26.0〜31.0</li>
+<li>iOS 10.x〜15.x <br  />
+ (※2022年9月時点)</li>
+</ul>
+<p >※ Windows Phone 等、他のプラットフォームはサポートしていません。</p>
+<h1>テクニカルサポート窓口対応バージョン</h1>
+<p >テクニカルサポート窓口では、1年半以内にリリースされたSDKに対してのみサポート対応させていただきます。<br  />
+ 定期的なバージョンのアップデートにご協力ください。<br  />
+ ※なお、mobile backend にて大規模な改修が行われた際は、1年半以内のSDKであっても対応出来ない場合がございます。<br  />
+ その際は<a href="https://mbaas.nifcloud.com/info/">informationブログ</a>にてお知らせいたします。予めご了承ください。</p>
+<ul>
+<li>v4.4.0 ～ (※2022年9月時点)</li>
+</ul>
+<h1>ライセンス</h1>
+<p >このSDKのライセンスはApache License Version 2.0、<a href="https://github.com/aaubry/YamlDotNet">YamlDotNet</a>に従います。</p>
+<h1>参考URL集</h1>
+<ul>
+<li><a href="https://mbaas.nifcloud.com/">ニフクラ mobile backend</a></li>
+<li><a href="https://mbaas.nifcloud.com/doc/current/">SDKの詳細な使い方</a></li>
+<li><a href="https://mbaas.nifcloud.com/doc/current/tutorial/tutorial_unity.html">サンプル＆チュートリアル</a></li>
+<li><a href="https://github.com/NIFCLOUD-mbaas/UserCommunity">ユーザーコミュニティ</a> </li>
+</ul>
+</div></div><!-- PageDoc -->
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">構築: <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
+</body>
+</html>
