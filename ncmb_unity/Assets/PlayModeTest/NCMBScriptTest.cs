@@ -150,16 +150,14 @@ public class NCMBScriptTest
      * - 内容：スクリプト実行APIメソッド(DELETE)で正常に処理されるか確認する
      * - 結果：エラーが発生しないこと
      */
+
 	[UnityTest]
 	public IEnumerator ExecuteCallbackWhenExecuteScriptTest_DELETE ()
 	{
 		NCMBScript script = new NCMBScript ("testScript_DELETE.js", NCMBScript.MethodType.DELETE, _endPoint);
 		script.ExecuteAsync (null, null, null, (byte[] result, NCMBException e) => {
 			if (e == null) {
-				// string cmd = System.Text.Encoding.UTF8.GetString (result);
-				// cmd = cmd.TrimEnd ('\0');//終端文字の削除
-				Assert.IsEmpty(result);
-				// Assert.AreEqual ("", cmd);
+				Assert.Null(result);
 			} else {
 				Assert.Fail (e.ErrorMessage);
 			}
@@ -169,6 +167,7 @@ public class NCMBScriptTest
 		yield return NCMBTestSettings.AwaitAsync ();
 		Assert.True (NCMBTestSettings.CallbackFlag);
 	}
+
 
 	/**
      * - 内容：スクリプト実行APIメソッドでエラーが返却された際に正常に処理されるか確認する
