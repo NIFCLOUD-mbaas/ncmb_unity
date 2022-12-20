@@ -27,7 +27,7 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 
 ## 動作環境
 
-- Unity 2021.x〜
+- Unity 2021.x
 - Android 8.x〜12.x, API level 26.0〜31.0
 - iOS 13.x〜16.x  
 (※2022年10月時点)

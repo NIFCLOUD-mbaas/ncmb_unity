@@ -1,10 +1,9 @@
 {
   "name": "com.nifcloud.mbaas.unity",
-  "version": "4.4.1",
+  "version": "4.6.0",
   "displayName": "NCMB Unity SDK",
   "description": "NCMB Unity SDK package - build to work with Unity",
-  "unity": "2019.4",
-  "unityRelease": "30f1",
+  "unity": "2021.3",
   "documentationUrl": "https://mbaas.nifcloud.com/doc/current/#/Unity",
   "changelogUrl": "https://github.com/NIFCLOUD-mbaas/ncmb_unity/releases",
   "licensesUrl": "https://github.com/NIFCLOUD-mbaas/ncmb_unity/blob/master/LICENSE",
@@ -14,7 +13,7 @@
     "ncmb_unity"
   ],
   "author": {
-    "name": "NIFCloud MBaaS",
+    "name": "NIFCLOUD Mobile Backend",
     "url": "https://mbaas.nifcloud.com"
   }
 }
