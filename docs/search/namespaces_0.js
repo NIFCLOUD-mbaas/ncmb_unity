@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['mimetypes',['MimeTypes',['../namespaceMimeTypes.html',1,'']]],
-  ['minijson',['MiniJSON',['../namespaceMiniJSON.html',1,'']]]
+  ['mimetypes_0',['MimeTypes',['../namespaceMimeTypes.html',1,'']]],
+  ['minijson_1',['MiniJSON',['../namespaceMiniJSON.html',1,'']]]
 ];
