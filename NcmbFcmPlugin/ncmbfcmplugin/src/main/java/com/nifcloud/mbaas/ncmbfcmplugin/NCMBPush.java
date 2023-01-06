@@ -1,10 +1,23 @@
 package com.nifcloud.mbaas.ncmbfcmplugin;
 
+//import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+//import static androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
 
 
 /**

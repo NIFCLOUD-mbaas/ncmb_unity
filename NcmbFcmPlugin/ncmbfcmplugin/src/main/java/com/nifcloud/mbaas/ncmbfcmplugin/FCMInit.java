@@ -16,13 +16,18 @@
 
 package com.nifcloud.mbaas.ncmbfcmplugin;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.activity.result.ActivityResultCallerKt;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -103,6 +108,7 @@ public class FCMInit extends Activity {
         }
         return true;
     }
+
 
     /**
      * C#から呼び出し

@@ -16,9 +16,22 @@
 
 package com.nifcloud.mbaas.ncmbfcmplugin;
 
+
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.unity3d.player.UnityPlayer;
 
 public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity {
@@ -26,7 +39,6 @@ public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity 
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		try {
 			this._proxyHelper = new ActivityProxyObjectHelper(this);
 			this._proxyHelper.onCreate(savedInstanceState);
@@ -61,4 +73,5 @@ public class UnityPlayerActivity extends com.unity3d.player.UnityPlayerActivity 
 		}
 		this._proxyHelper.invokeZeroParameterMethod("onResume");
 	}
+
 }
