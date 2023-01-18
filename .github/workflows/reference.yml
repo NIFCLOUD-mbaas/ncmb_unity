@@ -39,11 +39,19 @@ jobs:
         path: docs.zip
 
     - name: Setup Pages
+<<<<<<< Updated upstream
         uses: actions/configure-pages@v2
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: './docs'
+=======
+      uses: actions/configure-pages@v2
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: './docs'
+>>>>>>> Stashed changes
   deploy:
     environment:
       name: github-pages
