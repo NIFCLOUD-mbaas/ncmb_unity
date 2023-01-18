@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  generate_reference:
+  generate-reference:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -27,23 +27,20 @@ jobs:
       with:
         working-directory: .
         doxyfile-path: ./Doxyfile
-
-
     - name: zip docs
       run: zip -r docs.zip docs/
-
     - name: Archive artifacts
       uses: actions/upload-artifact@v3
       with:
         name: docs
         path: docs.zip
-
     - name: Setup Pages
-        uses: actions/configure-pages@v2
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: './docs'
+      uses: actions/configure-pages@
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: './docs'
+
   deploy:
     environment:
       name: github-pages
