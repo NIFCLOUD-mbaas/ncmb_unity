@@ -618,10 +618,10 @@ namespace NCMB
 						obj = new NCMBUser ();
 					} else if (resultClassName.Equals ("role")) {
 						obj = new NCMBRole ();
-					} else if (resultClassName.Equals ("installation")) {
-						obj = new NCMBInstallation ();
-					} else if (resultClassName.Equals ("push")) {
-						obj = new NCMBPush ();
+					// } else if (resultClassName.Equals ("installation")) {
+					// 	obj = new NCMBInstallation ();
+					// } else if (resultClassName.Equals ("push")) {
+					// 	obj = new NCMBPush ();
 					} else if (resultClassName.Equals ("file")) {
 						obj = new NCMBFile ();
 					} else {
@@ -880,16 +880,16 @@ namespace NCMB
 					Dictionary<string , object> realData = query._getFindParams ();
 					realData ["where"] = realData ["where"];
 					jsonAfter [pair.Key] = realData;
-				} else if (pair.Value is NCMBQuery<NCMBInstallation>) {
-					NCMBQuery<NCMBInstallation> query = (NCMBQuery<NCMBInstallation>)pair.Value;
-					Dictionary<string , object> realData = query._getFindParams ();
-					realData ["where"] = realData ["where"];
-					jsonAfter [pair.Key] = realData;
-				} else if (pair.Value is NCMBQuery<NCMBPush>) {
-					NCMBQuery<NCMBPush> query = (NCMBQuery<NCMBPush>)pair.Value;
-					Dictionary<string , object> realData = query._getFindParams ();
-					realData ["where"] = realData ["where"];
-					jsonAfter [pair.Key] = realData;
+				// } else if (pair.Value is NCMBQuery<NCMBInstallation>) {
+				// 	NCMBQuery<NCMBInstallation> query = (NCMBQuery<NCMBInstallation>)pair.Value;
+				// 	Dictionary<string , object> realData = query._getFindParams ();
+				// 	realData ["where"] = realData ["where"];
+				// 	jsonAfter [pair.Key] = realData;
+				// } else if (pair.Value is NCMBQuery<NCMBPush>) {
+				// 	NCMBQuery<NCMBPush> query = (NCMBQuery<NCMBPush>)pair.Value;
+				// 	Dictionary<string , object> realData = query._getFindParams ();
+				// 	realData ["where"] = realData ["where"];
+				// 	jsonAfter [pair.Key] = realData;
 				} else if (pair.Value is IDictionary) {
 					jsonAfter [pair.Key] = _encodeSubQueries (pair.Value);
 				} else {
@@ -926,12 +926,12 @@ namespace NCMB
 			string url = "";
 			if (className == null || className.Equals ("")) {
 				throw new ArgumentException ("Not class name error. Please be sure to specify the class name.");
-			} else if (className.Equals ("push")) {
-				// プッシュ検索API
-				url = new NCMBPush ()._getBaseUrl ();
-			} else if (className.Equals ("installation")) {
-				// 配信端末検索API
-				url = new NCMBInstallation ()._getBaseUrl ();
+			// } else if (className.Equals ("push")) {
+			// 	// プッシュ検索API
+			// 	url = new NCMBPush ()._getBaseUrl ();
+			// } else if (className.Equals ("installation")) {
+			// 	// 配信端末検索API
+			// 	url = new NCMBInstallation ()._getBaseUrl ();
 			} else if (className.Equals ("file")) {
 				// ファイル検索API
 				url = new NCMBFile ()._getBaseUrl ();

@@ -25,12 +25,12 @@ public class NCMBTestSettings
 	// 初期化
 	public static void Initialize (string filePath = null)
 	{
-		
-		if (GameObject.Find ("NCMBManager") == null) {
-			GameObject manager = new GameObject ();
-			manager.name = "NCMBManager";
-			manager.AddComponent<NCMBManager> ();
-		}
+
+		// if (GameObject.Find ("NCMBManager") == null) {
+		// 	GameObject manager = new GameObject ();
+		// 	manager.name = "NCMBManager";
+		// 	manager.AddComponent<NCMBManager> ();
+		// }
 
 		if (GameObject.Find ("NCMBSettings") == null) {
 			GameObject settings = new GameObject ();
