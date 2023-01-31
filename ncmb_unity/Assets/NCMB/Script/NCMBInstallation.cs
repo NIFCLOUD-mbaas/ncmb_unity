@@ -79,16 +79,14 @@ namespace  NCMB
 					//iOSのみv1からアップデートした場合は{"data":{"objectId”:”xxxx…
 					dic = (Dictionary<string, object>)value;
 				}
-
 				//各プロパティの設定
 				_mergeFromServer (dic, false);
 			}
-
 			//固定値のため、internal化したsetter
 			DeviceToken = NCMBManager._token;
 			//applicationName,appVersion,deviceType,timeZone,SdkVersionを取得/設定
 			#if !UNITY_EDITOR
-			SetDefaultProperty ();
+			setDefaultProperty ();
 			#endif
 		}
 
@@ -124,34 +122,6 @@ namespace  NCMB
 				this ["deviceToken"] = value;
 			}
 		}
-
-		// /// <summary>
-		// /// デバイストークンの取得を行います。 <br/>
-		// /// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
-		// /// </summary>
-		// /// <param name="callback">コールバック</param>
-		// public void GetDeviceToken(NCMBGetCallback<String> callback){
-		// 	if(this.ContainsKey("deviceToken") && this["deviceToken"] != null ){
-		// 		callback((string)this["deviceToken"], null);
-		// 	} else {
-		// 		new Thread(() => {
-		// 			for (int i = 0; i < 10; i++){
-		// 				if (NCMBManager._token != null){
-		// 					this["deviceToken"] = NCMBManager._token;
-		// 					break;
-		// 				}
-		// 				Thread.Sleep(500);
-		// 			}
-		// 			if (callback != null){
-		// 				if (this.ContainsKey("deviceToken") && this["deviceToken"] != null){
-		// 					callback((string)this["deviceToken"], null);
-		// 				} else {
-		// 					callback(null, new NCMBException("Can not get device token"));
-		// 				}
-		// 			}
-		// 		}).Start();
-		// 	}
-		// }
 
 		/// <summary>
 		/// Android/iOSの取得、または設定を行います。
