@@ -36,27 +36,50 @@ namespace  NCMB
 	[NCMBClassName ("analytics")]
 	internal class NCMBAnalytics
 	{
-		internal static void TrackAppOpened (string _pushId)	//(Android/iOS)-NCMBManager.onAnalyticsReceived-this.NCMBAnalytics
+		//Dictionary<string,object> _requestData;
+
+		// internal Dictionary<string,object> TrackAppOpenedPrepare (string _pushId) {
+		// 	//ネイティブから取得したpushIdからリクエストヘッダを作成
+		// 	if (_pushId != null && NCMBManager._token != null && NCMBSettings.UseAnalytics) {
+		//
+		// 		string deviceType = "";
+		// 		#if UNITY_ANDROID
+		// 		deviceType = "android";
+		// 		#elif UNITY_IOS
+		// 		deviceType = "ios";
+		// 		#endif
+		//
+		// 		//RESTリクエストデータ生成
+		// 		Dictionary<string,object> requestData = new Dictionary<string,object> {
+		// 			{ "pushId", _pushId },
+		// 			{ "deviceToken", NCMBManager._token },
+		// 			{ "deviceType", deviceType }
+		// 		};
+		//
+		// 		return requestData;
+		// }
+
+		internal static void TrackAppOpened (Dictionary<string,object> requestData)	//(Android/iOS)-NCMBManager.onAnalyticsReceived-this.NCMBAnalytics
 		{
 			//ネイティブから取得したpushIdからリクエストヘッダを作成
-			if (_pushId != null && NCMBManager._token != null && NCMBSettings.UseAnalytics) {
-
-				string deviceType = "";
-				#if UNITY_ANDROID
-				deviceType = "android";
-				#elif UNITY_IOS
-				deviceType = "ios";
-				#endif
-
-				//RESTリクエストデータ生成
-				Dictionary<string,object> requestData = new Dictionary<string,object> {
-					{ "pushId", _pushId },
-					{ "deviceToken", NCMBManager._token },
-					{ "deviceType", deviceType }
-				};
+			// if (_pushId != null && NCMBManager._token != null && NCMBSettings.UseAnalytics) {
+			if (requestData != null && NCMBPushSettings.UseAnalytics) {
+				// string deviceType = "";
+				// #if UNITY_ANDROID
+				// deviceType = "android";
+				// #elif UNITY_IOS
+				// deviceType = "ios";
+				// #endif
+				//
+				// //RESTリクエストデータ生成
+				// Dictionary<string,object> requestData = new Dictionary<string,object> {
+				// 	{ "pushId", _pushId },
+				// 	{ "deviceToken", NCMBManager._token },
+				// 	{ "deviceType", deviceType }
+				// };
 
 				var json = Json.Serialize (requestData);
-				string url = NCMBAnalytics._getBaseUrl (_pushId);
+				string url = NCMBAnalytics._getBaseUrl (requestData["pushId"].ToString());
 				ConnectType type = ConnectType.POST;
 				string content = json.ToString ();
 
@@ -85,7 +108,14 @@ namespace  NCMB
 		/// </summary>
 		internal NCMBAnalytics ()
 		{
+			if (Type.GetType("NCMBAnalyticsUtils") != null) {
+				//If Push plugin is imported
+			} else {
+				//If Push plugin is not imported
+
+			}
 		}
+
 		//オーバーライド
 		internal static string _getBaseUrl (string _pushId)
 		{

@@ -35,10 +35,12 @@ namespace NCMB
 		internal static bool _responseValidationFlag = false;
 		//初回のみ実行フラグ
 		internal static bool _isInitialized = false;
-		//PUSH通知フラグ
-		private static bool _usePush = false;
-		//開封通知フラグ
-		private static bool _useAnalytics = false;
+
+		// //PUSH通知フラグ
+		// private static bool _usePush = false;
+		// //開封通知フラグ
+		// private static bool _useAnalytics = false;
+
 		//ドメインURL
 		private static string _domainURL = "";
 		//APIバージョン
@@ -50,12 +52,14 @@ namespace NCMB
 		[SerializeField]
 		internal string
 			clientKey = "";
-		[SerializeField]
-		internal bool
-			usePush = false;
-		[SerializeField]
-		internal bool
-			useAnalytics = false;
+
+		// [SerializeField]
+		// internal bool
+		// 	usePush = false;
+		//
+		// [SerializeField]
+		// internal bool
+		// 	useAnalytics = false;
 		//[SerializeField]
 		//internal bool
 		//getLocation = false;
@@ -109,23 +113,23 @@ namespace NCMB
 			}
 		}
 
-		/// <summary>
-		/// プッシュ通知設定の取得を行います。
-		/// </summary>
-		public static bool UsePush {
-			get {
-				return _usePush;
-			}
-		}
-
-		/// <summary>
-		/// 開封通知設定の取得を行います。
-		/// </summary>
-		public static bool UseAnalytics {
-			get {
-				return _useAnalytics;
-			}
-		}
+		// /// <summary>
+		// /// プッシュ通知設定の取得を行います。
+		// /// </summary>
+		// public static bool UsePush {
+		// 	get {
+		// 		return _usePush;
+		// 	}
+		// }
+		//
+		// /// <summary>
+		// /// 開封通知設定の取得を行います。
+		// /// </summary>
+		// public static bool UseAnalytics {
+		// 	get {
+		// 		return _useAnalytics;
+		// 	}
+		// }
 
 		/// <summary>
 		/// ドメインURLの取得、または設定を行います。

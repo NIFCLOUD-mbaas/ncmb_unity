@@ -121,7 +121,7 @@ namespace NCMB
 		#if UNITY_ANDROID
 		void Update ()
 		{
-			string pushId = LoadOpenedPushId(); 
+			string pushId = LoadOpenedPushId();
 			if (pushId != null && pushId != ""){
 				NCMBAnalytics.TrackAppOpened (pushId);
 				SaveOpenedPushId(null);
@@ -139,7 +139,7 @@ namespace NCMB
 
 		void Update ()
 		{
-			string pushId = LoadOpenedPushId(); 
+			string pushId = LoadOpenedPushId();
 			if (pushId != null && pushId != ""){
 				NCMBAnalytics.TrackAppOpened (pushId);
 				SaveOpenedPushId(null);
@@ -147,8 +147,8 @@ namespace NCMB
 
 			if (UnityEngine.iOS.NotificationServices.remoteNotificationCount > 0) {
 				ProcessNotification ();
-				NCMBPush push = new NCMBPush ();
-				push.ClearAll ();
+				NCMBPushUtils pushUtils = new NCMBPushUtils ();
+				pushUtils.ClearAll ();
 			}
 		}
 
@@ -295,7 +295,7 @@ namespace NCMB
 		{
 			//デバイストークンを更新
 			NCMBQuery<NCMBInstallation> query = NCMBInstallation.GetQuery ();	//ObjectId検索
-			installation.GetDeviceToken((token, error) => {
+			NCMBInstallationUtils.GetDeviceToken(installation, (token, error) => {
 				query.WhereEqualTo("deviceToken", token);
 				query.FindAsync ((List<NCMBInstallation> objList, NCMBException findError) => {
 					if (findError != null) {
