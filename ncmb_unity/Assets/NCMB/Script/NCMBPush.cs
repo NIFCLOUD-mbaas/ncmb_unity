@@ -65,43 +65,7 @@ namespace NCMB
 
 			}
 		}
-// 		#if UNITY_ANDROID
-// 		public static void Register ()
-// 		{
-//
-// #if !UNITY_EDITOR
-// 				m_AJClass.CallStatic("Init");
-// 		#endif
-// 		}
-//
-// #elif UNITY_IOS
-// 		public static void Register (bool useAnalytics)
-// 		{
-// 			#if !UNITY_EDITOR
-// 		registerNotification(useAnalytics);
-// 			#endif
-// 		}
-// 		#endif
-// 		#if UNITY_ANDROID
-// 	public static void RegisterWithLocation ()
-// 	{
-//
-// #if !UNITY_EDITOR
-// 			m_AJClass.CallStatic("Init");
-// 		#endif
-// 	}
-//
-// #elif UNITY_IOS
-// 		/// <summary>
-// 		/// Register for receiving remote notifications (with current location).
-// 		/// </summary>
-// 		internal static void RegisterWithLocation ()
-// 		{
-// 			#if !UNITY_EDITOR
-// 	registerNotificationWithLocation();
-// 			#endif
-// 		}
-// 		#endif
+
 
 		/*** Push設定 ***/
 		/// <summary>
@@ -334,25 +298,6 @@ namespace NCMB
 
 			base.SaveAsync (callback);
 		}
-
-		// #region Process notification for iOS only
-		//
-		// #if UNITY_IOS
-		// // Clears all notifications.
-		// public void ClearAll ()
-		// {
-		// 	#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-		// 	NotificationServices.ClearRemoteNotifications ();
-		// 	#else
-		// 	UnityEngine.iOS.NotificationServices.ClearRemoteNotifications ();
-		// 	#endif
-		//
-		// 	#if !UNITY_EDITOR
-		// clearAll();
-		// 	#endif
-		// }
-		// #endif
-		// #endregion
 
 		/// <summary>
 		/// Push内のオブジェクトで使用出来るクエリを取得します。
