@@ -123,7 +123,7 @@ namespace NCMB
 		{
 			string pushId = LoadOpenedPushId();
 			if (pushId != null && pushId != ""){
-				NCMBAnalytics.TrackAppOpened (pushId);
+				NCMBAnalyticsUtils.TrackAppOpened (pushId);
 				SaveOpenedPushId(null);
 			}
 		}
@@ -141,7 +141,7 @@ namespace NCMB
 		{
 			string pushId = LoadOpenedPushId();
 			if (pushId != null && pushId != ""){
-				NCMBAnalytics.TrackAppOpened (pushId);
+				NCMBAnalyticsUtils.TrackAppOpened (pushId);
 				SaveOpenedPushId(null);
 			}
 

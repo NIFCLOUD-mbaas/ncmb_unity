@@ -14,14 +14,14 @@
  limitations under the License.
  **********/
 
-using System.Collections;
-using System;
-using System.IO;
-using System.Threading;
-using System.Collections.Generic;
-using MiniJSON;
+// using System.Collections;
+// using System;
+// using System.IO;
+// using System.Threading;
+// using System.Collections.Generic;
+// using MiniJSON;
 using NCMB.Internal;
-using System.Linq;
+// using System.Linq;
 using UnityEngine;
 
 using System.Runtime.CompilerServices;
@@ -37,61 +37,11 @@ namespace  NCMB
 	internal class NCMBAnalytics
 	{
 
-		internal static void TrackAppOpened (Dictionary<string,object> requestData)	//(Android/iOS)-NCMBManager.onAnalyticsReceived-this.NCMBAnalytics
-		{
-			//ネイティブから取得したpushIdからリクエストヘッダを作成
-			// if (_pushId != null && NCMBManager._token != null && NCMBSettings.UseAnalytics) {
-			if (requestData != null && NCMBPushSettings.UseAnalytics) {
-				string deviceType = "";
-				#if UNITY_ANDROID
-				deviceType = "android";
-				#elif UNITY_IOS
-				deviceType = "ios";
-				#endif
-
-				//RESTリクエストデータ生成
-				Dictionary<string,object> requestData = new Dictionary<string,object> {
-					{ "pushId", _pushId },
-					{ "deviceToken", NCMBManager._token },
-					{ "deviceType", deviceType }
-				};
-
-				var json = Json.Serialize (requestData);
-				string url = NCMBAnalytics._getBaseUrl (requestData["pushId"].ToString());
-				ConnectType type = ConnectType.POST;
-				string content = json.ToString ();
-
-				//ログを確認（通信前）
-				NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
-				// 通信処理
-				NCMBConnection con = new NCMBConnection (url, type, content, NCMBUser._getCurrentSessionToken ());
-				con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
-					try {
-						NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					} catch (Exception e) {
-						error = new NCMBException (e);
-					}
-					return;
-				});
-
-				#if UNITY_IOS
-					UnityEngine.iOS.NotificationServices.ClearRemoteNotifications ();
-				#endif
-
-			}
-		}
-
 		/// <summary>
 		/// コンストラクター
 		/// </summary>
 		internal NCMBAnalytics ()
 		{
-			if (Type.GetType("NCMBAnalyticsUtils") != null) {
-				//If Push plugin is imported
-			} else {
-				//If Push plugin is not imported
-
-			}
 		}
 
 		//オーバーライド
