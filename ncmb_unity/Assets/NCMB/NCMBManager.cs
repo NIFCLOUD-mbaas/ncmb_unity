@@ -255,11 +255,11 @@ namespace NCMB
 
 			//currentInstallationがあれば読み込み、更新の必要性を判定します
 			string jsonText = "";
-			NCMBInstallation installation = null;
+			NCMBCurrentInstallation installation = null;
 			if ((jsonText = ReadFile (path)) != "") {	//currentInstallationあり
-				installation = new NCMBInstallation (jsonText);
+				installation = new NCMBCurrentInstallation (jsonText);
 			} else {
-				installation = new NCMBInstallation ();
+				installation = new NCMBCurrentInstallation ();
 			}
 
 			installation.DeviceToken = _token;
@@ -291,11 +291,11 @@ namespace NCMB
 			});
 		}
 
-		private void updateExistedInstallation (NCMBInstallation installation, string path)
+		private void updateExistedInstallation (NCMBCurrentInstallation installation, string path)
 		{
 			//デバイストークンを更新
 			NCMBQuery<NCMBInstallation> query = NCMBInstallation.GetQuery ();	//ObjectId検索
-			NCMBInstallationUtils.GetDeviceToken(installation, (token, error) => {
+			NCMBCurrentInstallation.GetDeviceToken(installation, (token, error) => {
 				query.WhereEqualTo("deviceToken", token);
 				query.FindAsync ((List<NCMBInstallation> objList, NCMBException findError) => {
 					if (findError != null) {
