@@ -212,8 +212,8 @@ namespace NCMB
 		IEnumerator IEClearAfterAFrame ()
 		{
 			yield return 0;
-			NCMBPush push = new NCMBPush ();
-			push.ClearAll ();
+			NCMBPushUtils pushUtils = new NCMBPushUtils ();
+			pushUtils.ClearAll ();
 		}
 		#endif
 		#endregion
