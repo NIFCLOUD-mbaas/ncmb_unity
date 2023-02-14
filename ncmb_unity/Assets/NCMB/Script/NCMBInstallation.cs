@@ -19,7 +19,7 @@ using System.IO;
 using System.Threading;
 using System.Collections.Generic;
 using NCMB.Internal;
-
+using MiniJSON;
 
 namespace  NCMB
 {
@@ -34,9 +34,61 @@ namespace  NCMB
 		/// コンストラクター。<br/>
 		/// installationsの作成を行います。
 		/// </summary>
-		public NCMBInstallation () : base ()
+		public NCMBInstallation () : this ("")
 		{
 		}
+
+		/// <summary>
+		/// コンストラクター。<br/>
+		/// JSONデータをセットしinstallationを作成する場合、こちらを使用します。
+		/// </summary>
+		internal NCMBInstallation (string jsonText): base ()//NCMBObjectのコンストラクタ実行
+		{
+			if (jsonText != null && jsonText != "") {
+				Dictionary<string, object> dic = Json.Deserialize (jsonText) as Dictionary<string, object>;	//辞書形式へ変換
+				object value;
+				if (dic.TryGetValue ("data", out value)) {
+					//iOSのみv1からアップデートした場合は{"data":{"objectId”:”xxxx…
+					dic = (Dictionary<string, object>)value;
+				}
+
+				//各プロパティの設定
+				_mergeFromServer (dic, false);
+			}
+
+			//固定値のため、internal化したsetter
+			DeviceToken = NCMBManager._token;
+			//applicationName,appVersion,deviceType,timeZone,SdkVersionを取得/設定
+			#if !UNITY_EDITOR
+			setDefaultProperty ();
+			#endif
+		}
+
+		internal void setDefaultProperty ()
+		{
+
+			IDictionary<string, object> dic = NCMBManager.installationDefaultProperty;
+			object value;
+			if (dic.TryGetValue ("applicationName", out value)) {
+				ApplicationName = (string)value;
+			}
+			if (dic.TryGetValue ("appVersion", out value)) {
+				AppVersion = (string)value;
+			}
+			if (dic.TryGetValue ("deviceType", out value)) {
+				DeviceType = (string)value;
+			}
+			if (dic.TryGetValue ("timeZone", out value)) {
+				TimeZone = (string)value;
+			}
+
+			#if UNITY_ANDROID && !UNITY_EDITOR
+			this["pushType"] = "fcm";
+			#endif
+
+			SdkVersion = CommonConstant.SDK_VERSION;
+		}
+
 
 		/// <summary>
 		/// アプリ名の取得、または設定を行います。
