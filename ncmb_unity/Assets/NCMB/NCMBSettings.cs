@@ -35,10 +35,7 @@ namespace NCMB
 		internal static bool _responseValidationFlag = false;
 		//初回のみ実行フラグ
 		internal static bool _isInitialized = false;
-		//PUSH通知フラグ
-		private static bool _usePush = false;
-		//開封通知フラグ
-		private static bool _useAnalytics = false;
+
 		//ドメインURL
 		private static string _domainURL = "";
 		//APIバージョン
@@ -50,12 +47,7 @@ namespace NCMB
 		[SerializeField]
 		internal string
 			clientKey = "";
-		[SerializeField]
-		internal bool
-			usePush = false;
-		[SerializeField]
-		internal bool
-			useAnalytics = false;
+
 		//[SerializeField]
 		//internal bool
 		//getLocation = false;
@@ -110,24 +102,6 @@ namespace NCMB
 		}
 
 		/// <summary>
-		/// プッシュ通知設定の取得を行います。
-		/// </summary>
-		public static bool UsePush {
-			get {
-				return _usePush;
-			}
-		}
-
-		/// <summary>
-		/// 開封通知設定の取得を行います。
-		/// </summary>
-		public static bool UseAnalytics {
-			get {
-				return _useAnalytics;
-			}
-		}
-
-		/// <summary>
 		/// ドメインURLの取得、または設定を行います。
 		/// </summary>
 		internal static string DomainURL {
@@ -177,40 +151,6 @@ namespace NCMB
 			_apiVersion = string.IsNullOrEmpty (apiVersion) ? CommonConstant.API_VERSION : apiVersion;
 		}
 
-		// /// <summary>
-		// /// iOS,Androidそれぞれの端末登録を行う
-		// /// </summary>
-		// /// <param name="usePush">true:プッシュ通知有効　false:プッシュ通知無効</param>
-		// /// <param name="useAnalytics">true:開封通知有効　false:開封通知無効</param>
-		// /// <param name="getLocation">true:位置情報有効　false:位置情報無効</param>
-		// private static void RegisterPush (bool usePush, bool useAnalytics, bool getLocation = false)
-		// {
-		//
-		// 	//Push関連設定
-		// 	_usePush = usePush;
-		// 	_useAnalytics = useAnalytics;
-		//
-		// 	// Register
-		// 	if (usePush) {
-		// 		//Installation基本情報を取得
-		// 		NCMBManager.CreateInstallationProperty ();
-		// 		if (!getLocation) {
-		// 			#if UNITY_ANDROID
-		// 			NCMBPush.Register();
-		// 			#elif UNITY_IOS
-		// 			NCMBPush.Register (useAnalytics);
-		// 			#endif
-		// 		} else {
-		// 			#if UNITY_ANDROID
-		// 			//not Analytics
-		// 			NCMBPush.RegisterWithLocation();
-		// 			#elif UNITY_IOS
-		// 			NCMBPush.RegisterWithLocation ();
-		// 			#endif
-		// 		}
-		// 	}
-		// }
-
 		/// <summary>
 		/// レスポンスが改ざんされていないか判定する機能を有効にします。<br/>
 		/// デフォルトは無効です。
@@ -231,10 +171,8 @@ namespace NCMB
 				_responseValidationFlag = responseValidation;
 				DontDestroyOnLoad (base.gameObject);
 				NCMBSettings.Initialize (this.applicationKey, this.clientKey, this.domainURL, this.apiVersion);
-				//NCMBSettings.RegisterPush(this.usePush, this.androidSenderId, this.getLocation);
 				filePath = Application.persistentDataPath;
-				//currentInstallationPath = filePath + "/currentInstallation";
-				//NCMBSettings.RegisterPush (this.usePush, this.useAnalytics, false);
+				currentInstallationPath = filePath + "/currentInstallation";
 			}
 		}
 
