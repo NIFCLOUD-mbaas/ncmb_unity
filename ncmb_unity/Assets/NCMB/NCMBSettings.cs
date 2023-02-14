@@ -19,6 +19,9 @@ using System;
 using UnityEngine;
 using NCMB.Internal;
 using System.Collections.Generic;
+# if PLATFORM_ANDROID
+using UnityEngine.Android;
+# endif
 
 namespace NCMB
 {
@@ -176,40 +179,6 @@ namespace NCMB
 			// APIバージョンを設定
 			_apiVersion = string.IsNullOrEmpty (apiVersion) ? CommonConstant.API_VERSION : apiVersion;
 		}
-
-		// /// <summary>
-		// /// iOS,Androidそれぞれの端末登録を行う
-		// /// </summary>
-		// /// <param name="usePush">true:プッシュ通知有効　false:プッシュ通知無効</param>
-		// /// <param name="useAnalytics">true:開封通知有効　false:開封通知無効</param>
-		// /// <param name="getLocation">true:位置情報有効　false:位置情報無効</param>
-		// private static void RegisterPush (bool usePush, bool useAnalytics, bool getLocation = false)
-		// {
-		//
-		// 	//Push関連設定
-		// 	_usePush = usePush;
-		// 	_useAnalytics = useAnalytics;
-		//
-		// 	// Register
-		// 	if (usePush) {
-		// 		//Installation基本情報を取得
-		// 		NCMBManager.CreateInstallationProperty ();
-		// 		if (!getLocation) {
-		// 			#if UNITY_ANDROID
-		// 			NCMBPush.Register();
-		// 			#elif UNITY_IOS
-		// 			NCMBPush.Register (useAnalytics);
-		// 			#endif
-		// 		} else {
-		// 			#if UNITY_ANDROID
-		// 			//not Analytics
-		// 			NCMBPush.RegisterWithLocation();
-		// 			#elif UNITY_IOS
-		// 			NCMBPush.RegisterWithLocation ();
-		// 			#endif
-		// 		}
-		// 	}
-		// }
 
 		/// <summary>
 		/// レスポンスが改ざんされていないか判定する機能を有効にします。<br/>
