@@ -19,6 +19,9 @@ using System;
 using UnityEngine;
 using NCMB.Internal;
 using System.Collections.Generic;
+# if PLATFORM_ANDROID
+using UnityEngine.Android;
+# endif
 
 namespace NCMB
 {
