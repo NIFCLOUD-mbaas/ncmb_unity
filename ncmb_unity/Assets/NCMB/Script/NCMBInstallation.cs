@@ -56,37 +56,12 @@ namespace  NCMB
 				_mergeFromServer (dic, false);
 			}
 
-			//固定値のため、internal化したsetter
-			DeviceToken = NCMBManager._token;
-			//applicationName,appVersion,deviceType,timeZone,SdkVersionを取得/設定
-			#if !UNITY_EDITOR
-			setDefaultProperty ();
-			#endif
-		}
-
-		internal void setDefaultProperty ()
-		{
-
-			IDictionary<string, object> dic = NCMBManager.installationDefaultProperty;
-			object value;
-			if (dic.TryGetValue ("applicationName", out value)) {
-				ApplicationName = (string)value;
-			}
-			if (dic.TryGetValue ("appVersion", out value)) {
-				AppVersion = (string)value;
-			}
-			if (dic.TryGetValue ("deviceType", out value)) {
-				DeviceType = (string)value;
-			}
-			if (dic.TryGetValue ("timeZone", out value)) {
-				TimeZone = (string)value;
-			}
-
-			#if UNITY_ANDROID && !UNITY_EDITOR
-			this["pushType"] = "fcm";
-			#endif
-
-			SdkVersion = CommonConstant.SDK_VERSION;
+			// 固定値のため、internal化したsetter
+			// DeviceToken = NCMBManager._token;
+			// applicationName,appVersion,deviceType,timeZone,SdkVersionを取得/設定
+			// #if !UNITY_EDITOR
+			// setDefaultProperty ();
+			// #endif
 		}
 
 

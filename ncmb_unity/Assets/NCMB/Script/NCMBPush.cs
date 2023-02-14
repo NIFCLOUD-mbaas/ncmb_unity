@@ -57,13 +57,6 @@ namespace NCMB
 		/// </summary>
 		public NCMBPush () : base ()	//継承元のコンストラクタを実施するため
 		{
-			if (Type.GetType("NCMBPushUtils") != null) {
-				//If Push plugin is imported
-				NCMBPushUtils pushUtil = new NCMBPushUtils();
-			} else {
-				//If Push plugin is not imported
-
-			}
 		}
 
 
