@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using NCMB;
 
 //private InputField UserName;
@@ -44,7 +45,7 @@ public class Loginsignin : MonoBehaviour
                 // テキストの表示を入れ替える
                 debug_text.text = "ログインに成功";
                 //LogOutの部分は移動d先のScene名
-                Application.LoadLevel ("LogOut");
+                SceneManager.LoadScene ("LogOut");
 			}
 		});
 

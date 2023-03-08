@@ -19,6 +19,9 @@ using System;
 using UnityEngine;
 using NCMB.Internal;
 using System.Collections.Generic;
+# if PLATFORM_ANDROID
+using UnityEngine.Android;
+# endif
 
 namespace NCMB
 {
@@ -192,6 +195,9 @@ namespace NCMB
 
 			// Register
 			if (usePush) {
+				#if PLATFORM_ANDROID
+				Permission.RequestUserPermission("android.permission.POST_NOTIFICATIONS");
+				#endif
 				//Installation基本情報を取得
 				NCMBManager.CreateInstallationProperty ();
 				if (!getLocation) {
