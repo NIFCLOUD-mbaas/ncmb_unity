@@ -1,0 +1,53 @@
+name: Generate Reference and Deploy Github Pages
+
+on:
+  push: 
+    branches:
+      - master
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  generate-reference:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Doxygen Action
+      uses: mattnotmitt/doxygen-action@1.9.4
+      with:
+        working-directory: .
+        doxyfile-path: ./Doxyfile
+    - name: zip docs
+      run: zip -r docs.zip docs/
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs
+        path: docs.zip
+    - name: Setup Pages
+      uses: actions/configure-pages@v2
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: './docs'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: generate-reference
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
