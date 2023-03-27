@@ -2,8 +2,8 @@
 ---
 request:
   url: 2013-09-01/login
-  method: GET
-  query:
+  method: POST
+  body:
     password: tarou
     userName: tarou
 response:

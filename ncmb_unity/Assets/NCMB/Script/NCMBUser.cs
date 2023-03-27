@@ -462,32 +462,36 @@ namespace  NCMB
 
 		private static void _ncmbLogIn(string name, string password, string email, NCMBCallback callback)
 		{
+			//URL
  			string url = _getLogInUrl();
-			ConnectType type = ConnectType.GET;
 
-			Dictionary<string, object> paramDic = new Dictionary<string, object>();
-			paramDic["password"] = password;
-
+			//コンテント
+			NCMBUser user = new NCMBUser();
+			//user.Name = name;
 			//nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
 			if (name != null)
 			{
-				paramDic["userName"] = name;
+				user.UserName = name;
 			}
 			else if (email != null)
 			{
-				paramDic["mailAddress"] = email;
+				user.Email = email;
 			}
 			else
 			{
 				throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
 			}
+			user.Password = password;
 
-			url = _makeParamUrl(url + "?", paramDic);
+			string content = user._toJSONObjectForSaving(user.StartSave());
+			
+			//Type
+			ConnectType type = ConnectType.POST;
 
 			//ログを確認（通信前）
-			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type);
+			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			//通信処理
-			NCMBConnection con = new NCMBConnection(url, type, null, null);
+			NCMBConnection con = new NCMBConnection(url, type, content, null);
 			con.Connect(delegate (int statusCode, string responseData, NCMBException error)
 			{
 				try
@@ -518,22 +522,22 @@ namespace  NCMB
 			});
 		}
 
-		private static string _makeParamUrl (string url, Dictionary<string, object> parameter)
-		{
-			string result = url;
-			foreach (KeyValuePair<string, object> pair in parameter) {
-				//result += pair.Key + "=" + NCMBUtility._encodeString ((string)pair.Value) + "&"; //**Encoding が必要
-				#if UNITY_2017_3_OR_NEWER
-					result += pair.Key + "=" + UnityWebRequest.EscapeURL ((string)pair.Value) + "&"; //**Encoding が必要
-				#else
-					result += pair.Key + "=" + WWW.EscapeURL((string)pair.Value) + "&"; //**Encoding が必要
-				#endif
-			}
-			if (parameter.Count > 0) {
-				result = result.Remove (result.Length - 1);
-			}
-			return result;
-		}
+		// private static string _makeParamUrl (string url, Dictionary<string, object> parameter)
+		// {
+		// 	string result = url;
+		// 	foreach (KeyValuePair<string, object> pair in parameter) {
+		// 		//result += pair.Key + "=" + NCMBUtility._encodeString ((string)pair.Value) + "&"; //**Encoding が必要
+		// 		#if UNITY_2017_3_OR_NEWER
+		// 			result += pair.Key + "=" + UnityWebRequest.EscapeURL ((string)pair.Value) + "&"; //**Encoding が必要
+		// 		#else
+		// 			result += pair.Key + "=" + WWW.EscapeURL((string)pair.Value) + "&"; //**Encoding が必要
+		// 		#endif
+		// 	}
+		// 	if (parameter.Count > 0) {
+		// 		result = result.Remove (result.Length - 1);
+		// 	}
+		// 	return result;
+		// }
 
 		/// <summary>
 		/// 非同期処理でメールアドレスとパスワードを指定して、ユーザのログインを行います。<br/>

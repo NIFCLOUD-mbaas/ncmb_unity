@@ -2,8 +2,8 @@
 ---
 request:
   url: 2013-09-01/login
-  method: GET
-  query:
+  method: POST
+  body:
     password: password
     mailAddress: sample@example.com
 response:
@@ -19,8 +19,8 @@ response:
 ---
 request:
   url: 2013-09-01/login
-  method: GET
-  query:
+  method: POST
+  body:
     password: tarou
     userName: tarou
 response:
