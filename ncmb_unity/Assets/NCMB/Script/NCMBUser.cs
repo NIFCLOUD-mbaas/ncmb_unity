@@ -482,11 +482,13 @@ namespace  NCMB
 				throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
 			}
 			user.Password = password;
-
 			string content = user._toJSONObjectForSaving(user.StartSave());
 			
 			//Type
 			ConnectType type = ConnectType.POST;
+
+			
+
 
 			//ログを確認（通信前）
 			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
@@ -521,23 +523,6 @@ namespace  NCMB
 				return;
 			});
 		}
-
-		// private static string _makeParamUrl (string url, Dictionary<string, object> parameter)
-		// {
-		// 	string result = url;
-		// 	foreach (KeyValuePair<string, object> pair in parameter) {
-		// 		//result += pair.Key + "=" + NCMBUtility._encodeString ((string)pair.Value) + "&"; //**Encoding が必要
-		// 		#if UNITY_2017_3_OR_NEWER
-		// 			result += pair.Key + "=" + UnityWebRequest.EscapeURL ((string)pair.Value) + "&"; //**Encoding が必要
-		// 		#else
-		// 			result += pair.Key + "=" + WWW.EscapeURL((string)pair.Value) + "&"; //**Encoding が必要
-		// 		#endif
-		// 	}
-		// 	if (parameter.Count > 0) {
-		// 		result = result.Remove (result.Length - 1);
-		// 	}
-		// 	return result;
-		// }
 
 		/// <summary>
 		/// 非同期処理でメールアドレスとパスワードを指定して、ユーザのログインを行います。<br/>
