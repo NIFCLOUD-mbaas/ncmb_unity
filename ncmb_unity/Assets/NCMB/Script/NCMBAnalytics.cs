@@ -14,14 +14,7 @@
  limitations under the License.
  **********/
 
-// using System.Collections;
-// using System;
-// using System.IO;
-// using System.Threading;
-// using System.Collections.Generic;
-// using MiniJSON;
 using NCMB.Internal;
-// using System.Linq;
 using UnityEngine;
 
 using System.Runtime.CompilerServices;

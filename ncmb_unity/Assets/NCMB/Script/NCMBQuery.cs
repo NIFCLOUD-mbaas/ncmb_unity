@@ -618,10 +618,10 @@ namespace NCMB
 						obj = new NCMBUser ();
 					} else if (resultClassName.Equals ("role")) {
 						obj = new NCMBRole ();
-					 } else if (resultClassName.Equals ("installation")) {
-					 	obj = new NCMBInstallation ();
-					 } else if (resultClassName.Equals ("push")) {
-					 	obj = new NCMBPush ();
+					} else if (resultClassName.Equals ("installation")) {
+						obj = new NCMBInstallation ();
+					} else if (resultClassName.Equals ("push")) {
+						obj = new NCMBPush ();
 					} else if (resultClassName.Equals ("file")) {
 						obj = new NCMBFile ();
 					} else {

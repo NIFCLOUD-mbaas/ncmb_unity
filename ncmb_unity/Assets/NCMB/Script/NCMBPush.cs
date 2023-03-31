@@ -29,28 +29,7 @@ namespace NCMB
 	[NCMBClassName ("push")]
 	public class NCMBPush:NCMBObject
 	{
-// 		#if UNITY_ANDROID
-// 		static AndroidJavaClass m_AJClass;
-//
-// #elif UNITY_IOS
-// 		[DllImport ("__Internal")]
-// 		private static extern void registerNotification (bool useAnalytics);
-//
-// 		[DllImport ("__Internal")]
-// 		private static extern void registerNotificationWithLocation ();
-//
-// 		[DllImport ("__Internal")]
-// 		private static extern void clearAll ();
-// 		#endif
-// 		/*		** 初期化 ***/
-// 		static NCMBPush ()
-// 		{
-// 			#if UNITY_ANDROID && !UNITY_EDITOR
-//                         m_AJClass = new AndroidJavaClass("com.nifcloud.mbaas.ncmbfcmplugin.FCMInit");
-// 			#endif
-//
-// 		}
-//
+
 		/// <summary>
 		/// コンストラクター。<br/>
 		/// プッシュの作成を行います。

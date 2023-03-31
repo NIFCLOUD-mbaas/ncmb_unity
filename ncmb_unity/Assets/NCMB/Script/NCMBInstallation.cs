@@ -56,12 +56,6 @@ namespace  NCMB
 				_mergeFromServer (dic, false);
 			}
 
-			// 固定値のため、internal化したsetter
-			// DeviceToken = NCMBManager._token;
-			// applicationName,appVersion,deviceType,timeZone,SdkVersionを取得/設定
-			// #if !UNITY_EDITOR
-			// setDefaultProperty ();
-			// #endif
 		}
 
 
