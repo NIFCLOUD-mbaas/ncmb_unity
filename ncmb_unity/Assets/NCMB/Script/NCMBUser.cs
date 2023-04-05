@@ -465,29 +465,34 @@ namespace  NCMB
 			//URL
  			string url = _getLogInUrl();
 
-			//コンテント
-			NCMBUser user = new NCMBUser();
-			//user.Name = name;
 			//nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
+			Dictionary<string,string> requestData = null;
 			if (name != null)
 			{
-				user.UserName = name;
+				//リクエストデータ生成
+				requestData = new Dictionary<string,string>{
+					{"userName", name},
+					{"password",password}
+				};
 			}
 			else if (email != null)
 			{
-				user.Email = email;
+				//リクエストデータ生成
+				requestData = new Dictionary<string,string>{
+					{"mailAddress",email},
+					{"password",password}
+				};
 			}
 			else
 			{
 				throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
 			}
-			user.Password = password;
-			string content = user._toJSONObjectForSaving(user.StartSave());
+
+			var json = Json.Serialize(requestData);
+			string content = json.ToString ();
 			
 			//Type
 			ConnectType type = ConnectType.POST;
-
-			
 
 
 			//ログを確認（通信前）
