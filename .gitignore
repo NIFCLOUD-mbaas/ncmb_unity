@@ -3,6 +3,9 @@ Unity generated
 ===============
 Temp/
 Library/
+Logs/
+ncmb_unity/UserSettings
+ncmb_unity/Assets/InitTestScene*.unity*
 
 =====================================
 Visual Studio / MonoDevelop generated
