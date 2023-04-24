@@ -1,6 +1,6 @@
 {
   "name": "com.nifcloud.mbaas.unity",
-  "version": "4.6.1",
+  "version": "5.0.0",
   "displayName": "NCMB Unity SDK",
   "description": "NCMB Unity SDK package - build to work with Unity",
   "unity": "2021.3",
