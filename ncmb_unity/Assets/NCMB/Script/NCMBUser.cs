@@ -456,43 +456,33 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public static void LogInAsync (string name, string password, NCMBCallback callback)
 		{
+			IDictionary<string,object> requestData = null;
+			requestData = new Dictionary<string,object>()
+			{
+				{"userName", name},
+				{"password", password}
+			};
 			//logIn通信を実施
-			_ncmbLogIn (name, password, null, callback);
+			_ncmbLogIn (requestData, callback);
 		}
 
-		private static void _ncmbLogIn(string name, string password, string email, NCMBCallback callback)
+		private static void _ncmbLogIn(IDictionary<string, object> body, NCMBCallback callback)
 		{
 			//URL
  			String url = _getLogInUrl();
 			//Type
 			ConnectType type = ConnectType.POST;
 
-			//nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
-			IDictionary<string,object> requestData = null;
-
-			if (name != null)
-			{
-				//リクエストデータ生成
-				requestData = new Dictionary<string,object>()
-				{
-					{"userName", name},
-					{"password", password}
-				};
-			} else if (email != null) {
-				//リクエストデータ生成
-				requestData = new Dictionary<string,object>()
-				{
-					{"mailAddress", email},
-					{"password", password}
-				};
-			}
-
-			if (requestData == null){
-				throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
-			}
-			
+			//コンテント作成
 			String content = null;
-			content = Json.Serialize(requestData);
+			if (body != null) {
+				content = Json.Serialize (body);
+			}
+
+			// if (requestData == null){
+			// 	throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
+			// }
+
 
 			//ログを確認（通信前）
 			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
@@ -537,7 +527,13 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public static void LogInWithMailAddressAsync (string email, string password, NCMBCallback callback)
 		{
-			_ncmbLogIn (null, password, email, callback);
+			IDictionary<string,object> requestData = null;
+			requestData = new Dictionary<string,object>()
+			{
+				{"mailAddress", email},
+				{"password", password}
+			};
+			_ncmbLogIn (requestData, callback);
 		}
 
 		/// <summary>
@@ -548,7 +544,13 @@ namespace  NCMB
 		/// <param name="password">パスワード</param>
 		public static void LogInWithMailAddressAsync (string email, string password)
 		{
-			_ncmbLogIn (null, password, email, null);
+			IDictionary<string,object> requestData = null;
+			requestData = new Dictionary<string,object>()
+			{
+				{"mailAddress", email},
+				{"password", password}
+			};
+			_ncmbLogIn (requestData, null);
 		}
 
 		/// <summary>
