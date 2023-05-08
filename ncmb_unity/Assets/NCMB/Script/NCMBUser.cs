@@ -463,45 +463,36 @@ namespace  NCMB
 		private static void _ncmbLogIn(string name, string password, string email, NCMBCallback callback)
 		{
 			//URL
- 			string url = _getLogInUrl();
+ 			String url = _getLogInUrl();
+			//Type
+			ConnectType type = ConnectType.POST;
 
 			//nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
-			// IDictionary<string,object> requestData = new Dictionary<String,object> ();
 			IDictionary<string,object> requestData = null;
 
 			if (name != null)
 			{
 				//リクエストデータ生成
-				requestData = new Dictionary<string,object>{
+				requestData = new Dictionary<string,object>()
+				{
 					{"userName", name},
-					{"password",password}
+					{"password", password}
 				};
-
-				// requestData["userName"] = name;
-				// requestData["password"] = password;
-			}
-			else if (email != null)
-			{
+			} else if (email != null) {
 				//リクエストデータ生成
-				requestData = new Dictionary<string,object>{
-					{"mailAddress",email},
-					{"password",password}
+				requestData = new Dictionary<string,object>()
+				{
+					{"mailAddress", email},
+					{"password", password}
 				};
-
-				// requestData["mailAddress"] = email;
-				// requestData["password"] = password;
 			}
 
 			if (requestData == null){
 				throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
 			}
-
-			// requestData = Json.Deserialize(requestData) as Dictionary<String,object>;
-			var json = Json.Serialize(requestData);
-			string content = json.ToString ();
 			
-			//Type
-			ConnectType type = ConnectType.POST;
+			String content = null;
+			content = Json.Serialize(requestData);
 
 			//ログを確認（通信前）
 			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
