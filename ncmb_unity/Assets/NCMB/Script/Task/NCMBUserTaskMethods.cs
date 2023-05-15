@@ -77,7 +77,7 @@ namespace NCMB
         public static Task<NCMBUser> LogInWithMailAddressTaskAsync(string email, string password)
         {
             var tcs = new TaskCompletionSource<NCMBUser>();
-            _ncmbLogIn(null, password, email, error =>
+            LogInWithMailAddressAsync(email, password, error =>
             {
                 if (error != null)
                 {

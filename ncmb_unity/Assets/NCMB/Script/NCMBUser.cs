@@ -456,38 +456,38 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public static void LogInAsync (string name, string password, NCMBCallback callback)
 		{
+			IDictionary<string,object> requestData = null;
+			requestData = new Dictionary<string,object>()
+			{
+				{"userName", name},
+				{"password", password}
+			};
 			//logIn通信を実施
-			_ncmbLogIn (name, password, null, callback);
+			_ncmbLogIn (requestData, callback);
 		}
 
-		private static void _ncmbLogIn(string name, string password, string email, NCMBCallback callback)
+		private static void _ncmbLogIn(IDictionary<string, object> body, NCMBCallback callback)
 		{
- 			string url = _getLogInUrl();
-			ConnectType type = ConnectType.GET;
+			//URL
+ 			String url = _getLogInUrl();
+			//Type
+			ConnectType type = ConnectType.POST;
 
-			Dictionary<string, object> paramDic = new Dictionary<string, object>();
-			paramDic["password"] = password;
-
-			//nameがあればLogInAsync経由　無ければLogInWithMailAddressAsync経由、どちらも無ければエラー
-			if (name != null)
-			{
-				paramDic["userName"] = name;
-			}
-			else if (email != null)
-			{
-				paramDic["mailAddress"] = email;
-			}
-			else
-			{
-				throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
+			//コンテント作成
+			String content = null;
+			if (body != null) {
+				content = Json.Serialize (body);
 			}
 
-			url = _makeParamUrl(url + "?", paramDic);
+			// if (requestData == null){
+			// 	throw new NCMBException(new ArgumentException("UserName or Email can not be null."));
+			// }
+
 
 			//ログを確認（通信前）
-			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type);
+			NCMBDebug.Log("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			//通信処理
-			NCMBConnection con = new NCMBConnection(url, type, null, null);
+			NCMBConnection con = new NCMBConnection(url, type, content, null);
 			con.Connect(delegate (int statusCode, string responseData, NCMBException error)
 			{
 				try
@@ -518,23 +518,6 @@ namespace  NCMB
 			});
 		}
 
-		private static string _makeParamUrl (string url, Dictionary<string, object> parameter)
-		{
-			string result = url;
-			foreach (KeyValuePair<string, object> pair in parameter) {
-				//result += pair.Key + "=" + NCMBUtility._encodeString ((string)pair.Value) + "&"; //**Encoding が必要
-				#if UNITY_2017_3_OR_NEWER
-					result += pair.Key + "=" + UnityWebRequest.EscapeURL ((string)pair.Value) + "&"; //**Encoding が必要
-				#else
-					result += pair.Key + "=" + WWW.EscapeURL((string)pair.Value) + "&"; //**Encoding が必要
-				#endif
-			}
-			if (parameter.Count > 0) {
-				result = result.Remove (result.Length - 1);
-			}
-			return result;
-		}
-
 		/// <summary>
 		/// 非同期処理でメールアドレスとパスワードを指定して、ユーザのログインを行います。<br/>
 		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
@@ -544,7 +527,13 @@ namespace  NCMB
 		/// <param name="callback">コールバック</param>
 		public static void LogInWithMailAddressAsync (string email, string password, NCMBCallback callback)
 		{
-			_ncmbLogIn (null, password, email, callback);
+			IDictionary<string,object> requestData = null;
+			requestData = new Dictionary<string,object>()
+			{
+				{"mailAddress", email},
+				{"password", password}
+			};
+			_ncmbLogIn (requestData, callback);
 		}
 
 		/// <summary>
@@ -555,7 +544,13 @@ namespace  NCMB
 		/// <param name="password">パスワード</param>
 		public static void LogInWithMailAddressAsync (string email, string password)
 		{
-			_ncmbLogIn (null, password, email, null);
+			IDictionary<string,object> requestData = null;
+			requestData = new Dictionary<string,object>()
+			{
+				{"mailAddress", email},
+				{"password", password}
+			};
+			_ncmbLogIn (requestData, null);
 		}
 
 		/// <summary>
