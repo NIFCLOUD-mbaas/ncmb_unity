@@ -4,8 +4,8 @@ request:
   url: 2013-09-01/login
   method: POST
   body:
-    password: password
     mailAddress: sample@example.com
+    password: password
 response:
   status: 200
   file: /json/login_response.json
@@ -21,8 +21,8 @@ request:
   url: 2013-09-01/login
   method: POST
   body:
-    password: tarou
     userName: tarou
+    password: tarou
 response:
   status: 200
   file: /json/login_response.json
