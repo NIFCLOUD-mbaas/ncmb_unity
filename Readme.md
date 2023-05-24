@@ -6,7 +6,7 @@
 SDKを導入することで、以下の機能をアプリから利用することが可能です。
 
 - [プッシュ通知](https://mbaas.nifcloud.com/doc/current/push/basic_usage_unity.html)
-  - ※プッシュ通知を利用する場合、Unityプッシュ通知用プラグインを合わせて利用する必要があります。
+  - ※プッシュ通知を利用する場合、[Unityプッシュ通知用プラグイン](https://github.com/NIFCLOUD-mbaas/ncmb_unity_push_plugin)を合わせて利用する必要があります。
 - [会員管理・認証](https://mbaas.nifcloud.com/doc/current/user/basic_usage_unity.html)
 - [SNS連携](https://mbaas.nifcloud.com/doc/current/sns/facebook_unity.html)
 - [データストア](https://mbaas.nifcloud.com/doc/current/datastore/basic_usage_unity.html)
@@ -20,10 +20,10 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 
 ## 動作環境
 
-- Unity 2021.x
+- Unity 2022.x
 - Android 8.x〜13.x, API level 26.0〜33.0
 - iOS 13.x〜16.x  
-(※2023年4月時点)
+(※2023年5月時点)
 
 ※ Windows Phone 等、他のプラットフォームはサポートしていません。
 
@@ -34,7 +34,7 @@ SDK導入手順については、[クイックスタート](https://mbaas.nifclo
 ※なお、mobile backend にて大規模な改修が行われた際は、1年半以内のSDKであっても対応出来ない場合がございます。<br>
 その際は[informationブログ](https://mbaas.nifcloud.com/info/)にてお知らせいたします。予めご了承ください。
 
-- v4.4.1 ～ (※2023年4月時点)
+- v4.4.2 ～ (※2023年5月時点)
 
 ## ライセンス
 
