@@ -2,10 +2,10 @@
 ---
 request:
   url: 2013-09-01/login
-  method: GET
-  query:
-    password: password
+  method: POST
+  body:
     mailAddress: sample@example.com
+    password: password
 response:
   status: 200
   file: /json/login_response.json
@@ -19,10 +19,10 @@ response:
 ---
 request:
   url: 2013-09-01/login
-  method: GET
-  query:
-    password: tarou
+  method: POST
+  body:
     userName: tarou
+    password: tarou
 response:
   status: 200
   file: /json/login_response.json
