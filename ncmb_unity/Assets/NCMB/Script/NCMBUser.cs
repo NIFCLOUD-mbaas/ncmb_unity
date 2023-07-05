@@ -91,7 +91,7 @@ namespace  NCMB
 			get {
 				return (Dictionary<string,object>)this ["authData"];
 			}
-			internal set {
+			set {
 				this ["authData"] = value;
 			}
 		}
