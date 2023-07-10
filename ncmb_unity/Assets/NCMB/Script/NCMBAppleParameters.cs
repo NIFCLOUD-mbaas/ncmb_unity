@@ -25,7 +25,7 @@ namespace NCMB
     [NCMBClassName("appleParameters")]
     public class NCMBAppleParameters
     {
-        internal Dictionary<string, object> param = new Dictionary<string, object> ();
+        public Dictionary<string, object> param = new Dictionary<string, object> ();
 
         public NCMBAppleParameters(string userId, string accessToken, string clientId)
         {
@@ -45,4 +45,3 @@ namespace NCMB
         }
     }
 }
-
